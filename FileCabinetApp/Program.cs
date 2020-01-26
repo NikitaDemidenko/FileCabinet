@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace FileCabinetApp
 {
@@ -10,19 +12,29 @@ namespace FileCabinetApp
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
+        private static readonly CultureInfo Culture = new CultureInfo("en-US");
+
         private static bool isRunning = true;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
+            new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("list", List),
+            new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
+            new string[] { "create", "creates new record", "The 'create' command creates new record." },
+            new string[] { "list", "prints all records", "The 'list' command prints the records." },
+            new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
+
+        private static FileCabinetService fileCabinetService = new FileCabinetService();
 
         public static void Main(string[] args)
         {
@@ -95,6 +107,118 @@ namespace FileCabinetApp
         {
             Console.WriteLine("Exiting an application...");
             isRunning = false;
+        }
+
+        private static void Stat(string parameters)
+        {
+            var recordsCount = Program.fileCabinetService.GetStat();
+            Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Create(string parameters)
+        {
+            string firstName;
+            do
+            {
+                Console.Write("First name: ");
+                firstName = Console.ReadLine();
+                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$"))
+                {
+                    Console.WriteLine("Invalid first name. Try again!");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (true);
+
+            string lastName;
+            do
+            {
+                Console.Write("Last name: ");
+                lastName = Console.ReadLine();
+                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$"))
+                {
+                    Console.WriteLine("Invalid last name. Try again!");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (true);
+
+            DateTime dateOfBirth;
+            string input;
+            do
+            {
+                Console.Write("Date of birth (MM/dd/yyyy): ");
+                input = Console.ReadLine();
+                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date. Try again!");
+                }
+            }
+            while (true);
+
+            char sex;
+            do
+            {
+                Console.Write("Sex: ");
+                sex = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                if (sex == 'M' || sex == 'F')
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid character. Try again!");
+            }
+            while (true);
+
+            short numberOfReviews;
+            do
+            {
+                Console.Write("Number of reviews: ");
+                if (short.TryParse(Console.ReadLine(), out numberOfReviews) && numberOfReviews >= 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (true);
+
+            decimal salary;
+            do
+            {
+                Console.Write("Salary: ");
+                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, CultureInfo.DefaultThreadCurrentCulture, out salary) && salary >= 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (true);
+
+            fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
+        }
+
+        private static void List(string parameters)
+        {
+            var records = fileCabinetService.GetRecords();
+            foreach (var record in records)
+            {
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
+                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+            }
         }
     }
 }
