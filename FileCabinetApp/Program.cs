@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace FileCabinetApp
 {
@@ -15,6 +17,7 @@ namespace FileCabinetApp
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
+            new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("exit", Exit),
             new Tuple<string, Action<string>>("stat", Stat),
         };
@@ -22,6 +25,7 @@ namespace FileCabinetApp
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
+            new string[] { "create", "creates new record", "The 'create' command creates new record." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
             new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
         };
@@ -105,6 +109,61 @@ namespace FileCabinetApp
         {
             var recordsCount = Program.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
+        }
+
+        private static void Create(string parameters)
+        {
+            string firstName;
+            do
+            {
+                Console.Write("First name: ");
+                firstName = Console.ReadLine();
+                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$"))
+                {
+                    Console.WriteLine("Invalid first name. Try again!");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (true);
+
+            string lastName;
+            do
+            {
+                Console.Write("Last name: ");
+                lastName = Console.ReadLine();
+                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$"))
+                {
+                    Console.WriteLine("Invalid last name. Try again!");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (true);
+
+            DateTime dateOfBirth;
+            string input;
+            do
+            {
+                Console.Write("Date of birth (MM/dd/yyyy): ");
+                input = Console.ReadLine();
+                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth))
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date. Try again!");
+                }
+            }
+            while (true);
+
+            fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
+            Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
         }
     }
 }
