@@ -12,6 +12,8 @@ namespace FileCabinetApp
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
+        private static readonly CultureInfo Culture = new CultureInfo("en-US");
+
         private static bool isRunning = true;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
@@ -164,17 +166,58 @@ namespace FileCabinetApp
             }
             while (true);
 
-            fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
+            char sex;
+            do
+            {
+                Console.Write("Sex: ");
+                sex = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                if (sex == 'M' || sex == 'F')
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid character. Try again!");
+            }
+            while (true);
+
+            short numberOfReviews;
+            do
+            {
+                Console.Write("Number of reviews: ");
+                if (short.TryParse(Console.ReadLine(), out numberOfReviews) && numberOfReviews >= 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (true);
+
+            decimal salary;
+            do
+            {
+                Console.Write("Salary: ");
+                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, CultureInfo.DefaultThreadCurrentCulture, out salary) && salary >= 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (true);
+
+            fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
             Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
         }
 
         private static void List(string parameters)
         {
-            var culture = new CultureInfo("en-US");
             var records = fileCabinetService.GetRecords();
             foreach (var record in records)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", culture)}");
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
+                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
             }
         }
     }
