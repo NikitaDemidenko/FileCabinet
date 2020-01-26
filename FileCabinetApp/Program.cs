@@ -18,16 +18,18 @@ namespace FileCabinetApp
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("create", Create),
-            new Tuple<string, Action<string>>("exit", Exit),
+            new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("exit", Exit),
         };
 
         private static string[][] helpMessages = new string[][]
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
-            new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
+            new string[] { "list", "prints all records", "The 'list' command prints the records." },
             new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
+            new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
         private static FileCabinetService fileCabinetService = new FileCabinetService();
@@ -164,6 +166,16 @@ namespace FileCabinetApp
 
             fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth);
             Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
+        }
+
+        private static void List(string parameters)
+        {
+            var culture = new CultureInfo("en-US");
+            var records = fileCabinetService.GetRecords();
+            foreach (var record in records)
+            {
+                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", culture)}");
+            }
         }
     }
 }
