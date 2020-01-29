@@ -122,7 +122,7 @@ namespace FileCabinetApp
             {
                 Console.Write("First name: ");
                 firstName = Console.ReadLine();
-                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$"))
+                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$") || firstName.Length < 2 || firstName.Length > 60)
                 {
                     Console.WriteLine("Invalid first name. Try again!");
                 }
@@ -138,7 +138,7 @@ namespace FileCabinetApp
             {
                 Console.Write("Last name: ");
                 lastName = Console.ReadLine();
-                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$"))
+                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$") || lastName.Length < 2 || lastName.Length > 60)
                 {
                     Console.WriteLine("Invalid last name. Try again!");
                 }
@@ -155,7 +155,8 @@ namespace FileCabinetApp
             {
                 Console.Write("Date of birth (MM/dd/yyyy): ");
                 input = Console.ReadLine();
-                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth))
+                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth) &&
+                    dateOfBirth >= new DateTime(1950, 01, 01) && dateOfBirth < DateTime.Now)
                 {
                     break;
                 }

@@ -30,7 +30,7 @@ namespace FileCabinetApp
                 throw new ArgumentException("Last name's length is out of range.");
             }
 
-            if (dateOfBirth < new DateTime(1950, 01, 01) || dateOfBirth > DateTime.Now)
+            if (dateOfBirth <= new DateTime(1950, 01, 01) || dateOfBirth > DateTime.Now)
             {
                 throw new ArgumentException("Invalid date.");
             }
