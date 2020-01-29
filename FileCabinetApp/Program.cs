@@ -20,6 +20,7 @@ namespace FileCabinetApp
         {
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("create", Create),
+            new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("exit", Exit),
@@ -29,6 +30,7 @@ namespace FileCabinetApp
         {
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
+            new string[] { "edit", "edits a record by Id", "The 'edit' command edits a record by Id." },
             new string[] { "list", "prints all records", "The 'list' command prints the records." },
             new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
@@ -122,7 +124,7 @@ namespace FileCabinetApp
             {
                 Console.Write("First name: ");
                 firstName = Console.ReadLine();
-                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$"))
+                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$") || firstName.Length < 2 || firstName.Length > 60)
                 {
                     Console.WriteLine("Invalid first name. Try again!");
                 }
@@ -138,7 +140,7 @@ namespace FileCabinetApp
             {
                 Console.Write("Last name: ");
                 lastName = Console.ReadLine();
-                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$"))
+                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$") || lastName.Length < 2 || lastName.Length > 60)
                 {
                     Console.WriteLine("Invalid last name. Try again!");
                 }
@@ -155,7 +157,8 @@ namespace FileCabinetApp
             {
                 Console.Write("Date of birth (MM/dd/yyyy): ");
                 input = Console.ReadLine();
-                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth))
+                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth) &&
+                    dateOfBirth >= new DateTime(1950, 01, 01) && dateOfBirth < DateTime.Now)
                 {
                     break;
                 }
@@ -219,6 +222,124 @@ namespace FileCabinetApp
                 Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
                     $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
             }
+        }
+
+        private static void Edit(string parameters)
+        {
+            if (!int.TryParse(parameters, out int id))
+            {
+                Console.WriteLine("Invalid characters.");
+                return;
+            }
+
+            if (id < 1 || id > fileCabinetService.GetStat())
+            {
+                Console.WriteLine($"#{id} record is not found.");
+                return;
+            }
+
+            string firstName;
+            do
+            {
+                Console.Write("First name: ");
+                firstName = Console.ReadLine();
+                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$") || firstName.Length < 2 || firstName.Length > 60)
+                {
+                    Console.WriteLine("Invalid first name. Try again!");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (true);
+
+            string lastName;
+            do
+            {
+                Console.Write("Last name: ");
+                lastName = Console.ReadLine();
+                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$") || lastName.Length < 2 || lastName.Length > 60)
+                {
+                    Console.WriteLine("Invalid last name. Try again!");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (true);
+
+            DateTime dateOfBirth;
+            string input;
+            do
+            {
+                Console.Write("Date of birth (MM/dd/yyyy): ");
+                input = Console.ReadLine();
+                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth) &&
+                    dateOfBirth >= new DateTime(1950, 01, 01) && dateOfBirth < DateTime.Now)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date. Try again!");
+                }
+            }
+            while (true);
+
+            char sex;
+            do
+            {
+                Console.Write("Sex: ");
+                sex = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                if (sex == 'M' || sex == 'F')
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid character. Try again!");
+            }
+            while (true);
+
+            short numberOfReviews;
+            do
+            {
+                Console.Write("Number of reviews: ");
+                if (short.TryParse(Console.ReadLine(), out numberOfReviews) && numberOfReviews >= 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (true);
+
+            decimal salary;
+            do
+            {
+                Console.Write("Salary: ");
+                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, CultureInfo.DefaultThreadCurrentCulture, out salary) && salary >= 0)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (true);
+
+            try
+            {
+                fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
+
+            Console.WriteLine($"Record #{id} is updated.");
         }
     }
 }
