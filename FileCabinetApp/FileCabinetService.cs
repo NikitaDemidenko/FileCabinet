@@ -131,5 +131,19 @@ namespace FileCabinetApp
                 }
             }
         }
+
+        public FileCabinetRecord[] FindByFirstName(string firstName)
+        {
+            var searchResult = new List<FileCabinetRecord>();
+            foreach (var record in this.list)
+            {
+                if (record.FirstName.Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    searchResult.Add(record);
+                }
+            }
+
+            return searchResult.ToArray();
+        }
     }
 }

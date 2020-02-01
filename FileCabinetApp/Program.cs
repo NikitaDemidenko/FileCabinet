@@ -21,6 +21,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("help", PrintHelp),
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
+            new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("exit", Exit),
@@ -31,6 +32,7 @@ namespace FileCabinetApp
             new string[] { "help", "prints the help screen", "The 'help' command prints the help screen." },
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
             new string[] { "edit", "edits a record by Id", "The 'edit' command edits a record by Id." },
+            new string[] { "find", "finds records by selected property", "The 'find' command finds records by selected property" },
             new string[] { "list", "prints all records", "The 'list' command prints the records." },
             new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
@@ -340,6 +342,50 @@ namespace FileCabinetApp
             }
 
             Console.WriteLine($"Record #{id} is updated.");
+        }
+
+        private static void Find(string parameters)
+        {
+            if (string.IsNullOrWhiteSpace(parameters))
+            {
+                Console.WriteLine("Enter search property.");
+                return;
+            }
+
+            string[] splittedParameters = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            string propertyName;
+            string propertyValue;
+            try
+            {
+                propertyName = splittedParameters[0];
+                propertyValue = splittedParameters[1].Trim('"');
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Invalid number of parameters.");
+                return;
+            }
+
+            if (propertyName.Equals("firstname", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var searchResult = fileCabinetService.FindByFirstName(propertyValue);
+                if (searchResult.Length != 0)
+                {
+                    foreach (var record in searchResult)
+                    {
+                        Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
+                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Records with first name \"{propertyValue}\" are not found.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid property.");
+            }
         }
     }
 }
