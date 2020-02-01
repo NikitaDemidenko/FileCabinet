@@ -398,6 +398,29 @@ namespace FileCabinetApp
                     Console.WriteLine($"Records with last name \"{propertyValue}\" are not found.");
                 }
             }
+            else if (propertyName.Equals("dateofbirth", StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (DateTime.TryParse(propertyValue, out DateTime dateOfBirth))
+                {
+                    var searchResult = fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                    if (searchResult.Length != 0)
+                    {
+                        foreach (var record in searchResult)
+                        {
+                            Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
+                        $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Records with date of birth \"{dateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}\" are not found.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date.");
+                }
+            }
             else
             {
                 Console.WriteLine("Invalid property.");
