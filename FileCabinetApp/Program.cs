@@ -382,6 +382,22 @@ namespace FileCabinetApp
                     Console.WriteLine($"Records with first name \"{propertyValue}\" are not found.");
                 }
             }
+            else if (propertyName.Equals("lastname", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var searchResult = fileCabinetService.FindByLastName(propertyValue);
+                if (searchResult.Length != 0)
+                {
+                    foreach (var record in searchResult)
+                    {
+                        Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
+                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"Records with last name \"{propertyValue}\" are not found.");
+                }
+            }
             else
             {
                 Console.WriteLine("Invalid property.");
