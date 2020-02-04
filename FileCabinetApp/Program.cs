@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
 {
@@ -11,8 +12,6 @@ namespace FileCabinetApp
         private const int CommandHelpIndex = 0;
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
-
-        private static readonly CultureInfo Culture = new CultureInfo("en-US");
 
         private static bool isRunning = true;
 
@@ -121,108 +120,23 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            string firstName;
-            do
-            {
-                Console.Write("First name: ");
-                firstName = Console.ReadLine();
-                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$") || firstName.Length < 2 || firstName.Length > 60)
-                {
-                    Console.WriteLine("Invalid first name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (true);
-
-            string lastName;
-            do
-            {
-                Console.Write("Last name: ");
-                lastName = Console.ReadLine();
-                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$") || lastName.Length < 2 || lastName.Length > 60)
-                {
-                    Console.WriteLine("Invalid last name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (true);
-
-            DateTime dateOfBirth;
-            string input;
-            do
-            {
-                Console.Write("Date of birth (MM/dd/yyyy): ");
-                input = Console.ReadLine();
-                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth) &&
-                    dateOfBirth >= new DateTime(1950, 01, 01) && dateOfBirth < DateTime.Now)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid date. Try again!");
-                }
-            }
-            while (true);
-
-            char sex;
-            do
-            {
-                Console.Write("Sex: ");
-                sex = Console.ReadKey().KeyChar;
-                Console.WriteLine();
-                if (sex == 'M' || sex == 'F')
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid character. Try again!");
-            }
-            while (true);
-
-            short numberOfReviews;
-            do
-            {
-                Console.Write("Number of reviews: ");
-                if (short.TryParse(Console.ReadLine(), out numberOfReviews) && numberOfReviews >= 0)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid characters!");
-            }
-            while (true);
-
-            decimal salary;
-            do
-            {
-                Console.Write("Salary: ");
-                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, CultureInfo.DefaultThreadCurrentCulture, out salary) && salary >= 0)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid characters!");
-            }
-            while (true);
-
+            UserInput(out string firstName, out string lastName, out DateTime dateOfBirth, out char sex, out short numberOfReviews, out decimal salary);
             fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
             Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
         }
 
         private static void List(string parameters)
         {
+            if (fileCabinetService.GetStat() == 0)
+            {
+                Console.WriteLine("There are no records.");
+                return;
+            }
+
             var records = fileCabinetService.GetRecords();
             foreach (var record in records)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
-                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                Console.WriteLine(record);
             }
         }
 
@@ -234,103 +148,13 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (id < 1 || id > fileCabinetService.GetStat())
+            if (id < MinValueOfId || id > fileCabinetService.GetStat())
             {
                 Console.WriteLine($"#{id} record is not found.");
                 return;
             }
 
-            string firstName;
-            do
-            {
-                Console.Write("First name: ");
-                firstName = Console.ReadLine();
-                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$") || firstName.Length < 2 || firstName.Length > 60)
-                {
-                    Console.WriteLine("Invalid first name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (true);
-
-            string lastName;
-            do
-            {
-                Console.Write("Last name: ");
-                lastName = Console.ReadLine();
-                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$") || lastName.Length < 2 || lastName.Length > 60)
-                {
-                    Console.WriteLine("Invalid last name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (true);
-
-            DateTime dateOfBirth;
-            string input;
-            do
-            {
-                Console.Write("Date of birth (MM/dd/yyyy): ");
-                input = Console.ReadLine();
-                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth) &&
-                    dateOfBirth >= new DateTime(1950, 01, 01) && dateOfBirth < DateTime.Now)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid date. Try again!");
-                }
-            }
-            while (true);
-
-            char sex;
-            do
-            {
-                Console.Write("Sex: ");
-                sex = Console.ReadKey().KeyChar;
-                Console.WriteLine();
-                if (sex == 'M' || sex == 'F')
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid character. Try again!");
-            }
-            while (true);
-
-            short numberOfReviews;
-            do
-            {
-                Console.Write("Number of reviews: ");
-                if (short.TryParse(Console.ReadLine(), out numberOfReviews) && numberOfReviews >= 0)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid characters!");
-            }
-            while (true);
-
-            decimal salary;
-            do
-            {
-                Console.Write("Salary: ");
-                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, CultureInfo.DefaultThreadCurrentCulture, out salary) && salary >= 0)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid characters!");
-            }
-            while (true);
-
+            UserInput(out string firstName, out string lastName, out DateTime dateOfBirth, out char sex, out short numberOfReviews, out decimal salary);
             try
             {
                 fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
@@ -352,13 +176,13 @@ namespace FileCabinetApp
                 return;
             }
 
-            string[] splittedParameters = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            string[] splittedParameters = parameters.Split(SpaceSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
             string propertyName;
             string propertyValue;
             try
             {
-                propertyName = splittedParameters[0];
-                propertyValue = splittedParameters[1].Trim('"');
+                propertyName = splittedParameters[FirstParameterIndex];
+                propertyValue = splittedParameters[SecondParameterIndex].Trim(QuoteSymbol);
             }
             catch (IndexOutOfRangeException)
             {
@@ -366,15 +190,14 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (propertyName.Equals("firstname", StringComparison.InvariantCultureIgnoreCase))
+            if (propertyName.Equals(FirstNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var searchResult = fileCabinetService.FindByFirstName(propertyValue);
                 if (searchResult.Length != 0)
                 {
                     foreach (var record in searchResult)
                     {
-                        Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
-                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                        Console.WriteLine(record);
                     }
                 }
                 else
@@ -382,15 +205,14 @@ namespace FileCabinetApp
                     Console.WriteLine($"Records with first name \"{propertyValue}\" are not found.");
                 }
             }
-            else if (propertyName.Equals("lastname", StringComparison.InvariantCultureIgnoreCase))
+            else if (propertyName.Equals(LastNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var searchResult = fileCabinetService.FindByLastName(propertyValue);
                 if (searchResult.Length != 0)
                 {
                     foreach (var record in searchResult)
                     {
-                        Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
-                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                        Console.WriteLine(record);
                     }
                 }
                 else
@@ -398,7 +220,7 @@ namespace FileCabinetApp
                     Console.WriteLine($"Records with last name \"{propertyValue}\" are not found.");
                 }
             }
-            else if (propertyName.Equals("dateofbirth", StringComparison.InvariantCultureIgnoreCase))
+            else if (propertyName.Equals(DateOfBirthPropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (DateTime.TryParse(propertyValue, out DateTime dateOfBirth))
                 {
@@ -407,13 +229,12 @@ namespace FileCabinetApp
                     {
                         foreach (var record in searchResult)
                         {
-                            Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
-                        $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                            Console.WriteLine(record);
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"Records with date of birth \"{dateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}\" are not found.");
+                        Console.WriteLine($"Records with date of birth \"{dateOfBirth.ToString(OutputDateFormat, CultureInfo.InvariantCulture)}\" are not found.");
                     }
                 }
                 else
@@ -425,6 +246,93 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Invalid property.");
             }
+        }
+
+        private static void UserInput(out string firstName, out string lastName, out DateTime dateOfBirth, out char sex, out short numberOfReviews, out decimal salary)
+        {
+            do
+            {
+                Console.Write("First name: ");
+                firstName = Console.ReadLine();
+                if (!Regex.IsMatch(firstName, AllowedCharacters) || firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols)
+                {
+                    Console.WriteLine("Invalid first name. Try again!");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (IsInvalidInput);
+
+            do
+            {
+                Console.Write("Last name: ");
+                lastName = Console.ReadLine();
+                if (!Regex.IsMatch(lastName, AllowedCharacters) || lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols)
+                {
+                    Console.WriteLine("Invalid last name. Try again!");
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while (IsInvalidInput);
+
+            do
+            {
+                Console.Write("Date of birth (MM/dd/yyyy): ");
+                string input = Console.ReadLine();
+                if (DateTime.TryParseExact(input, InputDateFormat, null, DateTimeStyles.None, out dateOfBirth) &&
+                    dateOfBirth >= MinDateOfBirth && dateOfBirth < DateTime.Now)
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date. Try again!");
+                }
+            }
+            while (IsInvalidInput);
+
+            do
+            {
+                Console.Write("Sex: ");
+                sex = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                if (sex == MaleSex || sex == FemaleSex)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid character. Try again!");
+            }
+            while (IsInvalidInput);
+
+            do
+            {
+                Console.Write("Number of reviews: ");
+                if (short.TryParse(Console.ReadLine(), out numberOfReviews) && numberOfReviews >= MinNumberOfReviews)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (IsInvalidInput);
+
+            do
+            {
+                Console.Write("Salary: ");
+                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, Culture, out salary) && salary >= MinValueOfSalary)
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (IsInvalidInput);
         }
     }
 }

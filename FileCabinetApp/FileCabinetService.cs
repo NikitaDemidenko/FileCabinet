@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
 {
@@ -23,32 +23,32 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(lastName));
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60)
+            if (firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols)
             {
                 throw new ArgumentException("First name's length is out of range.");
             }
 
-            if (lastName.Length < 2 || lastName.Length > 60)
+            if (lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols)
             {
                 throw new ArgumentException("Last name's length is out of range.");
             }
 
-            if (dateOfBirth <= new DateTime(1950, 01, 01) || dateOfBirth > DateTime.Now)
+            if (dateOfBirth <= MinDateOfBirth || dateOfBirth > DateTime.Now)
             {
                 throw new ArgumentException("Invalid date.");
             }
 
-            if (sex != 'M' && sex != 'F')
+            if (sex != MaleSex && sex != FemaleSex)
             {
                 throw new ArgumentException("There're only two genders.");
             }
 
-            if (salary < 0)
+            if (salary < MinValueOfSalary)
             {
                 throw new ArgumentException("Salary cannot be less than zero.");
             }
 
-            if (numberOfReviews < 0)
+            if (numberOfReviews < MinNumberOfReviews)
             {
                 throw new ArgumentException("Number of reviews cannot be less than zero.");
             }
@@ -95,7 +95,7 @@ namespace FileCabinetApp
 
         public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, char sex, short numberOfReviews, decimal salary)
         {
-            if (id < 1 || id > this.list.Count)
+            if (id < MinValueOfId || id > this.list.Count)
             {
                 throw new ArgumentException($"There is no #{id} record.");
             }
@@ -110,32 +110,32 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(lastName));
             }
 
-            if (firstName.Length < 2 || firstName.Length > 60)
+            if (firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols)
             {
                 throw new ArgumentException("First name's length is out of range.");
             }
 
-            if (lastName.Length < 2 || lastName.Length > 60)
+            if (lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols)
             {
                 throw new ArgumentException("Last name's length is out of range.");
             }
 
-            if (dateOfBirth <= new DateTime(1950, 01, 01) || dateOfBirth > DateTime.Now)
+            if (dateOfBirth <= MinDateOfBirth || dateOfBirth > DateTime.Now)
             {
                 throw new ArgumentException("Invalid date.");
             }
 
-            if (sex != 'M' && sex != 'F')
+            if (sex != MaleSex && sex != FemaleSex)
             {
                 throw new ArgumentException("There're only two genders.");
             }
 
-            if (salary < 0)
+            if (salary < MinValueOfSalary)
             {
                 throw new ArgumentException("Salary cannot be less than zero.");
             }
 
-            if (numberOfReviews < 0)
+            if (numberOfReviews < MinNumberOfReviews)
             {
                 throw new ArgumentException("Number of reviews cannot be less than zero.");
             }
