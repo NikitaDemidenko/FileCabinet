@@ -4,5 +4,166 @@
         <name>FileCabinetApp</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetApp.Constants">
+            <summary>Provides constatnts for work with FileCabinetApp.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.IsInvalidInput">
+            <summary>Indicates whether the user input is invalid.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MaleSex">
+            <summary>Male sex.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.FemaleSex">
+            <summary>Female sex.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MinValueOfSalary">
+            <summary>Minimum value of salary.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MinNumberOfSymbols">
+            <summary>Minimum number of symbols.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MaxNumberOfSymbols">
+            <summary>Maximum number of symbols.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MinValueOfId">
+            <summary>Minimum value of identifier.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.NumberOfParameters">
+            <summary>Number of parameters.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.FirstParameterIndex">
+            <summary>Index of the first parameter.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.SecondParameterIndex">
+            <summary>Index of the second parameter.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MinNumberOfReviews">
+            <summary>Minimum number of reviews.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.InputDateFormat">
+            <summary>Input date format.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.OutputDateFormat">
+            <summary>Output date format.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.AllowedCharacters">
+            <summary>Allowed characters for user input.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.FirstNamePropertyName">
+            <summary>First name property name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.LastNamePropertyName">
+            <summary>Last name property name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.DateOfBirthPropertyName">
+            <summary>Date of birth property name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.CurrencyFormat">
+            <summary>Currency format.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.SpaceSymbol">
+            <summary>Space symbol.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.QuoteSymbol">
+            <summary>Quote symbol.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MinDateOfBirth">
+            <summary>Minimum date of birth.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.Culture">
+            <summary>Culture.</summary>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetRecord">
+            <summary>Provides properties for records.</summary>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Id">
+            <summary>Gets or sets the identifier.</summary>
+            <value>Identifier of record.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
+            <summary>Gets or sets the first name.</summary>
+            <value>First name.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
+            <summary>Gets or sets the last name.</summary>
+            <value>Last name.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
+            <summary>Gets or sets the date of birth.</summary>
+            <value>Date of birth.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Sex">
+            <summary>Gets or sets the sex.</summary>
+            <value>Sex.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.NumberOfReviews">
+            <summary>Gets or sets the number of reviews.</summary>
+            <value>Number of reviews.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Salary">
+            <summary>Gets or sets the salary.</summary>
+            <value>Salary.</value>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecord.ToString">
+            <summary>Converts file cabinet record to its string representation.</summary>
+            <returns>A <see cref="T:System.String"/> that represents <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetService">
+            <summary>Provides methods for interaction with records in the file cabinet.</summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
+            <param name="firstName">First name.</param>
+            <param name="lastName">Last name.</param>
+            <param name="dateOfBirth">Date of birth.</param>
+            <param name="sex">Sex.</param>
+            <param name="numberOfReviews">Number of reviews.</param>
+            <param name="salary">Salary.</param>
+            <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>firstName</em> or <em>lastName</em> is <em>null</em>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when one of the parameters is invalid.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
+            <summary>Gets the records.</summary>
+            <returns>Returns an array of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
+            <summary>Gets the stat of records in the file cabinet.</summary>
+            <returns>Returns number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>Edits record by identifier.</summary>
+            <param name="id">Identifier.</param>
+            <param name="firstName">First name.</param>
+            <param name="lastName">Last name.</param>
+            <param name="dateOfBirth">Date of birth.</param>
+            <param name="sex">Sex.</param>
+            <param name="numberOfReviews">Number of reviews.</param>
+            <param name="salary">Salary.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>firstName</em> or <em>lastName</em> is <em>null</em>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when one of the parameters is invalid.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
+            <summary>Finds records by first name.</summary>
+            <param name="firstName">First name to find.</param>
+            <returns>Returns an array of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
+            <summary>Finds records by last name.</summary>
+            <param name="lastName">Last name to find.</param>
+            <returns>Returns an array of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetService.FindByDateOfBirth(System.DateTime)">
+            <summary>Finds records by date of birth.</summary>
+            <param name="dateOfBirth">Date of birth to find.</param>
+            <returns>Returns an array of found records.</returns>
+        </member>
+        <member name="T:FileCabinetApp.Program">
+            <summary>Main class of the project.</summary>
+        </member>
+        <member name="M:FileCabinetApp.Program.Main(System.String[])">
+            <summary>Defines the entry point of the application.</summary>
+            <param name="args">The arguments.</param>
+        </member>
     </members>
 </doc>
