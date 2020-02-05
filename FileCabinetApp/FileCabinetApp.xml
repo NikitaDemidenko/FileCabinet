@@ -19,6 +19,9 @@
         <member name="F:FileCabinetApp.Constants.MinValueOfSalary">
             <summary>Minimum value of salary.</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.MinValueOfSalaryCustom">
+            <summary>Minimum value of salary (custom).</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.MinNumberOfSymbols">
             <summary>Minimum number of symbols.</summary>
         </member>
@@ -39,6 +42,9 @@
         </member>
         <member name="F:FileCabinetApp.Constants.MinNumberOfReviews">
             <summary>Minimum number of reviews.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MinNumberOfReviewsCustom">
+            <summary>Minimum number of reviews (custom).</summary>
         </member>
         <member name="F:FileCabinetApp.Constants.InputDateFormat">
             <summary>Input date format.</summary>
@@ -72,6 +78,26 @@
         </member>
         <member name="F:FileCabinetApp.Constants.Culture">
             <summary>Culture.</summary>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>Provides methods for interaction with records in the file cabinet using custom validation rules.</summary>
+            <seealso cref="T:FileCabinetApp.FileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.UserInputData)">
+            <summary>Validates user input parameters using custom validation rules.</summary>
+            <param name="userInputData">User input.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>Provides methods for interaction with records in the file cabinet using default validation rules.</summary>
+            <seealso cref="T:FileCabinetApp.FileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.UserInputData)">
+            <summary>Validates user input parameters using default validation rules.</summary>
+            <param name="userInputData">User input.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>Provides properties for records.</summary>
@@ -111,9 +137,9 @@
         <member name="T:FileCabinetApp.FileCabinetService">
             <summary>Provides methods for interaction with records in the file cabinet.</summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.UserInput)">
+        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.UserInputData)">
             <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
-            <param name="userInput">User input data.</param>
+            <param name="userInputData">User input data.</param>
             <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
         </member>
@@ -125,7 +151,7 @@
             <summary>Gets the stat of records in the file cabinet.</summary>
             <returns>Returns number of records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.UserInput)">
+        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.UserInputData)">
             <summary>Edits record by identifier.</summary>
             <param name="id">Identifier.</param>
             <param name="userInput">User input data.</param>
@@ -147,6 +173,10 @@
             <param name="dateOfBirth">Date of birth to find.</param>
             <returns>Returns an array of found records.</returns>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.UserInputData)">
+            <summary>Validates user input parameters.</summary>
+            <param name="userInput">User input.</param>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>Main class of the project.</summary>
         </member>
@@ -154,33 +184,39 @@
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
         </member>
-        <member name="T:FileCabinetApp.UserInput">
+        <member name="T:FileCabinetApp.UserInputData">
             <summary>Provides methods for user data input.</summary>
         </member>
-        <member name="M:FileCabinetApp.UserInput.#ctor">
-            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.UserInput"/> class.</summary>
+        <member name="M:FileCabinetApp.UserInputData.#ctor(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.UserInputData"/> class.</summary>
+            <param name="firstName">First name user input.</param>
+            <param name="lastName">Last name user input.</param>
+            <param name="dateOfBirth">Date of birth user input.</param>
+            <param name="sex">Sex user input.</param>
+            <param name="numberOfReviews">Number of reviews user input.</param>
+            <param name="salary">Salary user input.</param>
         </member>
-        <member name="P:FileCabinetApp.UserInput.FirstName">
+        <member name="P:FileCabinetApp.UserInputData.FirstName">
             <summary>Gets the first name.</summary>
             <value>First name.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInput.LastName">
+        <member name="P:FileCabinetApp.UserInputData.LastName">
             <summary>Gets the last name.</summary>
             <value>Last name.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInput.DateOfBirth">
+        <member name="P:FileCabinetApp.UserInputData.DateOfBirth">
             <summary>Gets the date of birth.</summary>
             <value>Date of birth.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInput.Sex">
+        <member name="P:FileCabinetApp.UserInputData.Sex">
             <summary>Gets the sex.</summary>
             <value>Sex.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInput.NumberOfReviews">
+        <member name="P:FileCabinetApp.UserInputData.NumberOfReviews">
             <summary>Gets the number of reviews.</summary>
             <value>Number of reviews.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInput.Salary">
+        <member name="P:FileCabinetApp.UserInputData.Salary">
             <summary>Gets the salary.</summary>
             <value>Salary.</value>
         </member>

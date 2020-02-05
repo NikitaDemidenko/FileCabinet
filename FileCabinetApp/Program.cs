@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Text.RegularExpressions;
 using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
@@ -38,7 +37,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetService fileCabinetService = new FileCabinetService();
+        private static FileCabinetService fileCabinetService = new FileCabinetCustomService();
 
         /// <summary>Defines the entry point of the application.</summary>
         /// <param name="args">The arguments.</param>
@@ -123,9 +122,19 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            var userInput = new UserInput();
-            fileCabinetService.CreateRecord(userInput);
-            Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
+            GetUserInput(out string firstName, out string lastName, out DateTime dateOfBirth, out char sex, out short numberOfReviews, out decimal salary);
+            var userInput = new UserInputData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            try
+            {
+                fileCabinetService.CreateRecord(userInput);
+                Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
+            }
+            catch (ArgumentException ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("Record has not been created.");
+                return;
+            }
         }
 
         private static void List(string parameters)
@@ -157,18 +166,19 @@ namespace FileCabinetApp
                 return;
             }
 
-            var userInput = new UserInput();
+            GetUserInput(out string firstName, out string lastName, out DateTime dateOfBirth, out char sex, out short numberOfReviews, out decimal salary);
+            var userInput = new UserInputData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
             try
             {
                 fileCabinetService.EditRecord(id, userInput);
+                Console.WriteLine($"Record #{id} is updated.");
             }
             catch (ArgumentException ex)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine("Record has not been updated.");
                 return;
             }
-
-            Console.WriteLine($"Record #{id} is updated.");
         }
 
         private static void Find(string parameters)
@@ -249,6 +259,58 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Invalid property.");
             }
+        }
+
+        private static void GetUserInput(
+            out string firstName,
+            out string lastName,
+            out DateTime dateOfBirth,
+            out char sex,
+            out short numberOfReviews,
+            out decimal salary)
+        {
+            Console.Write("First name: ");
+            firstName = Console.ReadLine();
+            Console.Write("Last name: ");
+            lastName = Console.ReadLine();
+            do
+            {
+                Console.Write("Date of birth (MM/dd/yyyy): ");
+                if (DateTime.TryParseExact(Console.ReadLine(), InputDateFormat, null, DateTimeStyles.None, out dateOfBirth))
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid date. Try again!");
+            }
+            while (IsInvalidInput);
+
+            Console.Write("Sex: ");
+            sex = Console.ReadKey().KeyChar;
+            Console.WriteLine();
+            do
+            {
+                Console.Write("Number of reviews: ");
+                if (short.TryParse(Console.ReadLine(), out numberOfReviews))
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (IsInvalidInput);
+
+            do
+            {
+                Console.Write("Salary: ");
+                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, Culture, out salary))
+                {
+                    break;
+                }
+
+                Console.WriteLine("Invalid characters!");
+            }
+            while (IsInvalidInput);
         }
     }
 }

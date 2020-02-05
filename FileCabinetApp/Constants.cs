@@ -18,6 +18,9 @@ namespace FileCabinetApp
         /// <summary>Minimum value of salary.</summary>
         public const decimal MinValueOfSalary = 0M;
 
+        /// <summary>Minimum value of salary (custom).</summary>
+        public const decimal MinValueOfSalaryCustom = 200M;
+
         /// <summary>Minimum number of symbols.</summary>
         public const int MinNumberOfSymbols = 2;
 
@@ -38,6 +41,9 @@ namespace FileCabinetApp
 
         /// <summary>Minimum number of reviews.</summary>
         public const short MinNumberOfReviews = 0;
+
+        /// <summary>Minimum number of reviews (custom).</summary>
+        public const short MinNumberOfReviewsCustom = 50;
 
         /// <summary>Input date format.</summary>
         public const string InputDateFormat = "MM/dd/yyyy";
