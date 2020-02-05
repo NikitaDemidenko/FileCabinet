@@ -123,8 +123,8 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            UserInput(out string firstName, out string lastName, out DateTime dateOfBirth, out char sex, out short numberOfReviews, out decimal salary);
-            fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            var userInput = new UserInput();
+            fileCabinetService.CreateRecord(userInput);
             Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
         }
 
@@ -157,10 +157,10 @@ namespace FileCabinetApp
                 return;
             }
 
-            UserInput(out string firstName, out string lastName, out DateTime dateOfBirth, out char sex, out short numberOfReviews, out decimal salary);
+            var userInput = new UserInput();
             try
             {
-                fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+                fileCabinetService.EditRecord(id, userInput);
             }
             catch (ArgumentException ex)
             {
@@ -249,93 +249,6 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Invalid property.");
             }
-        }
-
-        private static void UserInput(out string firstName, out string lastName, out DateTime dateOfBirth, out char sex, out short numberOfReviews, out decimal salary)
-        {
-            do
-            {
-                Console.Write("First name: ");
-                firstName = Console.ReadLine();
-                if (!Regex.IsMatch(firstName, AllowedCharacters) || firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols)
-                {
-                    Console.WriteLine("Invalid first name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (IsInvalidInput);
-
-            do
-            {
-                Console.Write("Last name: ");
-                lastName = Console.ReadLine();
-                if (!Regex.IsMatch(lastName, AllowedCharacters) || lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols)
-                {
-                    Console.WriteLine("Invalid last name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (IsInvalidInput);
-
-            do
-            {
-                Console.Write("Date of birth (MM/dd/yyyy): ");
-                string input = Console.ReadLine();
-                if (DateTime.TryParseExact(input, InputDateFormat, null, DateTimeStyles.None, out dateOfBirth) &&
-                    dateOfBirth >= MinDateOfBirth && dateOfBirth < DateTime.Now)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid date. Try again!");
-                }
-            }
-            while (IsInvalidInput);
-
-            do
-            {
-                Console.Write("Sex: ");
-                sex = Console.ReadKey().KeyChar;
-                Console.WriteLine();
-                if (sex == MaleSex || sex == FemaleSex)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid character. Try again!");
-            }
-            while (IsInvalidInput);
-
-            do
-            {
-                Console.Write("Number of reviews: ");
-                if (short.TryParse(Console.ReadLine(), out numberOfReviews) && numberOfReviews >= MinNumberOfReviews)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid characters!");
-            }
-            while (IsInvalidInput);
-
-            do
-            {
-                Console.Write("Salary: ");
-                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, Culture, out salary) && salary >= MinValueOfSalary)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid characters!");
-            }
-            while (IsInvalidInput);
         }
     }
 }

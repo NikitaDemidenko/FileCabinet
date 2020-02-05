@@ -13,77 +13,36 @@ namespace FileCabinetApp
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
 
         /// <summary>Creates new <see cref="FileCabinetRecord"/> instance.</summary>
-        /// <param name="firstName">First name.</param>
-        /// <param name="lastName">Last name.</param>
-        /// <param name="dateOfBirth">Date of birth.</param>
-        /// <param name="sex">Sex.</param>
-        /// <param name="numberOfReviews">Number of reviews.</param>
-        /// <param name="salary">Salary.</param>
+        /// <param name="userInput">User input data.</param>
         /// <returns>Returns new <see cref="FileCabinetRecord"/> instance.</returns>
-        /// <exception cref="ArgumentNullException">Thrown when <em>firstName</em> or <em>lastName</em> is <em>null</em>.</exception>
-        /// <exception cref="ArgumentException">Thrown when one of the parameters is invalid.</exception>
-        public int CreateRecord(string firstName, string lastName, DateTime dateOfBirth, char sex, short numberOfReviews, decimal salary)
+        /// <exception cref="ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
+        public int CreateRecord(UserInput userInput)
         {
-            if (firstName == null)
+            if (userInput == null)
             {
-                throw new ArgumentNullException(nameof(firstName));
-            }
-
-            if (lastName == null)
-            {
-                throw new ArgumentNullException(nameof(lastName));
-            }
-
-            if (firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols)
-            {
-                throw new ArgumentException("First name's length is out of range.");
-            }
-
-            if (lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols)
-            {
-                throw new ArgumentException("Last name's length is out of range.");
-            }
-
-            if (dateOfBirth <= MinDateOfBirth || dateOfBirth > DateTime.Now)
-            {
-                throw new ArgumentException("Invalid date.");
-            }
-
-            if (sex != MaleSex && sex != FemaleSex)
-            {
-                throw new ArgumentException("There're only two genders.");
-            }
-
-            if (salary < MinValueOfSalary)
-            {
-                throw new ArgumentException("Salary cannot be less than zero.");
-            }
-
-            if (numberOfReviews < MinNumberOfReviews)
-            {
-                throw new ArgumentException("Number of reviews cannot be less than zero.");
+                throw new ArgumentNullException(nameof(userInput));
             }
 
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
-                FirstName = firstName,
-                LastName = lastName,
-                DateOfBirth = dateOfBirth,
-                Sex = sex,
-                NumberOfReviews = numberOfReviews,
-                Salary = salary,
+                FirstName = userInput.FirstName,
+                LastName = userInput.LastName,
+                DateOfBirth = userInput.DateOfBirth,
+                Sex = userInput.Sex,
+                NumberOfReviews = userInput.NumberOfReviews,
+                Salary = userInput.Salary,
             };
             this.list.Add(record);
 
-            string firstNameKey = firstName.ToUpperInvariant();
+            string firstNameKey = userInput.FirstName.ToUpperInvariant();
             if (!this.firstNameDictionary.ContainsKey(firstNameKey))
             {
                 this.firstNameDictionary.Add(firstNameKey, new List<FileCabinetRecord>());
             }
 
             this.firstNameDictionary[firstNameKey].Add(record);
-            string lastNameKey = lastName.ToUpperInvariant();
+            string lastNameKey = userInput.LastName.ToUpperInvariant();
             if (!this.lastNameDictionary.ContainsKey(lastNameKey))
             {
                 this.lastNameDictionary.Add(lastNameKey, new List<FileCabinetRecord>());
@@ -91,12 +50,12 @@ namespace FileCabinetApp
 
             this.lastNameDictionary[lastNameKey].Add(record);
 
-            if (!this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+            if (!this.dateOfBirthDictionary.ContainsKey(userInput.DateOfBirth))
             {
-                this.dateOfBirthDictionary.Add(dateOfBirth, new List<FileCabinetRecord>());
+                this.dateOfBirthDictionary.Add(userInput.DateOfBirth, new List<FileCabinetRecord>());
             }
 
-            this.dateOfBirthDictionary[dateOfBirth].Add(record);
+            this.dateOfBirthDictionary[userInput.DateOfBirth].Add(record);
             return record.Id;
         }
 
@@ -110,59 +69,19 @@ namespace FileCabinetApp
 
         /// <summary>Edits record by identifier.</summary>
         /// <param name="id">Identifier.</param>
-        /// <param name="firstName">First name.</param>
-        /// <param name="lastName">Last name.</param>
-        /// <param name="dateOfBirth">Date of birth.</param>
-        /// <param name="sex">Sex.</param>
-        /// <param name="numberOfReviews">Number of reviews.</param>
-        /// <param name="salary">Salary.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <em>firstName</em> or <em>lastName</em> is <em>null</em>.</exception>
-        /// <exception cref="ArgumentException">Thrown when one of the parameters is invalid.</exception>
-        public void EditRecord(int id, string firstName, string lastName, DateTime dateOfBirth, char sex, short numberOfReviews, decimal salary)
+        /// <param name="userInput">User input data.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when identifier is invalid.</exception>
+        public void EditRecord(int id, UserInput userInput)
         {
             if (id < MinValueOfId || id > this.list.Count)
             {
                 throw new ArgumentException($"There is no #{id} record.");
             }
 
-            if (firstName == null)
+            if (userInput == null)
             {
-                throw new ArgumentNullException(nameof(firstName));
-            }
-
-            if (lastName == null)
-            {
-                throw new ArgumentNullException(nameof(lastName));
-            }
-
-            if (firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols)
-            {
-                throw new ArgumentException("First name's length is out of range.");
-            }
-
-            if (lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols)
-            {
-                throw new ArgumentException("Last name's length is out of range.");
-            }
-
-            if (dateOfBirth <= MinDateOfBirth || dateOfBirth > DateTime.Now)
-            {
-                throw new ArgumentException("Invalid date.");
-            }
-
-            if (sex != MaleSex && sex != FemaleSex)
-            {
-                throw new ArgumentException("There're only two genders.");
-            }
-
-            if (salary < MinValueOfSalary)
-            {
-                throw new ArgumentException("Salary cannot be less than zero.");
-            }
-
-            if (numberOfReviews < MinNumberOfReviews)
-            {
-                throw new ArgumentException("Number of reviews cannot be less than zero.");
+                throw new ArgumentNullException(nameof(userInput));
             }
 
             foreach (var record in this.list)
@@ -172,21 +91,21 @@ namespace FileCabinetApp
                     this.firstNameDictionary[record.FirstName.ToUpperInvariant()].Remove(record);
                     this.lastNameDictionary[record.LastName.ToUpperInvariant()].Remove(record);
                     this.dateOfBirthDictionary[record.DateOfBirth].Remove(record);
-                    record.FirstName = firstName;
-                    record.LastName = lastName;
-                    record.DateOfBirth = dateOfBirth;
-                    record.Sex = sex;
-                    record.NumberOfReviews = numberOfReviews;
-                    record.Salary = salary;
+                    record.FirstName = userInput.FirstName;
+                    record.LastName = userInput.LastName;
+                    record.DateOfBirth = userInput.DateOfBirth;
+                    record.Sex = userInput.Sex;
+                    record.NumberOfReviews = userInput.NumberOfReviews;
+                    record.Salary = userInput.Salary;
 
-                    string firstNameKey = firstName.ToUpperInvariant();
+                    string firstNameKey = userInput.FirstName.ToUpperInvariant();
                     if (!this.firstNameDictionary.ContainsKey(firstNameKey))
                     {
                         this.firstNameDictionary.Add(firstNameKey, new List<FileCabinetRecord>());
                     }
 
                     this.firstNameDictionary[firstNameKey].Add(record);
-                    string lastNameKey = lastName.ToUpperInvariant();
+                    string lastNameKey = userInput.LastName.ToUpperInvariant();
                     if (!this.lastNameDictionary.ContainsKey(lastNameKey))
                     {
                         this.lastNameDictionary.Add(lastNameKey, new List<FileCabinetRecord>());
@@ -194,12 +113,12 @@ namespace FileCabinetApp
 
                     this.lastNameDictionary[lastNameKey].Add(record);
 
-                    if (!this.dateOfBirthDictionary.ContainsKey(dateOfBirth))
+                    if (!this.dateOfBirthDictionary.ContainsKey(userInput.DateOfBirth))
                     {
-                        this.dateOfBirthDictionary.Add(dateOfBirth, new List<FileCabinetRecord>());
+                        this.dateOfBirthDictionary.Add(userInput.DateOfBirth, new List<FileCabinetRecord>());
                     }
 
-                    this.dateOfBirthDictionary[dateOfBirth].Add(record);
+                    this.dateOfBirthDictionary[userInput.DateOfBirth].Add(record);
                     return;
                 }
             }
