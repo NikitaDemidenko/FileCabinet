@@ -64,6 +64,18 @@
         <member name="F:FileCabinetApp.Constants.DateOfBirthPropertyName">
             <summary>Date of birth property name.</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.ValidationRulesFullPropertyName">
+            <summary>Validation rules full property name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.ValidationRulesShortcutPropertyName">
+            <summary>Validation rules shortcut property name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.DefaultValidationRulesName">
+            <summary>Default validation rules name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.CustomValidationRulesName">
+            <summary>Custom validation rules name.</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.CurrencyFormat">
             <summary>Currency format.</summary>
         </member>
@@ -72,6 +84,9 @@
         </member>
         <member name="F:FileCabinetApp.Constants.QuoteSymbol">
             <summary>Quote symbol.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.EqualSignSymbol">
+            <summary>An equal sign symbol.</summary>
         </member>
         <member name="F:FileCabinetApp.Constants.MinDateOfBirth">
             <summary>Minimum date of birth.</summary>
@@ -175,7 +190,7 @@
         </member>
         <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.UserInputData)">
             <summary>Validates user input parameters.</summary>
-            <param name="userInput">User input.</param>
+            <param name="userInputData">User input.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>Main class of the project.</summary>

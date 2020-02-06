@@ -63,6 +63,18 @@ namespace FileCabinetApp
         /// <summary>Date of birth property name.</summary>
         public const string DateOfBirthPropertyName = "DateOfBirth";
 
+        /// <summary>Validation rules full property name.</summary>
+        public const string ValidationRulesFullPropertyName = "--validation-rules";
+
+        /// <summary>Validation rules shortcut property name.</summary>
+        public const string ValidationRulesShortcutPropertyName = "-v";
+
+        /// <summary>Default validation rules name.</summary>
+        public const string DefaultValidationRulesName = "Default";
+
+        /// <summary>Custom validation rules name.</summary>
+        public const string CustomValidationRulesName = "Custom";
+
         /// <summary>Currency format.</summary>
         public const string CurrencyFormat = "C";
 
@@ -71,6 +83,9 @@ namespace FileCabinetApp
 
         /// <summary>Quote symbol.</summary>
         public const char QuoteSymbol = '"';
+
+        /// <summary>An equal sign symbol.</summary>
+        public const char EqualSignSymbol = '=';
 
         /// <summary>Minimum date of birth.</summary>
         public static readonly DateTime MinDateOfBirth = new DateTime(1950, 01, 01);

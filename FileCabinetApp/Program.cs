@@ -37,13 +37,20 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetService fileCabinetService = new FileCabinetCustomService();
+        private static FileCabinetService fileCabinetService;
 
         /// <summary>Defines the entry point of the application.</summary>
         /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            if (!TryParseCommandLine(args))
+            {
+                Console.WriteLine("Invalid parameters.");
+                Console.WriteLine("Using default validation rules.");
+                fileCabinetService = new FileCabinetDefaultService();
+            }
+
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
 
@@ -311,6 +318,78 @@ namespace FileCabinetApp
                 Console.WriteLine("Invalid characters!");
             }
             while (IsInvalidInput);
+        }
+
+        private static bool TryParseCommandLine(string[] args)
+        {
+            bool isValidInput = true;
+            if (args == null)
+            {
+                return !isValidInput;
+            }
+
+            switch (args.Length)
+            {
+                case 0:
+                    Console.WriteLine("Using default validation rules.");
+                    fileCabinetService = new FileCabinetDefaultService();
+                    return isValidInput;
+                case 1:
+                    var splittedParameters = args[FirstParameterIndex].Split(EqualSignSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
+                    string parameterName;
+                    string parameterValue;
+                    try
+                    {
+                        parameterName = splittedParameters[FirstParameterIndex];
+                        parameterValue = splittedParameters[SecondParameterIndex];
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        return !isValidInput;
+                    }
+
+                    if (parameterName.Equals(ValidationRulesFullPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                        parameterValue.Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Using default validation rules.");
+                        fileCabinetService = new FileCabinetDefaultService();
+                        return isValidInput;
+                    }
+                    else if (parameterName.Equals(ValidationRulesFullPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                         parameterValue.Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Using custom validation rules.");
+                        fileCabinetService = new FileCabinetCustomService();
+                        return isValidInput;
+                    }
+                    else
+                    {
+                        return !isValidInput;
+                    }
+
+                case 2:
+                    if (args[FirstParameterIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                    args[SecondParameterIndex].Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Using default validation rules.");
+                        fileCabinetService = new FileCabinetDefaultService();
+                        return isValidInput;
+                    }
+                    else if (args[FirstParameterIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                        args[SecondParameterIndex].Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Using custom validation rules.");
+                        fileCabinetService = new FileCabinetCustomService();
+                        return isValidInput;
+                    }
+                    else
+                    {
+                        return !isValidInput;
+                    }
+
+                default:
+                    return !isValidInput;
+            }
         }
     }
 }
