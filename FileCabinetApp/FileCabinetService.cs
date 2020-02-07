@@ -11,6 +11,15 @@ namespace FileCabinetApp
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<string, List<FileCabinetRecord>> lastNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
+        private readonly IRecordValidator validator;
+
+        /// <summary>Initializes a new instance of the <see cref="FileCabinetService"/> class.</summary>
+        /// <param name="validator">Validator.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <em>validator</em> is <em>null</em>.</exception>
+        protected FileCabinetService(IRecordValidator validator)
+        {
+            this.validator = validator ?? throw new ArgumentNullException(nameof(validator));
+        }
 
         /// <summary>Creates new <see cref="FileCabinetRecord"/> instance.</summary>
         /// <param name="userInputData">User input data.</param>
@@ -23,7 +32,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(userInputData));
             }
 
-            this.CreateValidator().ValidateParameters(userInputData);
+            this.validator.ValidateParameters(userInputData);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -85,7 +94,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(userInputData));
             }
 
-            this.CreateValidator().ValidateParameters(userInputData);
+            this.validator.ValidateParameters(userInputData);
 
             foreach (var record in this.list)
             {
@@ -165,9 +174,5 @@ namespace FileCabinetApp
             return this.dateOfBirthDictionary.ContainsKey(dateOfBirth) && this.dateOfBirthDictionary[dateOfBirth].Count != 0 ?
                 this.dateOfBirthDictionary[dateOfBirth].ToArray() : Array.Empty<FileCabinetRecord>();
         }
-
-        /// <summary>Creates validator.</summary>
-        /// <returns>Returns new <see cref="IRecordValidator"/> object.</returns>
-        protected abstract IRecordValidator CreateValidator();
     }
 }

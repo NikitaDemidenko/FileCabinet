@@ -7,11 +7,10 @@ namespace FileCabinetApp
     /// <seealso cref="FileCabinetApp.FileCabinetService" />
     public sealed class FileCabinetDefaultService : FileCabinetService
     {
-        /// <summary>Creates default validator.</summary>
-        /// <returns>Returns new <see cref="IRecordValidator"/> object.</returns>
-        protected override IRecordValidator CreateValidator()
+        /// <summary>Initializes a new instance of the <see cref="FileCabinetDefaultService"/> class.</summary>
+        public FileCabinetDefaultService()
+            : base(new DefaultValidator())
         {
-            return new DefaultValidator();
         }
     }
 }

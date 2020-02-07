@@ -135,11 +135,14 @@ namespace FileCabinetApp
             {
                 fileCabinetService.CreateRecord(userInput);
                 Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
+                Console.WriteLine();
             }
             catch (ArgumentException ex)
             {
+                Console.WriteLine();
                 Console.WriteLine(ex.Message);
                 Console.WriteLine("Record has not been created.");
+                Console.WriteLine();
                 return;
             }
         }
@@ -164,12 +167,14 @@ namespace FileCabinetApp
             if (!int.TryParse(parameters, out int id))
             {
                 Console.WriteLine("Invalid characters.");
+                Console.WriteLine();
                 return;
             }
 
             if (id < MinValueOfId || id > fileCabinetService.GetStat())
             {
                 Console.WriteLine($"#{id} record is not found.");
+                Console.WriteLine();
                 return;
             }
 
@@ -179,11 +184,14 @@ namespace FileCabinetApp
             {
                 fileCabinetService.EditRecord(id, userInput);
                 Console.WriteLine($"Record #{id} is updated.");
+                Console.WriteLine();
             }
             catch (ArgumentException ex)
             {
+                Console.WriteLine();
                 Console.WriteLine(ex.Message);
                 Console.WriteLine("Record has not been updated.");
+                Console.WriteLine();
                 return;
             }
         }
