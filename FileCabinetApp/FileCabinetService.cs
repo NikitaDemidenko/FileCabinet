@@ -23,7 +23,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(userInputData));
             }
 
-            this.ValidateParameters(userInputData);
+            this.CreateValidator().ValidateParameters(userInputData);
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
@@ -70,22 +70,22 @@ namespace FileCabinetApp
 
         /// <summary>Edits record by identifier.</summary>
         /// <param name="id">Identifier.</param>
-        /// <param name="userInput">User input data.</param>
+        /// <param name="userInputData">User input data.</param>
         /// <exception cref="ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
         /// <exception cref="ArgumentException">Thrown when identifier is invalid.</exception>
-        public void EditRecord(int id, UserInputData userInput)
+        public void EditRecord(int id, UserInputData userInputData)
         {
             if (id < MinValueOfId || id > this.list.Count)
             {
                 throw new ArgumentException($"There is no #{id} record.");
             }
 
-            if (userInput == null)
+            if (userInputData == null)
             {
-                throw new ArgumentNullException(nameof(userInput));
+                throw new ArgumentNullException(nameof(userInputData));
             }
 
-            this.ValidateParameters(userInput);
+            this.CreateValidator().ValidateParameters(userInputData);
 
             foreach (var record in this.list)
             {
@@ -94,21 +94,21 @@ namespace FileCabinetApp
                     this.firstNameDictionary[record.FirstName.ToUpperInvariant()].Remove(record);
                     this.lastNameDictionary[record.LastName.ToUpperInvariant()].Remove(record);
                     this.dateOfBirthDictionary[record.DateOfBirth].Remove(record);
-                    record.FirstName = userInput.FirstName;
-                    record.LastName = userInput.LastName;
-                    record.DateOfBirth = userInput.DateOfBirth;
-                    record.Sex = userInput.Sex;
-                    record.NumberOfReviews = userInput.NumberOfReviews;
-                    record.Salary = userInput.Salary;
+                    record.FirstName = userInputData.FirstName;
+                    record.LastName = userInputData.LastName;
+                    record.DateOfBirth = userInputData.DateOfBirth;
+                    record.Sex = userInputData.Sex;
+                    record.NumberOfReviews = userInputData.NumberOfReviews;
+                    record.Salary = userInputData.Salary;
 
-                    string firstNameKey = userInput.FirstName.ToUpperInvariant();
+                    string firstNameKey = userInputData.FirstName.ToUpperInvariant();
                     if (!this.firstNameDictionary.ContainsKey(firstNameKey))
                     {
                         this.firstNameDictionary.Add(firstNameKey, new List<FileCabinetRecord>());
                     }
 
                     this.firstNameDictionary[firstNameKey].Add(record);
-                    string lastNameKey = userInput.LastName.ToUpperInvariant();
+                    string lastNameKey = userInputData.LastName.ToUpperInvariant();
                     if (!this.lastNameDictionary.ContainsKey(lastNameKey))
                     {
                         this.lastNameDictionary.Add(lastNameKey, new List<FileCabinetRecord>());
@@ -116,12 +116,12 @@ namespace FileCabinetApp
 
                     this.lastNameDictionary[lastNameKey].Add(record);
 
-                    if (!this.dateOfBirthDictionary.ContainsKey(userInput.DateOfBirth))
+                    if (!this.dateOfBirthDictionary.ContainsKey(userInputData.DateOfBirth))
                     {
-                        this.dateOfBirthDictionary.Add(userInput.DateOfBirth, new List<FileCabinetRecord>());
+                        this.dateOfBirthDictionary.Add(userInputData.DateOfBirth, new List<FileCabinetRecord>());
                     }
 
-                    this.dateOfBirthDictionary[userInput.DateOfBirth].Add(record);
+                    this.dateOfBirthDictionary[userInputData.DateOfBirth].Add(record);
                     return;
                 }
             }
@@ -166,8 +166,8 @@ namespace FileCabinetApp
                 this.dateOfBirthDictionary[dateOfBirth].ToArray() : Array.Empty<FileCabinetRecord>();
         }
 
-        /// <summary>Validates user input parameters.</summary>
-        /// <param name="userInputData">User input.</param>
-        protected abstract void ValidateParameters(UserInputData userInputData);
+        /// <summary>Creates validator.</summary>
+        /// <returns>Returns new <see cref="IRecordValidator"/> object.</returns>
+        protected abstract IRecordValidator CreateValidator();
     }
 }

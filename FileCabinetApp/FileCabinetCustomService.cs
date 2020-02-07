@@ -8,58 +8,11 @@ namespace FileCabinetApp
     /// <seealso cref="FileCabinetApp.FileCabinetService" />
     public sealed class FileCabinetCustomService : FileCabinetService
     {
-        /// <summary>Validates user input parameters using custom validation rules.</summary>
-        /// <param name="userInputData">User input.</param>
-        /// <exception cref="ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
-        /// <exception cref="ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
-        protected override void ValidateParameters(UserInputData userInputData)
+        /// <summary>Creates custom validator.</summary>
+        /// <returns>Returns new <see cref="IRecordValidator"/> object.</returns>
+        protected override IRecordValidator CreateValidator()
         {
-            if (userInputData == null)
-            {
-                throw new ArgumentNullException(nameof(userInputData));
-            }
-
-            if (string.IsNullOrWhiteSpace(userInputData.FirstName))
-            {
-                throw new ArgumentException("First name is empty.");
-            }
-
-            if (string.IsNullOrWhiteSpace(userInputData.LastName))
-            {
-                throw new ArgumentException("Last name is empty.");
-            }
-
-            if (userInputData.FirstName.Length < MinNumberOfSymbols || userInputData.FirstName.Length > MaxNumberOfSymbols ||
-                !Regex.IsMatch(userInputData.FirstName, AllowedCharacters))
-            {
-                throw new ArgumentException("First name's length is out of range or has invalid characters.");
-            }
-
-            if (userInputData.LastName.Length < MinNumberOfSymbols || userInputData.LastName.Length > MaxNumberOfSymbols ||
-                !Regex.IsMatch(userInputData.LastName, AllowedCharacters))
-            {
-                throw new ArgumentException("Last name's length is out of range or has invalid characters.");
-            }
-
-            if (userInputData.DateOfBirth < MinDateOfBirth || userInputData.DateOfBirth >= DateTime.Now)
-            {
-                throw new ArgumentException("Invalid date of birth.");
-            }
-
-            if (userInputData.Sex != MaleSex && userInputData.Sex != FemaleSex)
-            {
-                throw new ArgumentException("Wrong sex.");
-            }
-
-            if (userInputData.NumberOfReviews < MinNumberOfReviewsCustom)
-            {
-                throw new ArgumentException("Number of reviews is too small.");
-            }
-
-            if (userInputData.Salary < MinValueOfSalaryCustom)
-            {
-                throw new ArgumentException("Salary is too small.");
-            }
+            return new CustomValidator();
         }
     }
 }

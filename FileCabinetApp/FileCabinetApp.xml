@@ -94,25 +94,41 @@
         <member name="F:FileCabinetApp.Constants.Culture">
             <summary>Culture.</summary>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetCustomService">
-            <summary>Provides methods for interaction with records in the file cabinet using custom validation rules.</summary>
-            <seealso cref="T:FileCabinetApp.FileCabinetService" />
+        <member name="T:FileCabinetApp.CustomValidator">
+            <summary>Performs custom validation on user input data.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
         </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.ValidateParameters(FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.UserInputData)">
             <summary>Validates user input parameters using custom validation rules.</summary>
             <param name="userInputData">User input.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
             <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetDefaultService">
-            <summary>Provides methods for interaction with records in the file cabinet using default validation rules.</summary>
-            <seealso cref="T:FileCabinetApp.FileCabinetService" />
+        <member name="T:FileCabinetApp.DefaultValidator">
+            <summary>Performs default validation on user input data.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
         </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.ValidateParameters(FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.UserInputData)">
             <summary>Validates user input parameters using default validation rules.</summary>
             <param name="userInputData">User input.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
             <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetCustomService">
+            <summary>Provides methods for interaction with records in the file cabinet using custom validation rules.</summary>
+            <seealso cref="T:FileCabinetApp.FileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetCustomService.CreateValidator">
+            <summary>Creates custom validator.</summary>
+            <returns>Returns new <see cref="T:FileCabinetApp.IRecordValidator"/> object.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetDefaultService">
+            <summary>Provides methods for interaction with records in the file cabinet using default validation rules.</summary>
+            <seealso cref="T:FileCabinetApp.FileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetDefaultService.CreateValidator">
+            <summary>Creates default validator.</summary>
+            <returns>Returns new <see cref="T:FileCabinetApp.IRecordValidator"/> object.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>Provides properties for records.</summary>
@@ -169,7 +185,7 @@
         <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.UserInputData)">
             <summary>Edits record by identifier.</summary>
             <param name="id">Identifier.</param>
-            <param name="userInput">User input data.</param>
+            <param name="userInputData">User input data.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
             <exception cref="T:System.ArgumentException">Thrown when identifier is invalid.</exception>
         </member>
@@ -188,9 +204,18 @@
             <param name="dateOfBirth">Date of birth to find.</param>
             <returns>Returns an array of found records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetService.ValidateParameters(FileCabinetApp.UserInputData)">
-            <summary>Validates user input parameters.</summary>
-            <param name="userInputData">User input.</param>
+        <member name="M:FileCabinetApp.FileCabinetService.CreateValidator">
+            <summary>Creates validator.</summary>
+            <returns>Returns new <see cref="T:FileCabinetApp.IRecordValidator"/> object.</returns>
+        </member>
+        <member name="T:FileCabinetApp.IRecordValidator">
+            <summary>
+              <para>Provides functionality to validate parameters.</para>
+            </summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.UserInputData)">
+            <summary>Validates user input data.</summary>
+            <param name="userInputData">User input data.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>Main class of the project.</summary>
