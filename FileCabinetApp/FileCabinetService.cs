@@ -5,7 +5,7 @@ using static FileCabinetApp.Constants;
 namespace FileCabinetApp
 {
     /// <summary>Provides methods for interaction with records in the file cabinet.</summary>
-    public abstract class FileCabinetService
+    public class FileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
@@ -16,7 +16,7 @@ namespace FileCabinetApp
         /// <summary>Initializes a new instance of the <see cref="FileCabinetService"/> class.</summary>
         /// <param name="validator">Validator.</param>
         /// <exception cref="ArgumentNullException">Thrown when <em>validator</em> is <em>null</em>.</exception>
-        protected FileCabinetService(IRecordValidator validator)
+        public FileCabinetService(IRecordValidator validator)
         {
             this.validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }

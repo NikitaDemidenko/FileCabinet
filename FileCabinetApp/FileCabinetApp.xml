@@ -114,20 +114,6 @@
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
             <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetCustomService">
-            <summary>Provides methods for interaction with records in the file cabinet using custom validation rules.</summary>
-            <seealso cref="T:FileCabinetApp.FileCabinetService" />
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetCustomService.#ctor">
-            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetCustomService"/> class.</summary>
-        </member>
-        <member name="T:FileCabinetApp.FileCabinetDefaultService">
-            <summary>Provides methods for interaction with records in the file cabinet using default validation rules.</summary>
-            <seealso cref="T:FileCabinetApp.FileCabinetService" />
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetDefaultService.#ctor">
-            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetDefaultService"/> class.</summary>
-        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>Provides properties for records.</summary>
         </member>

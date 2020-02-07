@@ -48,7 +48,7 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Invalid parameters.");
                 Console.WriteLine("Using default validation rules.");
-                fileCabinetService = new FileCabinetDefaultService();
+                fileCabinetService = new FileCabinetService(new DefaultValidator());
             }
 
             Console.WriteLine(Program.HintMessage);
@@ -340,7 +340,7 @@ namespace FileCabinetApp
             {
                 case 0:
                     Console.WriteLine("Using default validation rules.");
-                    fileCabinetService = new FileCabinetDefaultService();
+                    fileCabinetService = new FileCabinetService(new DefaultValidator());
                     return isValidInput;
                 case 1:
                     var splittedParameters = args[FirstParameterIndex].Split(EqualSignSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
@@ -360,14 +360,14 @@ namespace FileCabinetApp
                         parameterValue.Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         Console.WriteLine("Using default validation rules.");
-                        fileCabinetService = new FileCabinetDefaultService();
+                        fileCabinetService = new FileCabinetService(new DefaultValidator());
                         return isValidInput;
                     }
                     else if (parameterName.Equals(ValidationRulesFullPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
                          parameterValue.Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         Console.WriteLine("Using custom validation rules.");
-                        fileCabinetService = new FileCabinetCustomService();
+                        fileCabinetService = new FileCabinetService(new CustomValidator());
                         return isValidInput;
                     }
                     else
@@ -380,14 +380,14 @@ namespace FileCabinetApp
                     args[SecondParameterIndex].Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         Console.WriteLine("Using default validation rules.");
-                        fileCabinetService = new FileCabinetDefaultService();
+                        fileCabinetService = new FileCabinetService(new DefaultValidator());
                         return isValidInput;
                     }
                     else if (args[FirstParameterIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
                         args[SecondParameterIndex].Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         Console.WriteLine("Using custom validation rules.");
-                        fileCabinetService = new FileCabinetCustomService();
+                        fileCabinetService = new FileCabinetService(new CustomValidator());
                         return isValidInput;
                     }
                     else
