@@ -37,7 +37,7 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetService fileCabinetService;
+        private static IFileCabinetService fileCabinetService;
 
         /// <summary>Defines the entry point of the application.</summary>
         /// <param name="args">The arguments.</param>

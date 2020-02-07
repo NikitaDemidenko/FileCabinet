@@ -6,7 +6,8 @@ using static FileCabinetApp.Constants;
 namespace FileCabinetApp
 {
     /// <summary>Provides methods for interaction with records in the file cabinet.</summary>
-    public class FileCabinetService
+    /// <seealso cref="FileCabinetApp.IFileCabinetService" />
+    public class FileCabinetService : IFileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
@@ -24,7 +25,7 @@ namespace FileCabinetApp
 
         /// <summary>Creates new <see cref="FileCabinetRecord"/> instance.</summary>
         /// <param name="userInputData">User input data.</param>
-        /// <returns>Returns new <see cref="FileCabinetRecord"/> instance.</returns>
+        /// <returns>Returns identifier of the new <see cref="FileCabinetRecord"/> instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
         public int CreateRecord(UserInputData userInputData)
         {
@@ -71,7 +72,7 @@ namespace FileCabinetApp
         }
 
         /// <summary>Gets the records.</summary>
-        /// <returns>Returns an array of records.</returns>
+        /// <returns>Returns a read-only collection  of records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords() => new ReadOnlyCollection<FileCabinetRecord>(this.list);
 
         /// <summary>Gets the stat of records in the file cabinet.</summary>
@@ -139,7 +140,7 @@ namespace FileCabinetApp
 
         /// <summary>Finds records by first name.</summary>
         /// <param name="firstName">First name to find.</param>
-        /// <returns>Returns an array of found records.</returns>
+        /// <returns>Returns a read-only collection of found records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
@@ -154,7 +155,7 @@ namespace FileCabinetApp
 
         /// <summary>Finds records by last name.</summary>
         /// <param name="lastName">Last name to find.</param>
-        /// <returns>Returns an array of found records.</returns>
+        /// <returns>Returns a read-only collection of found records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
@@ -169,7 +170,7 @@ namespace FileCabinetApp
 
         /// <summary>Finds records by date of birth.</summary>
         /// <param name="dateOfBirth">Date of birth to find.</param>
-        /// <returns>Returns an array of found records.</returns>
+        /// <returns>Returns a read-only collection of found records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             return this.dateOfBirthDictionary.ContainsKey(dateOfBirth) && this.dateOfBirthDictionary[dateOfBirth].Count != 0 ?
