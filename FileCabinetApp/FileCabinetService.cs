@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
@@ -71,7 +72,7 @@ namespace FileCabinetApp
 
         /// <summary>Gets the records.</summary>
         /// <returns>Returns an array of records.</returns>
-        public FileCabinetRecord[] GetRecords() => this.list.ToArray();
+        public ReadOnlyCollection<FileCabinetRecord> GetRecords() => new ReadOnlyCollection<FileCabinetRecord>(this.list);
 
         /// <summary>Gets the stat of records in the file cabinet.</summary>
         /// <returns>Returns number of records.</returns>
@@ -139,7 +140,7 @@ namespace FileCabinetApp
         /// <summary>Finds records by first name.</summary>
         /// <param name="firstName">First name to find.</param>
         /// <returns>Returns an array of found records.</returns>
-        public FileCabinetRecord[] FindByFirstName(string firstName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -148,13 +149,13 @@ namespace FileCabinetApp
 
             string firstNameKey = firstName.ToUpperInvariant();
             return this.firstNameDictionary.ContainsKey(firstNameKey) && this.firstNameDictionary[firstNameKey].Count != 0 ?
-                this.firstNameDictionary[firstNameKey].ToArray() : Array.Empty<FileCabinetRecord>();
+                new ReadOnlyCollection<FileCabinetRecord>(this.firstNameDictionary[firstNameKey]) : null;
         }
 
         /// <summary>Finds records by last name.</summary>
         /// <param name="lastName">Last name to find.</param>
         /// <returns>Returns an array of found records.</returns>
-        public FileCabinetRecord[] FindByLastName(string lastName)
+        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -163,16 +164,16 @@ namespace FileCabinetApp
 
             string lastNameKey = lastName.ToUpperInvariant();
             return this.lastNameDictionary.ContainsKey(lastNameKey) && this.lastNameDictionary[lastNameKey].Count != 0 ?
-                this.lastNameDictionary[lastNameKey].ToArray() : Array.Empty<FileCabinetRecord>();
+                new ReadOnlyCollection<FileCabinetRecord>(this.lastNameDictionary[lastNameKey]) : null;
         }
 
         /// <summary>Finds records by date of birth.</summary>
         /// <param name="dateOfBirth">Date of birth to find.</param>
         /// <returns>Returns an array of found records.</returns>
-        public FileCabinetRecord[] FindByDateOfBirth(DateTime dateOfBirth)
+        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             return this.dateOfBirthDictionary.ContainsKey(dateOfBirth) && this.dateOfBirthDictionary[dateOfBirth].Count != 0 ?
-                this.dateOfBirthDictionary[dateOfBirth].ToArray() : Array.Empty<FileCabinetRecord>();
+                new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]) : null;
         }
     }
 }

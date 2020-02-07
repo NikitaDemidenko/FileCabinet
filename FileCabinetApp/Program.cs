@@ -221,7 +221,7 @@ namespace FileCabinetApp
             if (propertyName.Equals(FirstNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var searchResult = fileCabinetService.FindByFirstName(propertyValue);
-                if (searchResult.Length != 0)
+                if (searchResult != null)
                 {
                     foreach (var record in searchResult)
                     {
@@ -236,7 +236,7 @@ namespace FileCabinetApp
             else if (propertyName.Equals(LastNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var searchResult = fileCabinetService.FindByLastName(propertyValue);
-                if (searchResult.Length != 0)
+                if (searchResult != null)
                 {
                     foreach (var record in searchResult)
                     {
@@ -253,7 +253,7 @@ namespace FileCabinetApp
                 if (DateTime.TryParse(propertyValue, out DateTime dateOfBirth))
                 {
                     var searchResult = fileCabinetService.FindByDateOfBirth(dateOfBirth);
-                    if (searchResult.Length != 0)
+                    if (searchResult != null)
                     {
                         foreach (var record in searchResult)
                         {
