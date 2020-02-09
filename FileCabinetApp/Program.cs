@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
 {
+    /// <summary>Main class of the project.</summary>
     public static class Program
     {
         private const string DeveloperName = "Nikita Demidenko";
@@ -12,9 +14,8 @@ namespace FileCabinetApp
         private const int DescriptionHelpIndex = 1;
         private const int ExplanationHelpIndex = 2;
 
-        private static readonly CultureInfo Culture = new CultureInfo("en-US");
-
         private static bool isRunning = true;
+        private static bool isCustomValidationRules = false;
 
         private static Tuple<string, Action<string>>[] commands = new Tuple<string, Action<string>>[]
         {
@@ -38,11 +39,115 @@ namespace FileCabinetApp
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
-        private static FileCabinetService fileCabinetService = new FileCabinetService();
+        private static IFileCabinetService fileCabinetService;
 
+        private static Func<string, Tuple<bool, string, string>> stringConverter = input =>
+        {
+            return new Tuple<bool, string, string>(true, null, input);
+        };
+
+        private static Func<string, Tuple<bool, string, DateTime>> dateConverter = input =>
+        {
+            return DateTime.TryParseExact(input, InputDateFormat, null, DateTimeStyles.None, out DateTime dateOfBirth)
+                ? new Tuple<bool, string, DateTime>(true, null, dateOfBirth)
+                : new Tuple<bool, string, DateTime>(false, "Invalid date format/characters", dateOfBirth);
+        };
+
+        private static Func<string, Tuple<bool, string, char>> charConverter = input =>
+        {
+            return char.TryParse(input, out char sex)
+                ? new Tuple<bool, string, char>(true, null, sex)
+                : new Tuple<bool, string, char>(false, "Input length must be equal to one", sex);
+        };
+
+        private static Func<string, Tuple<bool, string, short>> numberOfReviewsConverter = input =>
+        {
+            return short.TryParse(input, out short numberOfReviews)
+                ? new Tuple<bool, string, short>(true, null, numberOfReviews)
+                : new Tuple<bool, string, short>(false, "Invalid characters", numberOfReviews);
+        };
+
+        private static Func<string, Tuple<bool, string, decimal>> salaryConverter = input =>
+        {
+            return decimal.TryParse(input, out decimal salary)
+                ? new Tuple<bool, string, decimal>(true, null, salary)
+                : new Tuple<bool, string, decimal>(false, "Invalid characters", salary);
+        };
+
+        private static Func<string, Tuple<bool, string>> firstNameValidator = firstName =>
+        {
+            return isCustomValidationRules
+                ? firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols ||
+                !Regex.IsMatch(firstName, AllowedCharacters)
+                    ? new Tuple<bool, string>(false, "First name's length is out of range or has invalid characters")
+                    : new Tuple<bool, string>(true, null)
+                : firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols
+                    ? new Tuple<bool, string>(false, "First name's length is out of range")
+                    : new Tuple<bool, string>(true, null);
+        };
+
+        private static Func<string, Tuple<bool, string>> lastNameValidator = lastName =>
+        {
+            return isCustomValidationRules
+                ? lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols ||
+                !Regex.IsMatch(lastName, AllowedCharacters)
+                    ? new Tuple<bool, string>(false, "First name's length is out of range or has invalid characters")
+                    : new Tuple<bool, string>(true, null)
+                : lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols
+                    ? new Tuple<bool, string>(false, "First name's length is out of range")
+                    : new Tuple<bool, string>(true, null);
+        };
+
+        private static Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = dateOfBirth =>
+        {
+            return isCustomValidationRules
+                ? dateOfBirth < MinDateOfBirth || dateOfBirth >= DateTime.Now
+                    ? new Tuple<bool, string>(false, "Date of birth is greater than the current date or less than 1950-Jan-01")
+                    : new Tuple<bool, string>(true, null)
+                : dateOfBirth >= DateTime.Now
+                    ? new Tuple<bool, string>(false, "Date of birth is greater than the current date")
+                    : new Tuple<bool, string>(true, null);
+        };
+
+        private static Func<char, Tuple<bool, string>> sexValidator = sex =>
+        {
+            return sex != MaleSex && sex != FemaleSex ? new Tuple<bool, string>(false, "Wrong sex") : new Tuple<bool, string>(true, null);
+        };
+
+        private static Func<short, Tuple<bool, string>> numberOfReviewsValidator = numberOfReviews =>
+        {
+            return isCustomValidationRules
+                ? numberOfReviews < MinNumberOfReviewsCustom
+                    ? new Tuple<bool, string>(false, "Number of reviews is too small. It must be greater than 50")
+                    : new Tuple<bool, string>(true, null)
+                : numberOfReviews < MinNumberOfReviews
+                    ? new Tuple<bool, string>(false, "Number of reviews cannot be less than zero")
+                    : new Tuple<bool, string>(true, null);
+        };
+
+        private static Func<decimal, Tuple<bool, string>> salaryValidator = salary =>
+        {
+            return isCustomValidationRules
+                ? salary < MinValueOfSalaryCustom
+                    ? new Tuple<bool, string>(false, "Salary is too small. It must be greater than 200")
+                    : new Tuple<bool, string>(true, null)
+                : salary < MinValueOfSalary
+                    ? new Tuple<bool, string>(false, "Salary cannot be less than zero")
+                    : new Tuple<bool, string>(true, null);
+        };
+
+        /// <summary>Defines the entry point of the application.</summary>
+        /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            if (!TryParseCommandLine(args))
+            {
+                Console.WriteLine("Invalid parameters.");
+                Console.WriteLine("Using default validation rules.");
+                fileCabinetService = new FileCabinetService(new DefaultValidator());
+            }
+
             Console.WriteLine(Program.HintMessage);
             Console.WriteLine();
 
@@ -121,108 +226,41 @@ namespace FileCabinetApp
 
         private static void Create(string parameters)
         {
-            string firstName;
-            do
-            {
-                Console.Write("First name: ");
-                firstName = Console.ReadLine();
-                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$") || firstName.Length < 2 || firstName.Length > 60)
-                {
-                    Console.WriteLine("Invalid first name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (true);
+            Console.Write("First name: ");
+            var firstName = ReadInput(stringConverter, firstNameValidator);
 
-            string lastName;
-            do
-            {
-                Console.Write("Last name: ");
-                lastName = Console.ReadLine();
-                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$") || lastName.Length < 2 || lastName.Length > 60)
-                {
-                    Console.WriteLine("Invalid last name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (true);
+            Console.Write("Last name: ");
+            var lastName = ReadInput(stringConverter, lastNameValidator);
 
-            DateTime dateOfBirth;
-            string input;
-            do
-            {
-                Console.Write("Date of birth (MM/dd/yyyy): ");
-                input = Console.ReadLine();
-                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth) &&
-                    dateOfBirth >= new DateTime(1950, 01, 01) && dateOfBirth < DateTime.Now)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid date. Try again!");
-                }
-            }
-            while (true);
+            Console.Write("Date of birth: ");
+            var dateOfBirth = ReadInput(dateConverter, dateOfBirthValidator);
 
-            char sex;
-            do
-            {
-                Console.Write("Sex: ");
-                sex = Console.ReadKey().KeyChar;
-                Console.WriteLine();
-                if (sex == 'M' || sex == 'F')
-                {
-                    break;
-                }
+            Console.Write("Sex: ");
+            var sex = ReadInput(charConverter, sexValidator);
 
-                Console.WriteLine("Invalid character. Try again!");
-            }
-            while (true);
+            Console.Write("Number of reviews: ");
+            var numberOfReviews = ReadInput(numberOfReviewsConverter, numberOfReviewsValidator);
 
-            short numberOfReviews;
-            do
-            {
-                Console.Write("Number of reviews: ");
-                if (short.TryParse(Console.ReadLine(), out numberOfReviews) && numberOfReviews >= 0)
-                {
-                    break;
-                }
+            Console.Write("Salary: ");
+            var salary = ReadInput(salaryConverter, salaryValidator);
 
-                Console.WriteLine("Invalid characters!");
-            }
-            while (true);
-
-            decimal salary;
-            do
-            {
-                Console.Write("Salary: ");
-                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, CultureInfo.DefaultThreadCurrentCulture, out salary) && salary >= 0)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid characters!");
-            }
-            while (true);
-
-            fileCabinetService.CreateRecord(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            var userInputData = new UserInputData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            fileCabinetService.CreateRecord(userInputData);
             Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
         }
 
         private static void List(string parameters)
         {
+            if (fileCabinetService.GetStat() == 0)
+            {
+                Console.WriteLine("There are no records.");
+                return;
+            }
+
             var records = fileCabinetService.GetRecords();
             foreach (var record in records)
             {
-                Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
-                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                Console.WriteLine(record);
             }
         }
 
@@ -231,116 +269,37 @@ namespace FileCabinetApp
             if (!int.TryParse(parameters, out int id))
             {
                 Console.WriteLine("Invalid characters.");
+                Console.WriteLine();
                 return;
             }
 
-            if (id < 1 || id > fileCabinetService.GetStat())
+            if (id < MinValueOfId || id > fileCabinetService.GetStat())
             {
                 Console.WriteLine($"#{id} record is not found.");
-                return;
-            }
-
-            string firstName;
-            do
-            {
-                Console.Write("First name: ");
-                firstName = Console.ReadLine();
-                if (!Regex.IsMatch(firstName, @"^[a-zA-Z-]+$") || firstName.Length < 2 || firstName.Length > 60)
-                {
-                    Console.WriteLine("Invalid first name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (true);
-
-            string lastName;
-            do
-            {
-                Console.Write("Last name: ");
-                lastName = Console.ReadLine();
-                if (!Regex.IsMatch(lastName, @"^[a-zA-Z-]+$") || lastName.Length < 2 || lastName.Length > 60)
-                {
-                    Console.WriteLine("Invalid last name. Try again!");
-                }
-                else
-                {
-                    break;
-                }
-            }
-            while (true);
-
-            DateTime dateOfBirth;
-            string input;
-            do
-            {
-                Console.Write("Date of birth (MM/dd/yyyy): ");
-                input = Console.ReadLine();
-                if (DateTime.TryParseExact(input, "MM/dd/yyyy", null, DateTimeStyles.None, out dateOfBirth) &&
-                    dateOfBirth >= new DateTime(1950, 01, 01) && dateOfBirth < DateTime.Now)
-                {
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Invalid date. Try again!");
-                }
-            }
-            while (true);
-
-            char sex;
-            do
-            {
-                Console.Write("Sex: ");
-                sex = Console.ReadKey().KeyChar;
                 Console.WriteLine();
-                if (sex == 'M' || sex == 'F')
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid character. Try again!");
-            }
-            while (true);
-
-            short numberOfReviews;
-            do
-            {
-                Console.Write("Number of reviews: ");
-                if (short.TryParse(Console.ReadLine(), out numberOfReviews) && numberOfReviews >= 0)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid characters!");
-            }
-            while (true);
-
-            decimal salary;
-            do
-            {
-                Console.Write("Salary: ");
-                if (decimal.TryParse(Console.ReadLine(), NumberStyles.Float, CultureInfo.DefaultThreadCurrentCulture, out salary) && salary >= 0)
-                {
-                    break;
-                }
-
-                Console.WriteLine("Invalid characters!");
-            }
-            while (true);
-
-            try
-            {
-                fileCabinetService.EditRecord(id, firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
-            }
-            catch (ArgumentException ex)
-            {
-                Console.WriteLine(ex.Message);
                 return;
             }
 
+            Console.Write("First name: ");
+            var firstName = ReadInput(stringConverter, firstNameValidator);
+
+            Console.Write("Last name: ");
+            var lastName = ReadInput(stringConverter, lastNameValidator);
+
+            Console.Write("Date of birth: ");
+            var dateOfBirth = ReadInput(dateConverter, dateOfBirthValidator);
+
+            Console.Write("Sex: ");
+            var sex = ReadInput(charConverter, sexValidator);
+
+            Console.Write("Number of reviews: ");
+            var numberOfReviews = ReadInput(numberOfReviewsConverter, numberOfReviewsValidator);
+
+            Console.Write("Salary: ");
+            var salary = ReadInput(salaryConverter, salaryValidator);
+
+            var userInputData = new UserInputData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            fileCabinetService.EditRecord(id, userInputData);
             Console.WriteLine($"Record #{id} is updated.");
         }
 
@@ -352,13 +311,13 @@ namespace FileCabinetApp
                 return;
             }
 
-            string[] splittedParameters = parameters.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+            string[] splittedParameters = parameters.Split(SpaceSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
             string propertyName;
             string propertyValue;
             try
             {
-                propertyName = splittedParameters[0];
-                propertyValue = splittedParameters[1].Trim('"');
+                propertyName = splittedParameters[FirstParameterIndex];
+                propertyValue = splittedParameters[SecondParameterIndex].Trim(QuoteSymbol);
             }
             catch (IndexOutOfRangeException)
             {
@@ -366,15 +325,14 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (propertyName.Equals("firstname", StringComparison.InvariantCultureIgnoreCase))
+            if (propertyName.Equals(FirstNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var searchResult = fileCabinetService.FindByFirstName(propertyValue);
-                if (searchResult.Length != 0)
+                if (searchResult != null)
                 {
                     foreach (var record in searchResult)
                     {
-                        Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
-                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                        Console.WriteLine(record);
                     }
                 }
                 else
@@ -382,15 +340,14 @@ namespace FileCabinetApp
                     Console.WriteLine($"Records with first name \"{propertyValue}\" are not found.");
                 }
             }
-            else if (propertyName.Equals("lastname", StringComparison.InvariantCultureIgnoreCase))
+            else if (propertyName.Equals(LastNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var searchResult = fileCabinetService.FindByLastName(propertyValue);
-                if (searchResult.Length != 0)
+                if (searchResult != null)
                 {
                     foreach (var record in searchResult)
                     {
-                        Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
-                    $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                        Console.WriteLine(record);
                     }
                 }
                 else
@@ -398,22 +355,21 @@ namespace FileCabinetApp
                     Console.WriteLine($"Records with last name \"{propertyValue}\" are not found.");
                 }
             }
-            else if (propertyName.Equals("dateofbirth", StringComparison.InvariantCultureIgnoreCase))
+            else if (propertyName.Equals(DateOfBirthPropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (DateTime.TryParse(propertyValue, out DateTime dateOfBirth))
                 {
                     var searchResult = fileCabinetService.FindByDateOfBirth(dateOfBirth);
-                    if (searchResult.Length != 0)
+                    if (searchResult != null)
                     {
                         foreach (var record in searchResult)
                         {
-                            Console.WriteLine($"#{record.Id}, {record.FirstName}, {record.LastName}, {record.DateOfBirth.ToString("yyyy-MMM-dd", Culture)}, " +
-                        $"{record.Sex}, {record.NumberOfReviews}, {record.Salary.ToString("C", Culture)}");
+                            Console.WriteLine(record);
                         }
                     }
                     else
                     {
-                        Console.WriteLine($"Records with date of birth \"{dateOfBirth.ToString("yyyy-MMM-dd", CultureInfo.InvariantCulture)}\" are not found.");
+                        Console.WriteLine($"Records with date of birth \"{dateOfBirth.ToString(OutputDateFormat, CultureInfo.InvariantCulture)}\" are not found.");
                     }
                 }
                 else
@@ -425,6 +381,109 @@ namespace FileCabinetApp
             {
                 Console.WriteLine("Invalid property.");
             }
+        }
+
+        private static bool TryParseCommandLine(string[] args)
+        {
+            bool isValidInput = true;
+            if (args == null)
+            {
+                return !isValidInput;
+            }
+
+            switch (args.Length)
+            {
+                case 0:
+                    Console.WriteLine("Using default validation rules.");
+                    fileCabinetService = new FileCabinetService(new DefaultValidator());
+                    return isValidInput;
+                case 1:
+                    var splittedParameters = args[FirstParameterIndex].Split(EqualSignSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
+                    string parameterName;
+                    string parameterValue;
+                    try
+                    {
+                        parameterName = splittedParameters[FirstParameterIndex];
+                        parameterValue = splittedParameters[SecondParameterIndex];
+                    }
+                    catch (IndexOutOfRangeException)
+                    {
+                        return !isValidInput;
+                    }
+
+                    if (parameterName.Equals(ValidationRulesFullPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                        parameterValue.Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Using default validation rules.");
+                        fileCabinetService = new FileCabinetService(new DefaultValidator());
+                        return isValidInput;
+                    }
+                    else if (parameterName.Equals(ValidationRulesFullPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                         parameterValue.Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Using custom validation rules.");
+                        fileCabinetService = new FileCabinetService(new CustomValidator());
+                        isCustomValidationRules = true;
+                        return isValidInput;
+                    }
+                    else
+                    {
+                        return !isValidInput;
+                    }
+
+                case 2:
+                    if (args[FirstParameterIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                    args[SecondParameterIndex].Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Using default validation rules.");
+                        fileCabinetService = new FileCabinetService(new DefaultValidator());
+                        return isValidInput;
+                    }
+                    else if (args[FirstParameterIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                        args[SecondParameterIndex].Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Using custom validation rules.");
+                        fileCabinetService = new FileCabinetService(new CustomValidator());
+                        isCustomValidationRules = true;
+                        return isValidInput;
+                    }
+                    else
+                    {
+                        return !isValidInput;
+                    }
+
+                default:
+                    return !isValidInput;
+            }
+        }
+
+        private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)
+        {
+            do
+            {
+                T value;
+
+                var input = Console.ReadLine();
+                var conversionResult = converter(input);
+
+                if (!conversionResult.Item1)
+                {
+                    Console.WriteLine($"Conversion failed: {conversionResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                value = conversionResult.Item3;
+
+                var validationResult = validator(value);
+                if (!validationResult.Item1)
+                {
+                    Console.WriteLine($"Validation failed: {validationResult.Item2}. Please, correct your input.");
+                    continue;
+                }
+
+                return value;
+            }
+            while (IsInvalidInput);
         }
     }
 }
