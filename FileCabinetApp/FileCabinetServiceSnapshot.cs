@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Text;
+using System.Xml;
 using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
@@ -27,21 +26,47 @@ namespace FileCabinetApp
         }
 
         /// <summary>Saves snapshot to csv file.</summary>
-        /// <param name="streamWriter">Stream writer.</param>
-        /// <exception cref="ArgumentNullException">Thrown when streamWriter is null.</exception>
-        public void SaveToCsv(StreamWriter streamWriter)
+        /// <param name="writer">Writer.</param>
+        /// <exception cref="ArgumentNullException">Thrown when writer is null.</exception>
+        public void SaveToCsv(StreamWriter writer)
         {
-            if (streamWriter == null)
+            if (writer == null)
             {
-                throw new ArgumentNullException(nameof(streamWriter));
+                throw new ArgumentNullException(nameof(writer));
             }
 
-            var csvWriter = new FileCabinetRecordCsvWriter(streamWriter);
-            streamWriter.WriteLine("Id;First Name;Last Name;Date of Birth;Sex;Number of Reviews;Salary");
+            var csvWriter = new FileCabinetRecordCsvWriter(writer);
+            writer.WriteLine("Id;First Name;Last Name;Date of Birth;Sex;Number of Reviews;Salary");
             foreach (var record in this.records)
             {
                 csvWriter.Write(record);
             }
+        }
+
+        /// <summary>Saves snapshot to xml file.</summary>
+        /// <param name="writer">Writer.</param>
+        /// <exception cref="ArgumentNullException">Thrown when writer is null.</exception>
+        public void SaveToXml(StreamWriter writer)
+        {
+            if (writer == null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            var settings = new XmlWriterSettings
+            {
+                Indent = true,
+            };
+            using var xmlDoc = XmlWriter.Create(writer, settings);
+            xmlDoc.WriteStartDocument();
+            xmlDoc.WriteStartElement("records");
+            var xmlWriter = new FileCabinetRecordXmlWriter(xmlDoc);
+            foreach (var record in this.records)
+            {
+                xmlWriter.Write(record);
+            }
+
+            xmlDoc.WriteEndDocument();
         }
     }
 }

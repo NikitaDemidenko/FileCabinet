@@ -6,14 +6,14 @@ namespace FileCabinetApp
     /// <summary>Provides method for saving <see cref="FileCabinetRecord"/> to csv file.</summary>
     public class FileCabinetRecordCsvWriter
     {
-        private readonly TextWriter textWriter;
+        private readonly TextWriter writer;
 
         /// <summary>Initializes a new instance of the <see cref="FileCabinetRecordCsvWriter"/> class.</summary>
-        /// <param name="textWriter">Text writer.</param>
-        /// <exception cref="ArgumentNullException">Thrown when textWriter is null.</exception>
-        public FileCabinetRecordCsvWriter(TextWriter textWriter)
+        /// <param name="writer">Text writer.</param>
+        /// <exception cref="ArgumentNullException">Thrown when writer is null.</exception>
+        public FileCabinetRecordCsvWriter(TextWriter writer)
         {
-            this.textWriter = textWriter ?? throw new ArgumentNullException(nameof(textWriter));
+            this.writer = writer ?? throw new ArgumentNullException(nameof(writer));
         }
 
         /// <summary>Writes the specified record to csv file.</summary>
@@ -26,13 +26,13 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(record));
             }
 
-            this.textWriter.Write($"{record.Id};");
-            this.textWriter.Write($"{record.FirstName};");
-            this.textWriter.Write($"{record.LastName};");
-            this.textWriter.Write($"{record.DateOfBirth:MM/dd/yyyy};");
-            this.textWriter.Write($"{record.Sex};");
-            this.textWriter.Write($"{record.NumberOfReviews};");
-            this.textWriter.WriteLine($"{record.Salary};");
+            this.writer.Write($"{record.Id};");
+            this.writer.Write($"{record.FirstName};");
+            this.writer.Write($"{record.LastName};");
+            this.writer.Write($"{record.DateOfBirth:MM/dd/yyyy};");
+            this.writer.Write($"{record.Sex};");
+            this.writer.Write($"{record.NumberOfReviews};");
+            this.writer.WriteLine($"{record.Salary};");
         }
     }
 }

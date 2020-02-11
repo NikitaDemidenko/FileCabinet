@@ -409,7 +409,8 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
+            if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase) ||
+                typeOfFile.Equals(XmlFileExtension, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (File.Exists(filePath))
                 {
@@ -428,7 +429,15 @@ namespace FileCabinetApp
                 {
                     using var streamWriter = new StreamWriter(filePath, append, Encoding.UTF8);
                     var snapshot = fileCabinetService.MakeSnapshot();
-                    snapshot.SaveToCsv(streamWriter);
+                    if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        snapshot.SaveToCsv(streamWriter);
+                    }
+                    else
+                    {
+                        snapshot.SaveToXml(streamWriter);
+                    }
+
                     Console.WriteLine("Export completed.");
                 }
                 catch (IOException ex)
@@ -436,6 +445,10 @@ namespace FileCabinetApp
                     Console.WriteLine(ex.Message);
                     return;
                 }
+            }
+            else
+            {
+                Console.WriteLine("Wrong type of file parameter.");
             }
         }
 
