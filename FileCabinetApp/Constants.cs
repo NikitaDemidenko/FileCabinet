@@ -33,11 +33,11 @@ namespace FileCabinetApp
         /// <summary>Number of parameters.</summary>
         public const int NumberOfParameters = 2;
 
-        /// <summary>Index of the first parameter.</summary>
-        public const int FirstParameterIndex = 0;
+        /// <summary>Index of the first element of the collection.</summary>
+        public const int FirstElementIndex = 0;
 
-        /// <summary>Index of the second parameter.</summary>
-        public const int SecondParameterIndex = 1;
+        /// <summary>Index of the second element of the collection.</summary>
+        public const int SecondElementIndex = 1;
 
         /// <summary>Minimum number of reviews.</summary>
         public const short MinNumberOfReviews = 0;
@@ -77,6 +77,15 @@ namespace FileCabinetApp
 
         /// <summary>Currency format.</summary>
         public const string CurrencyFormat = "C";
+
+        /// <summary>CSV file extension.</summary>
+        public const string CsvFileExtension = "csv";
+
+        /// <summary>XML file extension.</summary>
+        public const string XmlFileExtension = "xml";
+
+        /// <summary>Positive user answer.</summary>
+        public const string PositiveUserAnswer = "Y";
 
         /// <summary>Space symbol.</summary>
         public const char SpaceSymbol = ' ';

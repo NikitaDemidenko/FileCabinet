@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using static FileCabinetApp.Constants;
 
@@ -25,6 +27,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
+            new Tuple<string, Action<string>>("export", Export),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -36,6 +39,7 @@ namespace FileCabinetApp
             new string[] { "find", "finds records by selected property", "The 'find' command finds records by selected property" },
             new string[] { "list", "prints all records", "The 'list' command prints the records." },
             new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
+            new string[] { "export", "exports records to file", "The 'export' command exports records to file." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -316,8 +320,8 @@ namespace FileCabinetApp
             string propertyValue;
             try
             {
-                propertyName = splittedParameters[FirstParameterIndex];
-                propertyValue = splittedParameters[SecondParameterIndex].Trim(QuoteSymbol);
+                propertyName = splittedParameters[FirstElementIndex];
+                propertyValue = splittedParameters[SecondElementIndex].Trim(QuoteSymbol);
             }
             catch (IndexOutOfRangeException)
             {
@@ -383,6 +387,58 @@ namespace FileCabinetApp
             }
         }
 
+        private static void Export(string parameters)
+        {
+            if (string.IsNullOrWhiteSpace(parameters))
+            {
+                Console.WriteLine("Enter export parameters.");
+                return;
+            }
+
+            var splittedParameters = parameters.Split(SpaceSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
+            string typeOfFile;
+            string filePath;
+            try
+            {
+                typeOfFile = splittedParameters[FirstElementIndex];
+                filePath = splittedParameters[SecondElementIndex].Trim(QuoteSymbol);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Invalid number of parameters.");
+                return;
+            }
+
+            if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (File.Exists(filePath))
+                {
+                    Console.Write($"File is exist - rewrite {filePath}? [Y/n]: ");
+                    string answer = Console.ReadLine();
+                    Console.WriteLine();
+                    if (!answer.Equals(PositiveUserAnswer, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Export has been canceled.");
+                        return;
+                    }
+                }
+
+                bool append = false;
+                try
+                {
+                    using var streamWriter = new StreamWriter(filePath, append, Encoding.UTF8);
+                    var snapshot = fileCabinetService.MakeSnapshot();
+                    snapshot.SaveToCsv(streamWriter);
+                    Console.WriteLine("Export completed.");
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
+            }
+        }
+
         private static bool TryParseCommandLine(string[] args)
         {
             bool isValidInput = true;
@@ -398,13 +454,13 @@ namespace FileCabinetApp
                     fileCabinetService = new FileCabinetService(new DefaultValidator());
                     return isValidInput;
                 case 1:
-                    var splittedParameters = args[FirstParameterIndex].Split(EqualSignSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
+                    var splittedParameters = args[FirstElementIndex].Split(EqualSignSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
                     string parameterName;
                     string parameterValue;
                     try
                     {
-                        parameterName = splittedParameters[FirstParameterIndex];
-                        parameterValue = splittedParameters[SecondParameterIndex];
+                        parameterName = splittedParameters[FirstElementIndex];
+                        parameterValue = splittedParameters[SecondElementIndex];
                     }
                     catch (IndexOutOfRangeException)
                     {
@@ -432,15 +488,15 @@ namespace FileCabinetApp
                     }
 
                 case 2:
-                    if (args[FirstParameterIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                    args[SecondParameterIndex].Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    if (args[FirstElementIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                    args[SecondElementIndex].Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         Console.WriteLine("Using default validation rules.");
                         fileCabinetService = new FileCabinetService(new DefaultValidator());
                         return isValidInput;
                     }
-                    else if (args[FirstParameterIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                        args[SecondParameterIndex].Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
+                    else if (args[FirstElementIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
+                        args[SecondElementIndex].Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         Console.WriteLine("Using custom validation rules.");
                         fileCabinetService = new FileCabinetService(new CustomValidator());

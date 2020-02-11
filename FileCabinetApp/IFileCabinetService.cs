@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Text;
 
 namespace FileCabinetApp
@@ -40,5 +41,9 @@ namespace FileCabinetApp
         /// <param name="dateOfBirth">Date of birth to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth);
+
+        /// <summary>Makes snapshot of current object state.</summary>
+        /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot();
     }
 }
