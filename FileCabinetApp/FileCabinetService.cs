@@ -176,5 +176,9 @@ namespace FileCabinetApp
             return this.dateOfBirthDictionary.ContainsKey(dateOfBirth) && this.dateOfBirthDictionary[dateOfBirth].Count != 0 ?
                 new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]) : null;
         }
+
+        /// <summary>Makes snapshot of current <see cref="FileCabinetService"/> object state.</summary>
+        /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot() => new FileCabinetServiceSnapshot(this.GetRecords());
     }
 }
