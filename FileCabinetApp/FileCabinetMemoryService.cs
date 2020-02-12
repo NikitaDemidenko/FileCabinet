@@ -5,9 +5,9 @@ using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
 {
-    /// <summary>Provides methods for interaction with records in the file cabinet.</summary>
+    /// <summary>Provides methods for interaction with records in memory.</summary>
     /// <seealso cref="FileCabinetApp.IFileCabinetService" />
-    public class FileCabinetService : IFileCabinetService
+    public class FileCabinetMemoryService : IFileCabinetService
     {
         private readonly List<FileCabinetRecord> list = new List<FileCabinetRecord>();
         private readonly Dictionary<string, List<FileCabinetRecord>> firstNameDictionary = new Dictionary<string, List<FileCabinetRecord>>();
@@ -15,10 +15,10 @@ namespace FileCabinetApp
         private readonly Dictionary<DateTime, List<FileCabinetRecord>> dateOfBirthDictionary = new Dictionary<DateTime, List<FileCabinetRecord>>();
         private readonly IRecordValidator validator;
 
-        /// <summary>Initializes a new instance of the <see cref="FileCabinetService"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="FileCabinetMemoryService"/> class.</summary>
         /// <param name="validator">Validator.</param>
         /// <exception cref="ArgumentNullException">Thrown when <em>validator</em> is <em>null</em>.</exception>
-        public FileCabinetService(IRecordValidator validator)
+        public FileCabinetMemoryService(IRecordValidator validator)
         {
             this.validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
@@ -177,7 +177,7 @@ namespace FileCabinetApp
                 new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]) : null;
         }
 
-        /// <summary>Makes snapshot of current <see cref="FileCabinetService"/> object state.</summary>
+        /// <summary>Makes snapshot of current <see cref="FileCabinetMemoryService"/> object state.</summary>
         /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
         public FileCabinetServiceSnapshot MakeSnapshot() => new FileCabinetServiceSnapshot(this.GetRecords());
     }
