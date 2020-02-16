@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Globalization;
 using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
@@ -70,9 +71,30 @@ namespace FileCabinetApp
             throw new NotImplementedException();
         }
 
+        /// <summary>Gets the records.</summary>
+        /// <returns>Returns a read-only collection  of records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            throw new NotImplementedException();
+            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+            this.fileStream.Seek(0, SeekOrigin.Begin);
+            var records = new List<FileCabinetRecord>();
+            while (reader.PeekChar() > -1)
+            {
+                var record = new FileCabinetRecord
+                {
+                    Id = reader.ReadInt32(),
+                    FirstName = reader.ReadString(),
+                    LastName = reader.ReadString(),
+                    DateOfBirth = DateTime.Parse(reader.ReadString(), CultureInfo.InvariantCulture),
+                    Sex = reader.ReadChar(),
+                    NumberOfReviews = reader.ReadInt16(),
+                    Salary = reader.ReadDecimal(),
+                };
+
+                records.Add(record);
+            }
+
+            return new ReadOnlyCollection<FileCabinetRecord>(records);
         }
 
         /// <summary>Gets the stat of records in the file cabinet.</summary>

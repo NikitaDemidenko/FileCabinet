@@ -154,6 +154,10 @@
             <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetRecords">
+            <summary>Gets the records.</summary>
+            <returns>Returns a read-only collection  of records.</returns>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat">
             <summary>Gets the stat of records in the file cabinet.</summary>
             <returns>Returns number of records.</returns>
