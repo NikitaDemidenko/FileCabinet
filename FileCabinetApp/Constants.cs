@@ -45,6 +45,9 @@ namespace FileCabinetApp
         /// <summary>Minimum number of reviews (custom).</summary>
         public const short MinNumberOfReviewsCustom = 50;
 
+        /// <summary>The record's lenght in bytes.</summary>
+        public const int RecordLenghtInBytes = 278;
+
         /// <summary>Input date format.</summary>
         public const string InputDateFormat = "MM/dd/yyyy";
 

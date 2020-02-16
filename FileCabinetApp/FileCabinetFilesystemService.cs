@@ -40,10 +40,25 @@ namespace FileCabinetApp
 
             using var writer = new BinaryWriter(this.fileStream, Encoding.Unicode, true);
             this.validator.ValidateParameters(userInputData);
+            var firstNameCharArray = new char[MaxNumberOfSymbols];
+            var lastNameCharArray = new char[MaxNumberOfSymbols];
+            for (int i = 0; i < userInputData.FirstName.Length; i++)
+            {
+                firstNameCharArray[i] = userInputData.FirstName[i];
+            }
+
+            for (int i = 0; i < userInputData.LastName.Length; i++)
+            {
+                lastNameCharArray[i] = userInputData.LastName[i];
+            }
+
+            this.fileStream.Seek(2, SeekOrigin.End);
             writer.Write(++this.recordsCount);
-            writer.Write(userInputData.FirstName);
-            writer.Write(userInputData.LastName);
-            writer.Write(userInputData.DateOfBirth.ToString(InputDateFormat, CultureInfo.InvariantCulture));
+            writer.Write(firstNameCharArray);
+            writer.Write(lastNameCharArray);
+            writer.Write(userInputData.DateOfBirth.Year);
+            writer.Write(userInputData.DateOfBirth.Month);
+            writer.Write(userInputData.DateOfBirth.Day);
             writer.Write(userInputData.Sex);
             writer.Write(userInputData.NumberOfReviews);
             writer.Write(userInputData.Salary);
@@ -51,9 +66,59 @@ namespace FileCabinetApp
             return this.recordsCount;
         }
 
+        /// <summary>Edits record by identifier.</summary>
+        /// <param name="id">Identifier.</param>
+        /// <param name="userInputData">User input data.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
+        /// <exception cref="ArgumentException">Thrown when identifier is invalid.</exception>
         public void EditRecord(int id, UserInputData userInputData)
         {
-            throw new NotImplementedException();
+            if (id < MinValueOfId || id > this.recordsCount)
+            {
+                throw new ArgumentException($"There is no #{id} record.");
+            }
+
+            if (userInputData == null)
+            {
+                throw new ArgumentNullException(nameof(userInputData));
+            }
+
+            this.validator.ValidateParameters(userInputData);
+            var firstNameCharArray = new char[MaxNumberOfSymbols];
+            var lastNameCharArray = new char[MaxNumberOfSymbols];
+            for (int i = 0; i < userInputData.FirstName.Length; i++)
+            {
+                firstNameCharArray[i] = userInputData.FirstName[i];
+            }
+
+            for (int i = 0; i < userInputData.LastName.Length; i++)
+            {
+                lastNameCharArray[i] = userInputData.LastName[i];
+            }
+
+            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+            using var writer = new BinaryWriter(this.fileStream, Encoding.Unicode, true);
+            this.fileStream.Seek(2, SeekOrigin.Begin);
+            do
+            {
+                if (id == reader.ReadInt32())
+                {
+                    writer.Write(firstNameCharArray);
+                    writer.Write(lastNameCharArray);
+                    writer.Write(userInputData.DateOfBirth.Year);
+                    writer.Write(userInputData.DateOfBirth.Month);
+                    writer.Write(userInputData.DateOfBirth.Day);
+                    writer.Write(userInputData.Sex);
+                    writer.Write(userInputData.NumberOfReviews);
+                    writer.Write(userInputData.Salary);
+
+                    this.fileStream.Seek(0, SeekOrigin.End);
+                    break;
+                }
+
+                this.fileStream.Seek(RecordLenghtInBytes - sizeof(int), SeekOrigin.Current);
+            }
+            while (true);
         }
 
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
@@ -76,21 +141,22 @@ namespace FileCabinetApp
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
             using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
-            this.fileStream.Seek(0, SeekOrigin.Begin);
+            this.fileStream.Seek(2, SeekOrigin.Begin);
             var records = new List<FileCabinetRecord>();
             while (reader.PeekChar() > -1)
             {
                 var record = new FileCabinetRecord
                 {
                     Id = reader.ReadInt32(),
-                    FirstName = reader.ReadString(),
-                    LastName = reader.ReadString(),
-                    DateOfBirth = DateTime.Parse(reader.ReadString(), CultureInfo.InvariantCulture),
+                    FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
+                    LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
+                    DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                     Sex = reader.ReadChar(),
                     NumberOfReviews = reader.ReadInt16(),
                     Salary = reader.ReadDecimal(),
                 };
 
+                this.fileStream.Seek(2, SeekOrigin.Current);
                 records.Add(record);
             }
 

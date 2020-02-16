@@ -46,6 +46,9 @@
         <member name="F:FileCabinetApp.Constants.MinNumberOfReviewsCustom">
             <summary>Minimum number of reviews (custom).</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.RecordLenghtInBytes">
+            <summary>The record's lenght in bytes.</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.InputDateFormat">
             <summary>Input date format.</summary>
         </member>
@@ -153,6 +156,13 @@
             <param name="userInputData">User input data.</param>
             <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.EditRecord(System.Int32,FileCabinetApp.UserInputData)">
+            <summary>Edits record by identifier.</summary>
+            <param name="id">Identifier.</param>
+            <param name="userInputData">User input data.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when identifier is invalid.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetRecords">
             <summary>Gets the records.</summary>
