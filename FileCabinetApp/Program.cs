@@ -48,6 +48,7 @@ namespace FileCabinetApp
 
         private static List<string> commandLineFlags;
         private static List<string> commandLineArguments;
+        private static FileStream fileStream;
 
         private static Func<string, Tuple<bool, string, string>> stringConverter = input =>
         {
@@ -192,7 +193,8 @@ namespace FileCabinetApp
                     else if (commandLineArguments.Contains(FileStorageName))
                     {
                         Console.WriteLine("Using default validation rules. Records will be stored in file system.");
-                        fileCabinetService = new FileCabinetFilesystemService(new FileStream(DbFileName, FileMode.Create), new DefaultValidator());
+                        fileStream = new FileStream(DbFileName, FileMode.Create);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, new DefaultValidator());
                         break;
                     }
                     else
@@ -220,13 +222,15 @@ namespace FileCabinetApp
                     else if (commandLineArguments.Contains(DefaultValidationRulesName) && commandLineArguments.Contains(FileStorageName))
                     {
                         Console.WriteLine("Using default validation rules. Records will be stored in file system.");
-                        fileCabinetService = new FileCabinetFilesystemService(new FileStream(DbFileName, FileMode.Create), new DefaultValidator());
+                        fileStream = new FileStream(DbFileName, FileMode.Create);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, new DefaultValidator());
                         break;
                     }
                     else if (commandLineArguments.Contains(CustomValidationRulesName) && commandLineArguments.Contains(FileStorageName))
                     {
                         Console.WriteLine("Using custom validation rules. Records will be stored in file system.");
-                        fileCabinetService = new FileCabinetFilesystemService(new FileStream(DbFileName, FileMode.Create), new CustomValidator());
+                        fileStream = new FileStream(DbFileName, FileMode.Create);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, new CustomValidator());
                         isCustomValidationRules = true;
                         break;
                     }
@@ -268,6 +272,8 @@ namespace FileCabinetApp
                 }
             }
             while (isRunning);
+
+            fileStream?.Dispose();
         }
 
         private static void PrintMissedCommandInfo(string command)
@@ -514,7 +520,7 @@ namespace FileCabinetApp
                 bool append = false;
                 try
                 {
-                    using var streamWriter = new StreamWriter(filePath, append, Encoding.UTF8);
+                    using var streamWriter = new StreamWriter(filePath, append, Encoding.Unicode);
                     var snapshot = (fileCabinetService as FileCabinetMemoryService).MakeSnapshot();
                     if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
                     {

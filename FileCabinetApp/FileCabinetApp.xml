@@ -148,6 +148,12 @@
             <param name="validator">Validator.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when fileStream or validator is null.</exception>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.UserInputData)">
+            <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
+            <param name="userInputData">User input data.</param>
+            <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>Provides methods for interaction with records in memory.</summary>
             <seealso cref="T:FileCabinetApp.IFileCabinetService" />
