@@ -9,13 +9,16 @@ namespace FileCabinetApp
     public class FileCabinetFilesystemService : IFileCabinetService
     {
         private readonly FileStream fileStream;
+        private readonly IRecordValidator validator;
 
         /// <summary>Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.</summary>
         /// <param name="fileStream">File stream.</param>
-        /// <exception cref="ArgumentNullException">Thrown when fileStream is null.</exception>
-        public FileCabinetFilesystemService(FileStream fileStream)
+        /// <param name="validator">Validator.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileStream or validator is null.</exception>
+        public FileCabinetFilesystemService(FileStream fileStream, IRecordValidator validator)
         {
             this.fileStream = fileStream ?? throw new ArgumentNullException(nameof(fileStream));
+            this.validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
         public int CreateRecord(UserInputData userInputData)

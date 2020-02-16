@@ -70,11 +70,26 @@
         <member name="F:FileCabinetApp.Constants.ValidationRulesShortcutPropertyName">
             <summary>Validation rules shortcut property name.</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.StorageFullPropertyName">
+            <summary>Storage full property name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.StorageShortcutPropertyName">
+            <summary>Storage shortcut property name.</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.DefaultValidationRulesName">
             <summary>Default validation rules name.</summary>
         </member>
         <member name="F:FileCabinetApp.Constants.CustomValidationRulesName">
             <summary>Custom validation rules name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MemoryStorageName">
+            <summary>Memory storage argument name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.FileStorageName">
+            <summary>File storage argument name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.DbFileName">
+            <summary>The database file name.</summary>
         </member>
         <member name="F:FileCabinetApp.Constants.CurrencyFormat">
             <summary>Currency format.</summary>
@@ -127,10 +142,11 @@
             <summary>Provides methods for interaction with records in file system.</summary>
             <seealso cref="T:FileCabinetApp.IFileCabinetService" />
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.#ctor(System.IO.FileStream)">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.#ctor(System.IO.FileStream,FileCabinetApp.IRecordValidator)">
             <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetFilesystemService"/> class.</summary>
             <param name="fileStream">File stream.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when fileStream is null.</exception>
+            <param name="validator">Validator.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when fileStream or validator is null.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>Provides methods for interaction with records in memory.</summary>
@@ -259,6 +275,18 @@
             <summary>Saves snapshot to xml file.</summary>
             <param name="writer">Writer.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when writer is null.</exception>
+        </member>
+        <member name="T:FileCabinetApp.Flags">
+            <summary>Command line flags.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Flags.Default">
+            <summary>Default value.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Flags.ValidationRules">
+            <summary>Validation rules flag.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Flags.Storage">
+            <summary>Storage flag.</summary>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>Provides functionality for interaction with records in the file cabinet.</summary>

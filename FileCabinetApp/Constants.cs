@@ -64,16 +64,31 @@ namespace FileCabinetApp
         public const string DateOfBirthPropertyName = "DateOfBirth";
 
         /// <summary>Validation rules full property name.</summary>
-        public const string ValidationRulesFullPropertyName = "--validation-rules";
+        public const string ValidationRulesFullPropertyName = "--VALIDATION-RULES";
 
         /// <summary>Validation rules shortcut property name.</summary>
-        public const string ValidationRulesShortcutPropertyName = "-v";
+        public const string ValidationRulesShortcutPropertyName = "-V";
+
+        /// <summary>Storage full property name.</summary>
+        public const string StorageFullPropertyName = "--STORAGE";
+
+        /// <summary>Storage shortcut property name.</summary>
+        public const string StorageShortcutPropertyName = "-S";
 
         /// <summary>Default validation rules name.</summary>
-        public const string DefaultValidationRulesName = "Default";
+        public const string DefaultValidationRulesName = "DEFAULT";
 
         /// <summary>Custom validation rules name.</summary>
-        public const string CustomValidationRulesName = "Custom";
+        public const string CustomValidationRulesName = "CUSTOM";
+
+        /// <summary>Memory storage argument name.</summary>
+        public const string MemoryStorageName = "MEMORY";
+
+        /// <summary>File storage argument name.</summary>
+        public const string FileStorageName = "FILE";
+
+        /// <summary>The database file name.</summary>
+        public const string DbFileName = "cabinet-records.db";
 
         /// <summary>Currency format.</summary>
         public const string CurrencyFormat = "C";
