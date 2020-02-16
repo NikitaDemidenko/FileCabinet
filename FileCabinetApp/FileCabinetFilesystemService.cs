@@ -75,9 +75,8 @@ namespace FileCabinetApp
             throw new NotImplementedException();
         }
 
-        public int GetStat()
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>Gets the stat of records in the file cabinet.</summary>
+        /// <returns>Returns number of records.</returns>
+        public int GetStat() => this.recordsCount;
     }
 }
