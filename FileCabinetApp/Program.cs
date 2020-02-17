@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -44,6 +45,10 @@ namespace FileCabinetApp
         };
 
         private static IFileCabinetService fileCabinetService;
+
+        private static List<string> commandLineFlags;
+        private static List<string> commandLineArguments;
+        private static FileStream fileStream;
 
         private static Func<string, Tuple<bool, string, string>> stringConverter = input =>
         {
@@ -144,12 +149,98 @@ namespace FileCabinetApp
         /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
-            Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
-            if (!TryParseCommandLine(args))
+            if (args == null)
             {
-                Console.WriteLine("Invalid parameters.");
-                Console.WriteLine("Using default validation rules.");
-                fileCabinetService = new FileCabinetService(new DefaultValidator());
+                throw new ArgumentNullException(nameof(args));
+            }
+
+            Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
+            switch (ParseFlags(args))
+            {
+                case Flags.Default:
+                    Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                    fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                    break;
+                case Flags.ValidationRules:
+                    if (commandLineArguments.Contains(DefaultValidationRulesName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(CustomValidationRulesName))
+                    {
+                        Console.WriteLine("Using custom validation rules. Records will be stored in memory.");
+                        fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
+                        isCustomValidationRules = true;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid arguments.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        break;
+                    }
+
+                case Flags.Storage:
+                    if (commandLineArguments.Contains(MemoryStorageName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(FileStorageName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in file system.");
+                        fileStream = new FileStream(DbFileName, FileMode.Create);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, new DefaultValidator());
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid arguments.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        break;
+                    }
+
+                case Flags.ValidationRules | Flags.Storage:
+                    if (commandLineArguments.Contains(DefaultValidationRulesName) && commandLineArguments.Contains(MemoryStorageName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(CustomValidationRulesName) && commandLineArguments.Contains(MemoryStorageName))
+                    {
+                        Console.WriteLine("Using custom validation rules. Records will be stored in memory.");
+                        fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
+                        isCustomValidationRules = true;
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(DefaultValidationRulesName) && commandLineArguments.Contains(FileStorageName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in file system.");
+                        fileStream = new FileStream(DbFileName, FileMode.Create);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, new DefaultValidator());
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(CustomValidationRulesName) && commandLineArguments.Contains(FileStorageName))
+                    {
+                        Console.WriteLine("Using custom validation rules. Records will be stored in file system.");
+                        fileStream = new FileStream(DbFileName, FileMode.Create);
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, new CustomValidator());
+                        isCustomValidationRules = true;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid arguments.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        break;
+                    }
             }
 
             Console.WriteLine(Program.HintMessage);
@@ -181,6 +272,8 @@ namespace FileCabinetApp
                 }
             }
             while (isRunning);
+
+            fileStream?.Dispose();
         }
 
         private static void PrintMissedCommandInfo(string command)
@@ -427,8 +520,8 @@ namespace FileCabinetApp
                 bool append = false;
                 try
                 {
-                    using var streamWriter = new StreamWriter(filePath, append, Encoding.UTF8);
-                    var snapshot = fileCabinetService.MakeSnapshot();
+                    using var streamWriter = new StreamWriter(filePath, append, Encoding.Unicode);
+                    var snapshot = (fileCabinetService as FileCabinetMemoryService).MakeSnapshot();
                     if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
                     {
                         snapshot.SaveToCsv(streamWriter);
@@ -452,78 +545,53 @@ namespace FileCabinetApp
             }
         }
 
-        private static bool TryParseCommandLine(string[] args)
+        private static Flags ParseFlags(string[] args)
         {
-            bool isValidInput = true;
             if (args == null)
             {
-                return !isValidInput;
+                throw new ArgumentNullException(nameof(args));
             }
 
-            switch (args.Length)
+            commandLineArguments = new List<string>();
+            commandLineFlags = new List<string>();
+            foreach (var arg in args)
             {
-                case 0:
-                    Console.WriteLine("Using default validation rules.");
-                    fileCabinetService = new FileCabinetService(new DefaultValidator());
-                    return isValidInput;
-                case 1:
-                    var splittedParameters = args[FirstElementIndex].Split(EqualSignSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
-                    string parameterName;
-                    string parameterValue;
-                    try
-                    {
-                        parameterName = splittedParameters[FirstElementIndex];
-                        parameterValue = splittedParameters[SecondElementIndex];
-                    }
-                    catch (IndexOutOfRangeException)
-                    {
-                        return !isValidInput;
-                    }
-
-                    if (parameterName.Equals(ValidationRulesFullPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                        parameterValue.Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        Console.WriteLine("Using default validation rules.");
-                        fileCabinetService = new FileCabinetService(new DefaultValidator());
-                        return isValidInput;
-                    }
-                    else if (parameterName.Equals(ValidationRulesFullPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                         parameterValue.Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        Console.WriteLine("Using custom validation rules.");
-                        fileCabinetService = new FileCabinetService(new CustomValidator());
-                        isCustomValidationRules = true;
-                        return isValidInput;
-                    }
-                    else
-                    {
-                        return !isValidInput;
-                    }
-
-                case 2:
-                    if (args[FirstElementIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                    args[SecondElementIndex].Equals(DefaultValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        Console.WriteLine("Using default validation rules.");
-                        fileCabinetService = new FileCabinetService(new DefaultValidator());
-                        return isValidInput;
-                    }
-                    else if (args[FirstElementIndex].Equals(ValidationRulesShortcutPropertyName, StringComparison.InvariantCultureIgnoreCase) &&
-                        args[SecondElementIndex].Equals(CustomValidationRulesName, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        Console.WriteLine("Using custom validation rules.");
-                        fileCabinetService = new FileCabinetService(new CustomValidator());
-                        isCustomValidationRules = true;
-                        return isValidInput;
-                    }
-                    else
-                    {
-                        return !isValidInput;
-                    }
-
-                default:
-                    return !isValidInput;
+                commandLineArguments.Add(arg.ToUpperInvariant());
             }
+
+            foreach (var arg in commandLineArguments)
+            {
+                if (new Regex(@"^--|^-").IsMatch(arg))
+                {
+                    commandLineFlags.Add(arg);
+                }
+            }
+
+            var flags = Flags.Default;
+            foreach (var flag in commandLineFlags)
+            {
+                switch (flag)
+                {
+                    case ValidationRulesFullPropertyName:
+                        flags |= Flags.ValidationRules;
+                        break;
+                    case ValidationRulesShortcutPropertyName:
+                        flags |= Flags.ValidationRules;
+                        break;
+                    case StorageFullPropertyName:
+                        flags |= Flags.Storage;
+                        break;
+                    case StorageShortcutPropertyName:
+                        flags |= Flags.Storage;
+                        break;
+                    default:
+                        break;
+                }
+
+                commandLineArguments.Remove(flag);
+            }
+
+            return flags;
         }
 
         private static T ReadInput<T>(Func<string, Tuple<bool, string, T>> converter, Func<T, Tuple<bool, string>> validator)

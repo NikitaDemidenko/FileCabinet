@@ -46,6 +46,21 @@
         <member name="F:FileCabinetApp.Constants.MinNumberOfReviewsCustom">
             <summary>Minimum number of reviews (custom).</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.RecordLenghtInBytes">
+            <summary>The record's lenght in bytes.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.FirstNameOffset">
+            <summary>First name offset.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.LastNameOffset">
+            <summary>Last name offset.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.DateOfBirthOffset">
+            <summary>Date of birth offset.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.IdOffset">
+            <summary>Identifier offset.</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.InputDateFormat">
             <summary>Input date format.</summary>
         </member>
@@ -70,11 +85,26 @@
         <member name="F:FileCabinetApp.Constants.ValidationRulesShortcutPropertyName">
             <summary>Validation rules shortcut property name.</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.StorageFullPropertyName">
+            <summary>Storage full property name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.StorageShortcutPropertyName">
+            <summary>Storage shortcut property name.</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.DefaultValidationRulesName">
             <summary>Default validation rules name.</summary>
         </member>
         <member name="F:FileCabinetApp.Constants.CustomValidationRulesName">
             <summary>Custom validation rules name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.MemoryStorageName">
+            <summary>Memory storage argument name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.FileStorageName">
+            <summary>File storage argument name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.DbFileName">
+            <summary>The database file name.</summary>
         </member>
         <member name="F:FileCabinetApp.Constants.CurrencyFormat">
             <summary>Currency format.</summary>
@@ -96,6 +126,9 @@
         </member>
         <member name="F:FileCabinetApp.Constants.EqualSignSymbol">
             <summary>An equal sign symbol.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.NullCharacter">
+            <summary>Null character.</summary>
         </member>
         <member name="F:FileCabinetApp.Constants.MinDateOfBirth">
             <summary>Minimum date of birth.</summary>
@@ -122,6 +155,101 @@
             <param name="userInputData">User input.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
             <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetFilesystemService">
+            <summary>Provides methods for interaction with records in file system.</summary>
+            <seealso cref="T:FileCabinetApp.IFileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.#ctor(System.IO.FileStream,FileCabinetApp.IRecordValidator)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetFilesystemService"/> class.</summary>
+            <param name="fileStream">File stream.</param>
+            <param name="validator">Validator.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when fileStream or validator is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.UserInputData)">
+            <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
+            <param name="userInputData">User input data.</param>
+            <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.EditRecord(System.Int32,FileCabinetApp.UserInputData)">
+            <summary>Edits record by identifier.</summary>
+            <param name="id">Identifier.</param>
+            <param name="userInputData">User input data.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when identifier is invalid.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByFirstName(System.String)">
+            <summary>Finds records by first name.</summary>
+            <param name="firstName">First name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByLastName(System.String)">
+            <summary>Finds records by last name.</summary>
+            <param name="lastName">Last name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByDateOfBirth(System.DateTime)">
+            <summary>Finds records by date of birth.</summary>
+            <param name="dateOfBirth">Date of birth to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetRecords">
+            <summary>Gets the records.</summary>
+            <returns>Returns a read-only collection  of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetStat">
+            <summary>Gets the stat of records in the file cabinet.</summary>
+            <returns>Returns number of records.</returns>
+        </member>
+        <member name="T:FileCabinetApp.FileCabinetMemoryService">
+            <summary>Provides methods for interaction with records in memory.</summary>
+            <seealso cref="T:FileCabinetApp.IFileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.#ctor(FileCabinetApp.IRecordValidator)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetMemoryService"/> class.</summary>
+            <param name="validator">Validator.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>validator</em> is <em>null</em>.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.UserInputData)">
+            <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
+            <param name="userInputData">User input data.</param>
+            <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.GetRecords">
+            <summary>Gets the records.</summary>
+            <returns>Returns a read-only collection  of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.GetStat">
+            <summary>Gets the stat of records in the file cabinet.</summary>
+            <returns>Returns number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.UserInputData)">
+            <summary>Edits record by identifier.</summary>
+            <param name="id">Identifier.</param>
+            <param name="userInputData">User input data.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when identifier is invalid.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByFirstName(System.String)">
+            <summary>Finds records by first name.</summary>
+            <param name="firstName">First name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByLastName(System.String)">
+            <summary>Finds records by last name.</summary>
+            <param name="lastName">Last name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.FindByDateOfBirth(System.DateTime)">
+            <summary>Finds records by date of birth.</summary>
+            <param name="dateOfBirth">Date of birth to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.MakeSnapshot">
+            <summary>Makes snapshot of current <see cref="T:FileCabinetApp.FileCabinetMemoryService"/> object state.</summary>
+            <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/>.</returns>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>Provides properties for records.</summary>
@@ -184,55 +312,6 @@
             <param name="record">Record.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when record is null.</exception>
         </member>
-        <member name="T:FileCabinetApp.FileCabinetService">
-            <summary>Provides methods for interaction with records in the file cabinet.</summary>
-            <seealso cref="T:FileCabinetApp.IFileCabinetService" />
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.#ctor(FileCabinetApp.IRecordValidator)">
-            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetService"/> class.</summary>
-            <param name="validator">Validator.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when <em>validator</em> is <em>null</em>.</exception>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.CreateRecord(FileCabinetApp.UserInputData)">
-            <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
-            <param name="userInputData">User input data.</param>
-            <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
-            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.GetRecords">
-            <summary>Gets the records.</summary>
-            <returns>Returns a read-only collection  of records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.GetStat">
-            <summary>Gets the stat of records in the file cabinet.</summary>
-            <returns>Returns number of records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.EditRecord(System.Int32,FileCabinetApp.UserInputData)">
-            <summary>Edits record by identifier.</summary>
-            <param name="id">Identifier.</param>
-            <param name="userInputData">User input data.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
-            <exception cref="T:System.ArgumentException">Thrown when identifier is invalid.</exception>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.FindByFirstName(System.String)">
-            <summary>Finds records by first name.</summary>
-            <param name="firstName">First name to find.</param>
-            <returns>Returns a read-only collection of found records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.FindByLastName(System.String)">
-            <summary>Finds records by last name.</summary>
-            <param name="lastName">Last name to find.</param>
-            <returns>Returns a read-only collection of found records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.FindByDateOfBirth(System.DateTime)">
-            <summary>Finds records by date of birth.</summary>
-            <param name="dateOfBirth">Date of birth to find.</param>
-            <returns>Returns a read-only collection of found records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.FileCabinetService.MakeSnapshot">
-            <summary>Makes snapshot of current <see cref="T:FileCabinetApp.FileCabinetService"/> object state.</summary>
-            <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/>.</returns>
-        </member>
         <member name="T:FileCabinetApp.FileCabinetServiceSnapshot">
             <summary>Provides method for saving snapshots to csv file.</summary>
         </member>
@@ -250,6 +329,18 @@
             <summary>Saves snapshot to xml file.</summary>
             <param name="writer">Writer.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when writer is null.</exception>
+        </member>
+        <member name="T:FileCabinetApp.Flags">
+            <summary>Command line flags.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Flags.Default">
+            <summary>Default value.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Flags.ValidationRules">
+            <summary>Validation rules flag.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Flags.Storage">
+            <summary>Storage flag.</summary>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>Provides functionality for interaction with records in the file cabinet.</summary>
@@ -286,10 +377,6 @@
             <summary>Finds records by date of birth.</summary>
             <param name="dateOfBirth">Date of birth to find.</param>
             <returns>Returns a read-only collection of found records.</returns>
-        </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
-            <summary>Makes snapshot of current object state.</summary>
-            <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/>.</returns>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
