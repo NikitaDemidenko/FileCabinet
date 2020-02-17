@@ -164,6 +164,11 @@
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
             <exception cref="T:System.ArgumentException">Thrown when identifier is invalid.</exception>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByFirstName(System.String)">
+            <summary>Finds records by first name.</summary>
+            <param name="firstName">First name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetRecords">
             <summary>Gets the records.</summary>
             <returns>Returns a read-only collection  of records.</returns>

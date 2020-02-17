@@ -99,6 +99,7 @@ namespace FileCabinetApp
             using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             using var writer = new BinaryWriter(this.fileStream, Encoding.Unicode, true);
             this.fileStream.Seek(2, SeekOrigin.Begin);
+            bool isNotFound = true;
             do
             {
                 if (id == reader.ReadInt32())
@@ -113,25 +114,61 @@ namespace FileCabinetApp
                     writer.Write(userInputData.Salary);
 
                     this.fileStream.Seek(0, SeekOrigin.End);
-                    break;
+                    isNotFound = false;
                 }
 
                 this.fileStream.Seek(RecordLenghtInBytes - sizeof(int), SeekOrigin.Current);
             }
-            while (true);
+            while (isNotFound);
         }
 
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
-        {
-            throw new NotImplementedException();
-        }
-
+        /// <summary>Finds records by first name.</summary>
+        /// <param name="firstName">First name to find.</param>
+        /// <returns>Returns a read-only collection of found records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
         {
-            throw new NotImplementedException();
+            if (firstName == null)
+            {
+                throw new ArgumentNullException(nameof(firstName));
+            }
+
+            this.fileStream.Seek(6, SeekOrigin.Begin);
+            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+            var searchResult = new List<FileCabinetRecord>();
+            while (reader.PeekChar() > -1)
+            {
+                if (new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0').Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    this.fileStream.Seek((-2 * MaxNumberOfSymbols) - sizeof(int), SeekOrigin.Current);
+                    var record = new FileCabinetRecord
+                    {
+                        Id = reader.ReadInt32(),
+                        FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
+                        LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
+                        DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+                        Sex = reader.ReadChar(),
+                        NumberOfReviews = reader.ReadInt16(),
+                        Salary = reader.ReadDecimal(),
+                    };
+
+                    searchResult.Add(record);
+                    this.fileStream.Seek(6, SeekOrigin.Current);
+                }
+                else
+                {
+                    this.fileStream.Seek(RecordLenghtInBytes - (2 * MaxNumberOfSymbols), SeekOrigin.Current);
+                }
+            }
+
+            return searchResult.Count != 0 ? new ReadOnlyCollection<FileCabinetRecord>(searchResult) : null;
         }
 
         public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             throw new NotImplementedException();
         }
@@ -140,8 +177,8 @@ namespace FileCabinetApp
         /// <returns>Returns a read-only collection  of records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             this.fileStream.Seek(2, SeekOrigin.Begin);
+            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             var records = new List<FileCabinetRecord>();
             while (reader.PeekChar() > -1)
             {
