@@ -52,7 +52,7 @@ namespace FileCabinetApp
                 lastNameCharArray[i] = userInputData.LastName[i];
             }
 
-            this.fileStream.Seek(2, SeekOrigin.End);
+            this.fileStream.Seek(IdOffset, SeekOrigin.End);
             writer.Write(++this.recordsCount);
             writer.Write(firstNameCharArray);
             writer.Write(lastNameCharArray);
@@ -98,7 +98,7 @@ namespace FileCabinetApp
 
             using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             using var writer = new BinaryWriter(this.fileStream, Encoding.Unicode, true);
-            this.fileStream.Seek(2, SeekOrigin.Begin);
+            this.fileStream.Seek(IdOffset, SeekOrigin.Begin);
             bool isNotFound = true;
             do
             {
@@ -137,14 +137,14 @@ namespace FileCabinetApp
             var searchResult = new List<FileCabinetRecord>();
             while (reader.PeekChar() > -1)
             {
-                if (new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0').Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
+                if (new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter).Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     this.fileStream.Seek((-2 * MaxNumberOfSymbols) - sizeof(int), SeekOrigin.Current);
                     var record = new FileCabinetRecord
                     {
                         Id = reader.ReadInt32(),
-                        FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
-                        LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
+                        FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
+                        LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
                         DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                         Sex = reader.ReadChar(),
                         NumberOfReviews = reader.ReadInt16(),
@@ -178,14 +178,14 @@ namespace FileCabinetApp
             var searchResult = new List<FileCabinetRecord>();
             while (reader.PeekChar() > -1)
             {
-                if (new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0').Equals(lastName, StringComparison.InvariantCultureIgnoreCase))
+                if (new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter).Equals(lastName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     this.fileStream.Seek((-4 * MaxNumberOfSymbols) - sizeof(int), SeekOrigin.Current);
                     var record = new FileCabinetRecord
                     {
                         Id = reader.ReadInt32(),
-                        FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
-                        LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
+                        FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
+                        LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
                         DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                         Sex = reader.ReadChar(),
                         NumberOfReviews = reader.ReadInt16(),
@@ -204,16 +204,47 @@ namespace FileCabinetApp
             return searchResult.Count != 0 ? new ReadOnlyCollection<FileCabinetRecord>(searchResult) : null;
         }
 
+        /// <summary>Finds records by date of birth.</summary>
+        /// <param name="dateOfBirth">Date of birth to find.</param>
+        /// <returns>Returns a read-only collection of found records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
-            throw new NotImplementedException();
+            this.fileStream.Seek(DateOfBirthOffset, SeekOrigin.Begin);
+            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+            var searchResult = new List<FileCabinetRecord>();
+            while (reader.PeekChar() > -1)
+            {
+                if (reader.ReadInt32() == dateOfBirth.Year & reader.ReadInt32() == dateOfBirth.Month & reader.ReadInt32() == dateOfBirth.Day)
+                {
+                    this.fileStream.Seek((-4 * MaxNumberOfSymbols) - (4 * sizeof(int)), SeekOrigin.Current);
+                    var record = new FileCabinetRecord
+                    {
+                        Id = reader.ReadInt32(),
+                        FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
+                        LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
+                        DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+                        Sex = reader.ReadChar(),
+                        NumberOfReviews = reader.ReadInt16(),
+                        Salary = reader.ReadDecimal(),
+                    };
+
+                    searchResult.Add(record);
+                    this.fileStream.Seek(DateOfBirthOffset, SeekOrigin.Current);
+                }
+                else
+                {
+                    this.fileStream.Seek(RecordLenghtInBytes - (3 * sizeof(int)), SeekOrigin.Current);
+                }
+            }
+
+            return searchResult.Count != 0 ? new ReadOnlyCollection<FileCabinetRecord>(searchResult) : null;
         }
 
         /// <summary>Gets the records.</summary>
         /// <returns>Returns a read-only collection  of records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            this.fileStream.Seek(2, SeekOrigin.Begin);
+            this.fileStream.Seek(IdOffset, SeekOrigin.Begin);
             using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             var records = new List<FileCabinetRecord>();
             while (reader.PeekChar() > -1)
@@ -229,7 +260,7 @@ namespace FileCabinetApp
                     Salary = reader.ReadDecimal(),
                 };
 
-                this.fileStream.Seek(2, SeekOrigin.Current);
+                this.fileStream.Seek(IdOffset, SeekOrigin.Current);
                 records.Add(record);
             }
 

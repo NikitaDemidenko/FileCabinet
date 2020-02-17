@@ -54,6 +54,12 @@ namespace FileCabinetApp
         /// <summary>Last name offset.</summary>
         public const int LastNameOffset = 126;
 
+        /// <summary>Date of birth offset.</summary>
+        public const int DateOfBirthOffset = 246;
+
+        /// <summary>Identifier offset.</summary>
+        public const int IdOffset = 2;
+
         /// <summary>Input date format.</summary>
         public const string InputDateFormat = "MM/dd/yyyy";
 
@@ -119,6 +125,9 @@ namespace FileCabinetApp
 
         /// <summary>An equal sign symbol.</summary>
         public const char EqualSignSymbol = '=';
+
+        /// <summary>Null character.</summary>
+        public const char NullCharacter = '\0';
 
         /// <summary>Minimum date of birth.</summary>
         public static readonly DateTime MinDateOfBirth = new DateTime(1950, 01, 01);
