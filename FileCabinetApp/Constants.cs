@@ -48,6 +48,12 @@ namespace FileCabinetApp
         /// <summary>The record's lenght in bytes.</summary>
         public const int RecordLenghtInBytes = 278;
 
+        /// <summary>First name offset.</summary>
+        public const int FirstNameOffset = 6;
+
+        /// <summary>Last name offset.</summary>
+        public const int LastNameOffset = 126;
+
         /// <summary>Input date format.</summary>
         public const string InputDateFormat = "MM/dd/yyyy";
 

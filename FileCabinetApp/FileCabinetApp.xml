@@ -49,6 +49,12 @@
         <member name="F:FileCabinetApp.Constants.RecordLenghtInBytes">
             <summary>The record's lenght in bytes.</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.FirstNameOffset">
+            <summary>First name offset.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.LastNameOffset">
+            <summary>Last name offset.</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.InputDateFormat">
             <summary>Input date format.</summary>
         </member>
@@ -167,6 +173,11 @@
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByFirstName(System.String)">
             <summary>Finds records by first name.</summary>
             <param name="firstName">First name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.FindByLastName(System.String)">
+            <summary>Finds records by last name.</summary>
+            <param name="lastName">Last name to find.</param>
             <returns>Returns a read-only collection of found records.</returns>
         </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.GetRecords">
