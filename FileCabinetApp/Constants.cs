@@ -40,10 +40,10 @@ namespace FileCabinetApp
         public const int SecondElementIndex = 1;
 
         /// <summary>Minimum number of reviews.</summary>
-        public const short MinNumberOfReviews = 0;
+        public const int MinNumberOfReviews = 0;
 
         /// <summary>Minimum number of reviews (custom).</summary>
-        public const short MinNumberOfReviewsCustom = 50;
+        public const int MinNumberOfReviewsCustom = 50;
 
         /// <summary>The record's lenght in bytes.</summary>
         public const int RecordLenghtInBytes = 278;
