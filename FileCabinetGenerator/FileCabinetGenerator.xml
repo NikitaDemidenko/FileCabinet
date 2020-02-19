@@ -4,5 +4,45 @@
         <name>FileCabinetGenerator</name>
     </assembly>
     <members>
+        <member name="T:FileCabinetGenerator.Constants">
+            <summary>Provides constatnts for work with FileCabinetGenerator.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.OutputTypeFullPropertyName">
+            <summary>Output type full property name.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.OutputTypeShortcutPropertyName">
+            <summary>Output type shortcut property name.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.OutputFullPropertyName">
+            <summary>Output full property name.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.OutputShortcutPropertyName">
+            <summary>Output shortcut property name.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.RecordsAmountFullPropertyName">
+            <summary>Records amount full property name.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.RecordsAmountShortcutPropertyName">
+            <summary>Records amount shortcut property name.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.StartIdFullPropertyName">
+            <summary>Start identifier full property name.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.StartIdShortcutPropertyName">
+            <summary>Start identifier shortcut property name.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.CsvFileExtension">
+            <summary>CSV file extension.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Constants.XmlFileExtension">
+            <summary>XML file extension.</summary>
+        </member>
+        <member name="T:FileCabinetGenerator.Program">
+            <summary>Main class of the project.</summary>
+        </member>
+        <member name="M:FileCabinetGenerator.Program.Main(System.String[])">
+            <summary>Defines the entry point of the application.</summary>
+            <param name="args">The arguments.</param>
+        </member>
     </members>
 </doc>
