@@ -57,7 +57,16 @@ namespace FileCabinetGenerator
             string formatType = flagValuePairs[Flags.OutputType];
             if (formatType.Equals(Constants.CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
             {
-                SaveToCsv(filePath, recordsAmount, startId);
+                try
+                {
+                    SaveToCsv(filePath, recordsAmount, startId);
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
+
                 Console.WriteLine($"{recordsAmount} records were written to {filePath}.");
             }
             else if (formatType.Equals(Constants.XmlFileExtension, StringComparison.InvariantCultureIgnoreCase))
@@ -121,7 +130,24 @@ namespace FileCabinetGenerator
 
         private static void SaveToCsv(string filePath, int count, int startId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var writer = new StreamWriter(filePath, false, Encoding.Unicode);
+                foreach (var record in GetRandomRecords(count, startId))
+                {
+                    writer.Write($"{record.Id};");
+                    writer.Write($"{record.FirstName};");
+                    writer.Write($"{record.LastName};");
+                    writer.Write($"{record.DateOfBirth:MM/dd/yyyy};");
+                    writer.Write($"{record.Sex};");
+                    writer.Write($"{record.NumberOfReviews};");
+                    writer.WriteLine($"{record.Salary}");
+                }
+            }
+            catch (IOException)
+            {
+                throw;
+            }
         }
 
         private static void SaveToXml(string filePath, int count, int startId)
@@ -147,7 +173,7 @@ namespace FileCabinetGenerator
                 int month = random.Next(1, 12);
                 int day = month == 2 ? random.Next(1, 28) : random.Next(1, 30);
                 dateOfBirth = new DateTime(year, month, day);
-                sex = random.Next(1, 2) == 1 ? MaleSex : FemaleSex;
+                sex = random.Next(2) == 1 ? MaleSex : FemaleSex;
                 numberOfReviews = (short)random.Next(MinNumberOfReviews, short.MaxValue);
                 salary = random.Next((int)MinValueOfSalary, int.MaxValue);
 
@@ -171,7 +197,7 @@ namespace FileCabinetGenerator
                 char ch;
                 for (int j = 0; j < size; j++)
                 {
-                    ch = Convert.ToChar(Convert.ToInt32(Math.Floor((26 * random.NextDouble()) + 65)));
+                    ch = Convert.ToChar(Convert.ToInt32(Math.Floor((26 * random.NextDouble()) + 97)));
                     builder.Append(ch);
                 }
 

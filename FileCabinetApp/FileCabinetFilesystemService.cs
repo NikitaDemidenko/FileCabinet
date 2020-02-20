@@ -252,8 +252,8 @@ namespace FileCabinetApp
                 var record = new FileCabinetRecord
                 {
                     Id = reader.ReadInt32(),
-                    FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
-                    LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
+                    FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
+                    LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
                     DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                     Sex = reader.ReadChar(),
                     NumberOfReviews = reader.ReadInt16(),
