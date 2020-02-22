@@ -254,17 +254,16 @@
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>Provides properties for records.</summary>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetRecord.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecord"/> class.</summary>
+        </member>
         <member name="P:FileCabinetApp.FileCabinetRecord.Id">
             <summary>Gets or sets the identifier.</summary>
             <value>Identifier of record.</value>
         </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.FirstName">
-            <summary>Gets or sets the first name.</summary>
-            <value>First name.</value>
-        </member>
-        <member name="P:FileCabinetApp.FileCabinetRecord.LastName">
-            <summary>Gets or sets the last name.</summary>
-            <value>Last name.</value>
+        <member name="P:FileCabinetApp.FileCabinetRecord.Name">
+            <summary>Gets or sets the full name.</summary>
+            <value>Full name.</value>
         </member>
         <member name="P:FileCabinetApp.FileCabinetRecord.DateOfBirth">
             <summary>Gets or sets the date of birth.</summary>
@@ -302,15 +301,16 @@
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>Provides method for saving <see cref="T:FileCabinetApp.FileCabinetRecord"/> to xml file.</summary>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.Xml.XmlWriter)">
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.#ctor(System.IO.StreamWriter)">
             <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlWriter"/> class.</summary>
-            <param name="writer">Xml writer.</param>
+            <param name="writer">Stream writer.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when writer is null.</exception>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord)">
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord[],System.Xml.Serialization.XmlSerializer)">
             <summary>Writes the specified record to xml file.</summary>
-            <param name="record">Record.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when record is null.</exception>
+            <param name="records">Records.</param>
+            <param name="formatter">Xml formatter.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when records or formatter is null.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetServiceSnapshot">
             <summary>Provides method for saving snapshots to csv file.</summary>
@@ -341,6 +341,29 @@
         </member>
         <member name="F:FileCabinetApp.Flags.Storage">
             <summary>Storage flag.</summary>
+        </member>
+        <member name="T:FileCabinetApp.FullName">
+            <summary>Full name.</summary>
+        </member>
+        <member name="M:FileCabinetApp.FullName.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FullName"/> class.</summary>
+        </member>
+        <member name="M:FileCabinetApp.FullName.#ctor(System.String,System.String)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FullName"/> class.</summary>
+            <param name="firstName">The first name.</param>
+            <param name="lastName">The last name.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when firstName
+            or
+            lastName
+            is null.</exception>
+        </member>
+        <member name="P:FileCabinetApp.FullName.FirstName">
+            <summary>Gets or sets the first name.</summary>
+            <value>First name.</value>
+        </member>
+        <member name="P:FileCabinetApp.FullName.LastName">
+            <summary>Gets or sets the last name.</summary>
+            <value>Last name.</value>
         </member>
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>Provides functionality for interaction with records in the file cabinet.</summary>

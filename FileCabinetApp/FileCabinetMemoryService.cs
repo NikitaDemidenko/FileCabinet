@@ -38,8 +38,7 @@ namespace FileCabinetApp
             var record = new FileCabinetRecord
             {
                 Id = this.list.Count + 1,
-                FirstName = userInputData.FirstName,
-                LastName = userInputData.LastName,
+                Name = new FullName(userInputData.FirstName, userInputData.LastName),
                 DateOfBirth = userInputData.DateOfBirth,
                 Sex = userInputData.Sex,
                 NumberOfReviews = userInputData.NumberOfReviews,
@@ -102,11 +101,11 @@ namespace FileCabinetApp
             {
                 if (record.Id == id)
                 {
-                    this.firstNameDictionary[record.FirstName.ToUpperInvariant()].Remove(record);
-                    this.lastNameDictionary[record.LastName.ToUpperInvariant()].Remove(record);
+                    this.firstNameDictionary[record.Name.FirstName.ToUpperInvariant()].Remove(record);
+                    this.lastNameDictionary[record.Name.LastName.ToUpperInvariant()].Remove(record);
                     this.dateOfBirthDictionary[record.DateOfBirth].Remove(record);
-                    record.FirstName = userInputData.FirstName;
-                    record.LastName = userInputData.LastName;
+                    record.Name.FirstName = userInputData.FirstName;
+                    record.Name.LastName = userInputData.LastName;
                     record.DateOfBirth = userInputData.DateOfBirth;
                     record.Sex = userInputData.Sex;
                     record.NumberOfReviews = userInputData.NumberOfReviews;

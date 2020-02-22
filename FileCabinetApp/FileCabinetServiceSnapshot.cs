@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml;
+using System.Xml.Serialization;
 using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
@@ -57,16 +58,9 @@ namespace FileCabinetApp
             {
                 Indent = true,
             };
-            using var xmlDoc = XmlWriter.Create(writer, settings);
-            xmlDoc.WriteStartDocument();
-            xmlDoc.WriteStartElement("records");
-            var xmlWriter = new FileCabinetRecordXmlWriter(xmlDoc);
-            foreach (var record in this.records)
-            {
-                xmlWriter.Write(record);
-            }
-
-            xmlDoc.WriteEndDocument();
+            var formatter = new XmlSerializer(typeof(FileCabinetRecord[]));
+            var xmlWriter = new FileCabinetRecordXmlWriter(writer);
+            xmlWriter.Write(this.records, formatter);
         }
     }
 }
