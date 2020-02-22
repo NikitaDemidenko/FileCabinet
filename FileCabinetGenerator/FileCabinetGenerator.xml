@@ -37,6 +37,24 @@
         <member name="F:FileCabinetGenerator.Constants.XmlFileExtension">
             <summary>XML file extension.</summary>
         </member>
+        <member name="T:FileCabinetGenerator.Flags">
+            <summary>Command line args for FileCabinetGenerator.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Flags.Default">
+            <summary>Default.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Flags.OutputType">
+            <summary>The output type flag.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Flags.Output">
+            <summary>The output flag.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Flags.RecordsAmount">
+            <summary>The records amount flag.</summary>
+        </member>
+        <member name="F:FileCabinetGenerator.Flags.StartId">
+            <summary>The start identifier flag.</summary>
+        </member>
         <member name="T:FileCabinetGenerator.Program">
             <summary>Main class of the project.</summary>
         </member>

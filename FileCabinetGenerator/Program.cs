@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 using FileCabinetApp;
 using static FileCabinetApp.Constants;
 using static FileCabinetGenerator.Constants;
@@ -71,7 +72,16 @@ namespace FileCabinetGenerator
             }
             else if (formatType.Equals(Constants.XmlFileExtension, StringComparison.InvariantCultureIgnoreCase))
             {
-                SaveToXml(filePath, recordsAmount, startId);
+                try
+                {
+                    SaveToXml(filePath, recordsAmount, startId);
+                }
+                catch (IOException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
+
                 Console.WriteLine($"{recordsAmount} records were written to {filePath}.");
             }
             else
@@ -136,8 +146,8 @@ namespace FileCabinetGenerator
                 foreach (var record in GetRandomRecords(count, startId))
                 {
                     writer.Write($"{record.Id};");
-                    writer.Write($"{record.FirstName};");
-                    writer.Write($"{record.LastName};");
+                    writer.Write($"{record.Name.FirstName};");
+                    writer.Write($"{record.Name.LastName};");
                     writer.Write($"{record.DateOfBirth:MM/dd/yyyy};");
                     writer.Write($"{record.Sex};");
                     writer.Write($"{record.NumberOfReviews};");
@@ -152,7 +162,16 @@ namespace FileCabinetGenerator
 
         private static void SaveToXml(string filePath, int count, int startId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                using var writer = new StreamWriter(filePath, false, Encoding.Unicode);
+                var xmlWriter = new XmlSerializer(typeof(List<FileCabinetRecord>));
+                xmlWriter.Serialize(writer, GetRandomRecords(count, startId));
+            }
+            catch (IOException)
+            {
+                throw;
+            }
         }
 
         private static IEnumerable<FileCabinetRecord> GetRandomRecords(int count, int startId)
@@ -180,8 +199,7 @@ namespace FileCabinetGenerator
                 records.Add(new FileCabinetRecord
                 {
                     Id = id,
-                    FirstName = firstName,
-                    LastName = lastName,
+                    Name = new FullName(firstName, lastName),
                     DateOfBirth = dateOfBirth,
                     Sex = sex,
                     NumberOfReviews = numberOfReviews,
