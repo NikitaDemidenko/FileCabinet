@@ -266,5 +266,9 @@ namespace FileCabinetApp
         /// <summary>Gets the stat of records in the file cabinet.</summary>
         /// <returns>Returns number of records.</returns>
         public int GetStat() => this.recordsCount;
+
+        /// <summary>Makes snapshot of current <see cref="FileCabinetFilesystemService"/> object state.</summary>
+        /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot() => new FileCabinetServiceSnapshot(this.GetRecords());
     }
 }

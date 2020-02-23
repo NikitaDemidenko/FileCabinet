@@ -521,7 +521,7 @@ namespace FileCabinetApp
                 try
                 {
                     using var streamWriter = new StreamWriter(filePath, append, Encoding.Unicode);
-                    var snapshot = (fileCabinetService as FileCabinetMemoryService).MakeSnapshot();
+                    var snapshot = fileCabinetService.MakeSnapshot();
                     if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
                     {
                         snapshot.SaveToCsv(streamWriter);
