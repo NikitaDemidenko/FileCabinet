@@ -29,6 +29,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -41,6 +42,7 @@ namespace FileCabinetApp
             new string[] { "list", "prints all records", "The 'list' command prints the records." },
             new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
             new string[] { "export", "exports records to file", "The 'export' command exports records to file." },
+            new string[] { "import", "imports records from file", "The 'import' command imports records from file." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -542,6 +544,40 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("Wrong type of file parameter.");
+            }
+        }
+
+        private static void Import(string parameters)
+        {
+            if (string.IsNullOrWhiteSpace(parameters))
+            {
+                Console.WriteLine("Enter export parameters.");
+                return;
+            }
+
+            var splittedParameters = parameters.Split(SpaceSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
+            string typeOfFile;
+            string filePath;
+            try
+            {
+                typeOfFile = splittedParameters[FirstElementIndex];
+                filePath = splittedParameters[SecondElementIndex].Trim(QuoteSymbol);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Invalid number of parameters.");
+                return;
+            }
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Import error: file {filePath} is not exist.");
+                return;
+            }
+
+            if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new NotImplementedException();
             }
         }
 
