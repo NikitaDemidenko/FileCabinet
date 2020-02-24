@@ -9,7 +9,7 @@ using static FileCabinetApp.Constants;
 namespace FileCabinetApp
 {
     /// <summary>Provides methods for interaction with records in file system.</summary>
-    /// <seealso cref="FileCabinetApp.IFileCabinetService" />
+    /// <seealso cref="IFileCabinetService" />
     public class FileCabinetFilesystemService : IFileCabinetService
     {
         private readonly FileStream fileStream;
@@ -31,7 +31,7 @@ namespace FileCabinetApp
         /// <param name="userInputData">User input data.</param>
         /// <returns>Returns identifier of the new <see cref="FileCabinetRecord"/> instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
-        public int CreateRecord(UserInputData userInputData)
+        public int CreateRecord(UnverifiedData userInputData)
         {
             if (userInputData == null)
             {
@@ -71,7 +71,7 @@ namespace FileCabinetApp
         /// <param name="userInputData">User input data.</param>
         /// <exception cref="ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
         /// <exception cref="ArgumentException">Thrown when identifier is invalid.</exception>
-        public void EditRecord(int id, UserInputData userInputData)
+        public void EditRecord(int id, UnverifiedData userInputData)
         {
             if (id < MinValueOfId || id > this.recordsCount)
             {

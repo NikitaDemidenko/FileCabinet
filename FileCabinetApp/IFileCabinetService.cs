@@ -10,9 +10,9 @@ namespace FileCabinetApp
     public interface IFileCabinetService
     {
         /// <summary>Creates new <see cref="FileCabinetRecord"/> instance.</summary>
-        /// <param name="userInputData">User input data.</param>
+        /// <param name="unverifiedData">Raw data.</param>
         /// <returns>Returns identifier of the new <see cref="FileCabinetRecord"/> instance.</returns>
-        public int CreateRecord(UserInputData userInputData);
+        public int CreateRecord(UnverifiedData unverifiedData);
 
         /// <summary>Gets the records.</summary>
         /// <returns>Returns a read-only collection  of records.</returns>
@@ -24,8 +24,8 @@ namespace FileCabinetApp
 
         /// <summary>Edits record by identifier.</summary>
         /// <param name="id">Identifier.</param>
-        /// <param name="userInputData">User input data.</param>
-        public void EditRecord(int id, UserInputData userInputData);
+        /// <param name="unverifiedData">User input data.</param>
+        public void EditRecord(int id, UnverifiedData unverifiedData);
 
         /// <summary>Finds records by first name.</summary>
         /// <param name="firstName">First name to find.</param>

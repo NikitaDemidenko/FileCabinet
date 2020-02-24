@@ -129,6 +129,9 @@ namespace FileCabinetApp
         /// <summary>Null character.</summary>
         public const char NullCharacter = '\0';
 
+        /// <summary>CSV file separator.</summary>
+        public const char CsvFileSeparator = ';';
+
         /// <summary>Minimum date of birth.</summary>
         public static readonly DateTime MinDateOfBirth = new DateTime(1950, 01, 01);
 

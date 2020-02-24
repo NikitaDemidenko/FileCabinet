@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml;
@@ -10,7 +11,14 @@ namespace FileCabinetApp
     /// <summary>Provides method for saving snapshots to csv file.</summary>
     public class FileCabinetServiceSnapshot
     {
-        private readonly FileCabinetRecord[] records;
+        private readonly List<Tuple<FileCabinetRecord, string>> invalidRecords = new List<Tuple<FileCabinetRecord, string>>();
+        private readonly List<FileCabinetRecord> records;
+
+        /// <summary>Initializes a new instance of the <see cref="FileCabinetServiceSnapshot"/> class.</summary>
+        public FileCabinetServiceSnapshot()
+        {
+            this.records = new List<FileCabinetRecord>();
+        }
 
         /// <summary>Initializes a new instance of the <see cref="FileCabinetServiceSnapshot"/> class.</summary>
         /// <param name="records">Records to save.</param>
@@ -22,9 +30,16 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(records));
             }
 
-            this.records = new FileCabinetRecord[records.Count];
-            records.CopyTo(this.records, FirstElementIndex);
+            this.records = new List<FileCabinetRecord>(records);
         }
+
+        /// <summary>Gets the records.</summary>
+        /// <value>The records.</value>
+        public ReadOnlyCollection<FileCabinetRecord> Records => new ReadOnlyCollection<FileCabinetRecord>(this.records);
+
+        /// <summary>Gets the invalid records of taken snapshot.</summary>
+        /// <value>Invalid records of taken snapshot.</value>
+        public ReadOnlyCollection<Tuple<FileCabinetRecord, string>> InvalidRecords => new ReadOnlyCollection<Tuple<FileCabinetRecord, string>>(this.invalidRecords);
 
         /// <summary>Saves snapshot to csv file.</summary>
         /// <param name="writer">Writer.</param>
@@ -58,9 +73,61 @@ namespace FileCabinetApp
             {
                 Indent = true,
             };
-            var formatter = new XmlSerializer(typeof(FileCabinetRecord[]));
+            var formatter = new XmlSerializer(typeof(List<FileCabinetRecord>));
             var xmlWriter = new FileCabinetRecordXmlWriter(writer);
             xmlWriter.Write(this.records, formatter);
+        }
+
+        /// <summary>Loads records from CSV file.</summary>
+        /// <param name="reader">Reader.</param>
+        /// <param name="validator">Validator.</param>
+        /// <exception cref="ArgumentNullException">Thrown when reader
+        /// or
+        /// validator
+        /// is null.</exception>
+        public void LoadFromCsv(StreamReader reader, IRecordValidator validator)
+        {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (validator == null)
+            {
+                throw new ArgumentNullException(nameof(validator));
+            }
+
+            var csvReader = new FileCabinetRecordCsvReader(reader);
+            IList<FileCabinetRecord> records;
+            try
+            {
+                records = csvReader.ReadAll();
+            }
+            catch (FormatException)
+            {
+                throw;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                throw;
+            }
+
+            UnverifiedData unverifiedData;
+            foreach (var record in records)
+            {
+                unverifiedData = new UnverifiedData(record);
+                try
+                {
+                    validator.ValidateParameters(unverifiedData);
+                }
+                catch (ArgumentException ex)
+                {
+                    this.invalidRecords.Add(new Tuple<FileCabinetRecord, string>(record, ex.Message));
+                    continue;
+                }
+
+                this.records.Add(record);
+            }
         }
     }
 }

@@ -143,6 +143,7 @@ namespace FileCabinetGenerator
             try
             {
                 using var writer = new StreamWriter(filePath, false, Encoding.Unicode);
+                writer.WriteLine("Id;First Name;Last Name;Date of Birth;Sex;Number of Reviews;Salary");
                 foreach (var record in GetRandomRecords(count, startId))
                 {
                     writer.Write($"{record.Id};");

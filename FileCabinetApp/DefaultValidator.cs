@@ -8,52 +8,52 @@ namespace FileCabinetApp
     public sealed class DefaultValidator : IRecordValidator
     {
         /// <summary>Validates user input parameters using default validation rules.</summary>
-        /// <param name="userInputData">User input.</param>
+        /// <param name="unverifiedData">Raw data.</param>
         /// <exception cref="ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
         /// <exception cref="ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
-        public void ValidateParameters(UserInputData userInputData)
+        public void ValidateParameters(UnverifiedData unverifiedData)
         {
-            if (userInputData == null)
+            if (unverifiedData == null)
             {
-                throw new ArgumentNullException(nameof(userInputData));
+                throw new ArgumentNullException(nameof(unverifiedData));
             }
 
-            if (string.IsNullOrWhiteSpace(userInputData.FirstName))
+            if (string.IsNullOrWhiteSpace(unverifiedData.FirstName))
             {
                 throw new ArgumentException("First name is empty.");
             }
 
-            if (string.IsNullOrWhiteSpace(userInputData.LastName))
+            if (string.IsNullOrWhiteSpace(unverifiedData.LastName))
             {
                 throw new ArgumentException("Last name is empty.");
             }
 
-            if (userInputData.FirstName.Length < MinNumberOfSymbols || userInputData.FirstName.Length > MaxNumberOfSymbols)
+            if (unverifiedData.FirstName.Length < MinNumberOfSymbols || unverifiedData.FirstName.Length > MaxNumberOfSymbols)
             {
                 throw new ArgumentException("First name's length is out of range.");
             }
 
-            if (userInputData.LastName.Length < MinNumberOfSymbols || userInputData.LastName.Length > MaxNumberOfSymbols)
+            if (unverifiedData.LastName.Length < MinNumberOfSymbols || unverifiedData.LastName.Length > MaxNumberOfSymbols)
             {
                 throw new ArgumentException("Last name's length is out of range.");
             }
 
-            if (userInputData.DateOfBirth >= DateTime.Now)
+            if (unverifiedData.DateOfBirth >= DateTime.Now)
             {
                 throw new ArgumentException("Invalid date of birth.");
             }
 
-            if (userInputData.Sex != MaleSex && userInputData.Sex != FemaleSex)
+            if (unverifiedData.Sex != MaleSex && unverifiedData.Sex != FemaleSex)
             {
                 throw new ArgumentException("Wrong sex.");
             }
 
-            if (userInputData.NumberOfReviews < MinNumberOfReviews)
+            if (unverifiedData.NumberOfReviews < MinNumberOfReviews)
             {
                 throw new ArgumentException("Number of reviews cannot be less than zero.");
             }
 
-            if (userInputData.Salary < MinValueOfSalary)
+            if (unverifiedData.Salary < MinValueOfSalary)
             {
                 throw new ArgumentException("Salary cannot be less than zero.");
             }

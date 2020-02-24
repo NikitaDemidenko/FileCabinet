@@ -343,9 +343,9 @@ namespace FileCabinetApp
             Console.Write("Salary: ");
             var salary = ReadInput(salaryConverter, salaryValidator);
 
-            var userInputData = new UserInputData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
-            fileCabinetService.CreateRecord(userInputData);
-            Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
+            var userInputData = new UnverifiedData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            int id = fileCabinetService.CreateRecord(userInputData);
+            Console.WriteLine($"Record #{id} is created.");
         }
 
         private static void List(string parameters)
@@ -372,7 +372,7 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (id < MinValueOfId || id > fileCabinetService.GetStat())
+            if (!(fileCabinetService as FileCabinetMemoryService).StoredIdentifiers.Contains(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
                 Console.WriteLine();
@@ -397,7 +397,7 @@ namespace FileCabinetApp
             Console.Write("Salary: ");
             var salary = ReadInput(salaryConverter, salaryValidator);
 
-            var userInputData = new UserInputData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            var userInputData = new UnverifiedData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
             fileCabinetService.EditRecord(id, userInputData);
             Console.WriteLine($"Record #{id} is updated.");
         }
@@ -577,7 +577,35 @@ namespace FileCabinetApp
 
             if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new NotImplementedException();
+                using var reader = new StreamReader(filePath, Encoding.Unicode);
+                var snapshot = new FileCabinetServiceSnapshot();
+                try
+                {
+                    snapshot.LoadFromCsv(reader, (fileCabinetService as FileCabinetMemoryService).Validator);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("One of the record's properties has invalid format.");
+                    return;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    Console.WriteLine("One of the record's has invalid number of properties.");
+                    return;
+                }
+
+                foreach (var record in snapshot.InvalidRecords)
+                {
+                    Console.WriteLine($"Record #{record.Item1.Id} was skipped: {record.Item2}");
+                }
+
+                (fileCabinetService as FileCabinetMemoryService).Restore(snapshot);
+                Console.WriteLine($"{snapshot.Records.Count} records were imported.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid type of file.");
+                return;
             }
         }
 

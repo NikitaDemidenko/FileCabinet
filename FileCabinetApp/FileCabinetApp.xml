@@ -130,6 +130,9 @@
         <member name="F:FileCabinetApp.Constants.NullCharacter">
             <summary>Null character.</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.CsvFileSeparator">
+            <summary>CSV file separator.</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.MinDateOfBirth">
             <summary>Minimum date of birth.</summary>
         </member>
@@ -140,9 +143,9 @@
             <summary>Performs custom validation on user input data.</summary>
             <seealso cref="T:FileCabinetApp.IRecordValidator" />
         </member>
-        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.UnverifiedData)">
             <summary>Validates user input parameters using custom validation rules.</summary>
-            <param name="userInputData">User input.</param>
+            <param name="unverifiedData">Raw data.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
             <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
         </member>
@@ -150,9 +153,9 @@
             <summary>Performs default validation on user input data.</summary>
             <seealso cref="T:FileCabinetApp.IRecordValidator" />
         </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.UnverifiedData)">
             <summary>Validates user input parameters using default validation rules.</summary>
-            <param name="userInputData">User input.</param>
+            <param name="unverifiedData">Raw data.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
             <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
         </member>
@@ -166,13 +169,13 @@
             <param name="validator">Validator.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when fileStream or validator is null.</exception>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.UnverifiedData)">
             <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
             <param name="userInputData">User input data.</param>
             <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetFilesystemService.EditRecord(System.Int32,FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.EditRecord(System.Int32,FileCabinetApp.UnverifiedData)">
             <summary>Edits record by identifier.</summary>
             <param name="id">Identifier.</param>
             <param name="userInputData">User input data.</param>
@@ -215,7 +218,15 @@
             <param name="validator">Validator.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>validator</em> is <em>null</em>.</exception>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.UserInputData)">
+        <member name="P:FileCabinetApp.FileCabinetMemoryService.StoredIdentifiers">
+            <summary>Gets the collection of stored identifiers.</summary>
+            <value>Collections of identifiers strored in the file cabinet service.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetMemoryService.Validator">
+            <summary>Gets the validator of this <see cref="T:FileCabinetApp.FileCabinetMemoryService"/> object.</summary>
+            <value>The validator.</value>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.CreateRecord(FileCabinetApp.UnverifiedData)">
             <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
             <param name="userInputData">User input data.</param>
             <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
@@ -229,10 +240,10 @@
             <summary>Gets the stat of records in the file cabinet.</summary>
             <returns>Returns number of records.</returns>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.EditRecord(System.Int32,FileCabinetApp.UnverifiedData)">
             <summary>Edits record by identifier.</summary>
             <param name="id">Identifier.</param>
-            <param name="userInputData">User input data.</param>
+            <param name="unverifiedData">Raw data.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
             <exception cref="T:System.ArgumentException">Thrown when identifier is invalid.</exception>
         </member>
@@ -254,6 +265,11 @@
         <member name="M:FileCabinetApp.FileCabinetMemoryService.MakeSnapshot">
             <summary>Makes snapshot of current <see cref="T:FileCabinetApp.FileCabinetMemoryService"/> object state.</summary>
             <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/>.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>Restores the specified snapshot.</summary>
+            <param name="snapshot">Snapshot.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when snapshot is null.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>Provides properties for records.</summary>
@@ -289,6 +305,19 @@
             <summary>Converts file cabinet record to its string representation.</summary>
             <returns>A <see cref="T:System.String"/> that represents <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordCsvReader">
+            <summary>Provides method to import <see cref="T:FileCabinetApp.FileCabinetRecord"/> records from csv file.</summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.#ctor(System.IO.StreamReader)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordCsvReader"/> class.</summary>
+            <param name="reader">Reader.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when reader
+            is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordCsvReader.ReadAll">
+            <summary>Reads all records from csv file.</summary>
+            <returns>Returns read records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordCsvWriter">
             <summary>Provides method for saving <see cref="T:FileCabinetApp.FileCabinetRecord"/> to csv file.</summary>
         </member>
@@ -310,7 +339,7 @@
             <param name="writer">Stream writer.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when writer is null.</exception>
         </member>
-        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(FileCabinetApp.FileCabinetRecord[],System.Xml.Serialization.XmlSerializer)">
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlWriter.Write(System.Collections.Generic.List{FileCabinetApp.FileCabinetRecord},System.Xml.Serialization.XmlSerializer)">
             <summary>Writes the specified record to xml file.</summary>
             <param name="records">Records.</param>
             <param name="formatter">Xml formatter.</param>
@@ -319,10 +348,21 @@
         <member name="T:FileCabinetApp.FileCabinetServiceSnapshot">
             <summary>Provides method for saving snapshots to csv file.</summary>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.</summary>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.#ctor(System.Collections.ObjectModel.ReadOnlyCollection{FileCabinetApp.FileCabinetRecord})">
             <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/> class.</summary>
             <param name="records">Records to save.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when records is null.</exception>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetServiceSnapshot.Records">
+            <summary>Gets the records.</summary>
+            <value>The records.</value>
+        </member>
+        <member name="P:FileCabinetApp.FileCabinetServiceSnapshot.InvalidRecords">
+            <summary>Gets the invalid records of taken snapshot.</summary>
+            <value>Invalid records of taken snapshot.</value>
         </member>
         <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.SaveToCsv(System.IO.StreamWriter)">
             <summary>Saves snapshot to csv file.</summary>
@@ -333,6 +373,15 @@
             <summary>Saves snapshot to xml file.</summary>
             <param name="writer">Writer.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when writer is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromCsv(System.IO.StreamReader,FileCabinetApp.IRecordValidator)">
+            <summary>Loads records from CSV file.</summary>
+            <param name="reader">Reader.</param>
+            <param name="validator">Validator.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when reader
+            or
+            validator
+            is null.</exception>
         </member>
         <member name="T:FileCabinetApp.Flags">
             <summary>Command line flags.</summary>
@@ -372,9 +421,9 @@
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>Provides functionality for interaction with records in the file cabinet.</summary>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.UnverifiedData)">
             <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
-            <param name="userInputData">User input data.</param>
+            <param name="unverifiedData">Raw data.</param>
             <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.GetRecords">
@@ -385,10 +434,10 @@
             <summary>Gets the stat of records in the file cabinet.</summary>
             <returns>Returns number of records.</returns>
         </member>
-        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.IFileCabinetService.EditRecord(System.Int32,FileCabinetApp.UnverifiedData)">
             <summary>Edits record by identifier.</summary>
             <param name="id">Identifier.</param>
-            <param name="userInputData">User input data.</param>
+            <param name="unverifiedData">User input data.</param>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
             <summary>Finds records by first name.</summary>
@@ -414,9 +463,9 @@
               <para>Provides functionality to validate parameters.</para>
             </summary>
         </member>
-        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.UserInputData)">
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.UnverifiedData)">
             <summary>Validates user input data.</summary>
-            <param name="userInputData">User input data.</param>
+            <param name="unverifiedData">Raw data.</param>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>Main class of the project.</summary>
@@ -425,11 +474,11 @@
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
         </member>
-        <member name="T:FileCabinetApp.UserInputData">
+        <member name="T:FileCabinetApp.UnverifiedData">
             <summary>Provides methods for user data input.</summary>
         </member>
-        <member name="M:FileCabinetApp.UserInputData.#ctor(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
-            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.UserInputData"/> class.</summary>
+        <member name="M:FileCabinetApp.UnverifiedData.#ctor(System.String,System.String,System.DateTime,System.Char,System.Int16,System.Decimal)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.UnverifiedData"/> class.</summary>
             <param name="firstName">First name user input.</param>
             <param name="lastName">Last name user input.</param>
             <param name="dateOfBirth">Date of birth user input.</param>
@@ -437,27 +486,33 @@
             <param name="numberOfReviews">Number of reviews user input.</param>
             <param name="salary">Salary user input.</param>
         </member>
-        <member name="P:FileCabinetApp.UserInputData.FirstName">
+        <member name="M:FileCabinetApp.UnverifiedData.#ctor(FileCabinetApp.FileCabinetRecord)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.UnverifiedData"/> class.</summary>
+            <param name="record">Record.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when record
+            is null.</exception>
+        </member>
+        <member name="P:FileCabinetApp.UnverifiedData.FirstName">
             <summary>Gets the first name.</summary>
             <value>First name.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInputData.LastName">
+        <member name="P:FileCabinetApp.UnverifiedData.LastName">
             <summary>Gets the last name.</summary>
             <value>Last name.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInputData.DateOfBirth">
+        <member name="P:FileCabinetApp.UnverifiedData.DateOfBirth">
             <summary>Gets the date of birth.</summary>
             <value>Date of birth.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInputData.Sex">
+        <member name="P:FileCabinetApp.UnverifiedData.Sex">
             <summary>Gets the sex.</summary>
             <value>Sex.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInputData.NumberOfReviews">
+        <member name="P:FileCabinetApp.UnverifiedData.NumberOfReviews">
             <summary>Gets the number of reviews.</summary>
             <value>Number of reviews.</value>
         </member>
-        <member name="P:FileCabinetApp.UserInputData.Salary">
+        <member name="P:FileCabinetApp.UnverifiedData.Salary">
             <summary>Gets the salary.</summary>
             <value>Salary.</value>
         </member>

@@ -24,7 +24,7 @@ namespace FileCabinetApp
         /// <param name="records">Records.</param>
         /// <param name="formatter">Xml formatter.</param>
         /// <exception cref="ArgumentNullException">Thrown when records or formatter is null.</exception>
-        public void Write(FileCabinetRecord[] records, XmlSerializer formatter)
+        public void Write(List<FileCabinetRecord> records, XmlSerializer formatter)
         {
             if (records == null)
             {
