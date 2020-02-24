@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
@@ -591,6 +592,28 @@ namespace FileCabinetApp
                 catch (IndexOutOfRangeException)
                 {
                     Console.WriteLine("One of the record's has invalid number of properties.");
+                    return;
+                }
+
+                foreach (var record in snapshot.InvalidRecords)
+                {
+                    Console.WriteLine($"Record #{record.Item1.Id} was skipped: {record.Item2}");
+                }
+
+                fileCabinetService.Restore(snapshot);
+                Console.WriteLine($"{snapshot.Records.Count} records were imported.");
+            }
+            else if (typeOfFile.Equals(XmlFileExtension, StringComparison.InvariantCultureIgnoreCase))
+            {
+                using var reader = XmlReader.Create(filePath);
+                var snapshot = new FileCabinetServiceSnapshot();
+                try
+                {
+                    snapshot.LoadFromXml(reader, fileCabinetService.Validator);
+                }
+                catch (InvalidOperationException)
+                {
+                    Console.WriteLine("One of the record's properties has invalid format.");
                     return;
                 }
 

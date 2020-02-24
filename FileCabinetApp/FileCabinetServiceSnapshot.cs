@@ -81,10 +81,7 @@ namespace FileCabinetApp
         /// <summary>Loads records from CSV file.</summary>
         /// <param name="reader">Reader.</param>
         /// <param name="validator">Validator.</param>
-        /// <exception cref="ArgumentNullException">Thrown when reader
-        /// or
-        /// validator
-        /// is null.</exception>
+        /// <exception cref="ArgumentNullException">Thrown when reader or validator is null.</exception>
         public void LoadFromCsv(StreamReader reader, IRecordValidator validator)
         {
             if (reader == null)
@@ -108,6 +105,51 @@ namespace FileCabinetApp
                 throw;
             }
             catch (IndexOutOfRangeException)
+            {
+                throw;
+            }
+
+            UnverifiedData unverifiedData;
+            foreach (var record in records)
+            {
+                unverifiedData = new UnverifiedData(record);
+                try
+                {
+                    validator.ValidateParameters(unverifiedData);
+                }
+                catch (ArgumentException ex)
+                {
+                    this.invalidRecords.Add(new Tuple<FileCabinetRecord, string>(record, ex.Message));
+                    continue;
+                }
+
+                this.records.Add(record);
+            }
+        }
+
+        /// <summary>Loads records from XML file.</summary>
+        /// <param name="reader">Reader.</param>
+        /// <param name="validator">Validator.</param>
+        /// <exception cref="ArgumentNullException">Thrown when reader or validator is null.</exception>
+        public void LoadFromXml(XmlReader reader, IRecordValidator validator)
+        {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (validator == null)
+            {
+                throw new ArgumentNullException(nameof(validator));
+            }
+
+            var xmlReader = new FileCabinetRecordXmlReader(reader);
+            IList<FileCabinetRecord> records;
+            try
+            {
+                records = xmlReader.ReadAll();
+            }
+            catch (InvalidOperationException)
             {
                 throw;
             }

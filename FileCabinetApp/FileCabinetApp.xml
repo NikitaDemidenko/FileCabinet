@@ -169,6 +169,10 @@
             <param name="validator">Validator.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when fileStream or validator is null.</exception>
         </member>
+        <member name="P:FileCabinetApp.FileCabinetFilesystemService.Validator">
+            <summary>Gets the validator of this <see cref="T:FileCabinetApp.FileCabinetFilesystemService"/> object.</summary>
+            <value>The validator.</value>
+        </member>
         <member name="P:FileCabinetApp.FileCabinetFilesystemService.StoredIdentifiers">
             <summary>Gets the collection of stored identifiers.</summary>
             <value>Collections of identifiers strored in the file cabinet service.</value>
@@ -212,6 +216,11 @@
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.MakeSnapshot">
             <summary>Makes snapshot of current <see cref="T:FileCabinetApp.FileCabinetFilesystemService"/> object state.</summary>
             <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/>.</returns>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>Restores the specified snapshot.</summary>
+            <param name="snapshot">Snapshot.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when snapshot is null.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>Provides methods for interaction with records in memory.</summary>
@@ -335,6 +344,18 @@
             <param name="record">Record.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when record is null.</exception>
         </member>
+        <member name="T:FileCabinetApp.FileCabinetRecordXmlReader">
+            <summary>Provides method to import <see cref="T:FileCabinetApp.FileCabinetRecord"/> records from xml file.</summary>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.#ctor(System.Xml.XmlReader)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.FileCabinetRecordXmlReader"/> class.</summary>
+            <param name="reader">Reader.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when reader is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetRecordXmlReader.ReadAll">
+            <summary>Reads all records from xml file.</summary>
+            <returns>Returns read records.</returns>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecordXmlWriter">
             <summary>Provides method for saving <see cref="T:FileCabinetApp.FileCabinetRecord"/> to xml file.</summary>
         </member>
@@ -382,10 +403,13 @@
             <summary>Loads records from CSV file.</summary>
             <param name="reader">Reader.</param>
             <param name="validator">Validator.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when reader
-            or
-            validator
-            is null.</exception>
+            <exception cref="T:System.ArgumentNullException">Thrown when reader or validator is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetServiceSnapshot.LoadFromXml(System.Xml.XmlReader,FileCabinetApp.IRecordValidator)">
+            <summary>Loads records from XML file.</summary>
+            <param name="reader">Reader.</param>
+            <param name="validator">Validator.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when reader or validator is null.</exception>
         </member>
         <member name="T:FileCabinetApp.Flags">
             <summary>Command line flags.</summary>
