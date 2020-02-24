@@ -372,7 +372,7 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (!(fileCabinetService as FileCabinetMemoryService).StoredIdentifiers.Contains(id))
+            if (!fileCabinetService.StoredIdentifiers.Contains(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
                 Console.WriteLine();
@@ -581,7 +581,7 @@ namespace FileCabinetApp
                 var snapshot = new FileCabinetServiceSnapshot();
                 try
                 {
-                    snapshot.LoadFromCsv(reader, (fileCabinetService as FileCabinetMemoryService).Validator);
+                    snapshot.LoadFromCsv(reader, fileCabinetService.Validator);
                 }
                 catch (FormatException)
                 {
@@ -599,7 +599,7 @@ namespace FileCabinetApp
                     Console.WriteLine($"Record #{record.Item1.Id} was skipped: {record.Item2}");
                 }
 
-                (fileCabinetService as FileCabinetMemoryService).Restore(snapshot);
+                fileCabinetService.Restore(snapshot);
                 Console.WriteLine($"{snapshot.Records.Count} records were imported.");
             }
             else

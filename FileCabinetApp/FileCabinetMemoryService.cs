@@ -54,31 +54,7 @@ namespace FileCabinetApp
                 Salary = userInputData.Salary,
             };
 
-            this.storedIdentifiers.Add(record.Id);
-
-            this.list.Add(record);
-
-            string firstNameKey = userInputData.FirstName.ToUpperInvariant();
-            if (!this.firstNameDictionary.ContainsKey(firstNameKey))
-            {
-                this.firstNameDictionary.Add(firstNameKey, new List<FileCabinetRecord>());
-            }
-
-            this.firstNameDictionary[firstNameKey].Add(record);
-            string lastNameKey = userInputData.LastName.ToUpperInvariant();
-            if (!this.lastNameDictionary.ContainsKey(lastNameKey))
-            {
-                this.lastNameDictionary.Add(lastNameKey, new List<FileCabinetRecord>());
-            }
-
-            this.lastNameDictionary[lastNameKey].Add(record);
-
-            if (!this.dateOfBirthDictionary.ContainsKey(userInputData.DateOfBirth))
-            {
-                this.dateOfBirthDictionary.Add(userInputData.DateOfBirth, new List<FileCabinetRecord>());
-            }
-
-            this.dateOfBirthDictionary[userInputData.DateOfBirth].Add(record);
+            this.AddRecord(record);
             return record.Id;
         }
 
@@ -205,7 +181,7 @@ namespace FileCabinetApp
             UnverifiedData data;
             foreach (var record in snapshot.Records)
             {
-                if (this.ContainsId(record.Id))
+                if (this.storedIdentifiers.Contains(record.Id))
                 {
                     data = new UnverifiedData(record);
                     this.EditRecord(record.Id, data);
@@ -215,19 +191,6 @@ namespace FileCabinetApp
                     this.AddRecord(record);
                 }
             }
-        }
-
-        private bool ContainsId(int id)
-        {
-            foreach (var record in this.list)
-            {
-                if (record.Id == id)
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         private void AddRecord(FileCabinetRecord record)

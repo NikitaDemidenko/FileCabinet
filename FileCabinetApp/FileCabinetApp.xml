@@ -169,6 +169,10 @@
             <param name="validator">Validator.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when fileStream or validator is null.</exception>
         </member>
+        <member name="P:FileCabinetApp.FileCabinetFilesystemService.StoredIdentifiers">
+            <summary>Gets the collection of stored identifiers.</summary>
+            <value>Collections of identifiers strored in the file cabinet service.</value>
+        </member>
         <member name="M:FileCabinetApp.FileCabinetFilesystemService.CreateRecord(FileCabinetApp.UnverifiedData)">
             <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
             <param name="userInputData">User input data.</param>
@@ -421,6 +425,14 @@
         <member name="T:FileCabinetApp.IFileCabinetService">
             <summary>Provides functionality for interaction with records in the file cabinet.</summary>
         </member>
+        <member name="P:FileCabinetApp.IFileCabinetService.Validator">
+            <summary>Gets the validator of this <see cref="T:FileCabinetApp.IFileCabinetService"/> object.</summary>
+            <value>The validator.</value>
+        </member>
+        <member name="P:FileCabinetApp.IFileCabinetService.StoredIdentifiers">
+            <summary>Gets the collection of stored identifiers.</summary>
+            <value>Collections of identifiers strored in the file cabinet service.</value>
+        </member>
         <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.UnverifiedData)">
             <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
             <param name="unverifiedData">Raw data.</param>
@@ -457,6 +469,11 @@
         <member name="M:FileCabinetApp.IFileCabinetService.MakeSnapshot">
             <summary>Makes snapshot of current object state.</summary>
             /// <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/>.</returns>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>Restores the specified snapshot.</summary>
+            <param name="snapshot">Snapshot.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when snapshot is null.</exception>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>

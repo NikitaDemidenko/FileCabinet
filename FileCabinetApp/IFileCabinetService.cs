@@ -9,6 +9,14 @@ namespace FileCabinetApp
     /// <summary>Provides functionality for interaction with records in the file cabinet.</summary>
     public interface IFileCabinetService
     {
+        /// <summary>Gets the validator of this <see cref="IFileCabinetService"/> object.</summary>
+        /// <value>The validator.</value>
+        public IRecordValidator Validator { get; }
+
+        /// <summary>Gets the collection of stored identifiers.</summary>
+        /// <value>Collections of identifiers strored in the file cabinet service.</value>
+        public ReadOnlyCollection<int> StoredIdentifiers { get; }
+
         /// <summary>Creates new <see cref="FileCabinetRecord"/> instance.</summary>
         /// <param name="unverifiedData">Raw data.</param>
         /// <returns>Returns identifier of the new <see cref="FileCabinetRecord"/> instance.</returns>
@@ -45,5 +53,10 @@ namespace FileCabinetApp
         /// <summary>Makes snapshot of current object state.</summary>
         /// /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
         public FileCabinetServiceSnapshot MakeSnapshot();
+
+        /// <summary>Restores the specified snapshot.</summary>
+        /// <param name="snapshot">Snapshot.</param>
+        /// <exception cref="ArgumentNullException">Thrown when snapshot is null.</exception>
+        public void Restore(FileCabinetServiceSnapshot snapshot);
     }
 }
