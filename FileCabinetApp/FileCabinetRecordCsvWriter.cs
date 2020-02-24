@@ -27,12 +27,12 @@ namespace FileCabinetApp
             }
 
             this.writer.Write($"{record.Id};");
-            this.writer.Write($"{record.FirstName};");
-            this.writer.Write($"{record.LastName};");
+            this.writer.Write($"{record.Name.FirstName};");
+            this.writer.Write($"{record.Name.LastName};");
             this.writer.Write($"{record.DateOfBirth:MM/dd/yyyy};");
             this.writer.Write($"{record.Sex};");
             this.writer.Write($"{record.NumberOfReviews};");
-            this.writer.WriteLine($"{record.Salary};");
+            this.writer.WriteLine($"{record.Salary}");
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
@@ -29,6 +30,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("export", Export),
+            new Tuple<string, Action<string>>("import", Import),
             new Tuple<string, Action<string>>("exit", Exit),
         };
 
@@ -41,6 +43,7 @@ namespace FileCabinetApp
             new string[] { "list", "prints all records", "The 'list' command prints the records." },
             new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
             new string[] { "export", "exports records to file", "The 'export' command exports records to file." },
+            new string[] { "import", "imports records from file", "The 'import' command imports records from file." },
             new string[] { "exit", "exits the application", "The 'exit' command exits the application." },
         };
 
@@ -341,9 +344,9 @@ namespace FileCabinetApp
             Console.Write("Salary: ");
             var salary = ReadInput(salaryConverter, salaryValidator);
 
-            var userInputData = new UserInputData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
-            fileCabinetService.CreateRecord(userInputData);
-            Console.WriteLine($"Record #{fileCabinetService.GetStat()} is created.");
+            var userInputData = new UnverifiedData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            int id = fileCabinetService.CreateRecord(userInputData);
+            Console.WriteLine($"Record #{id} is created.");
         }
 
         private static void List(string parameters)
@@ -370,7 +373,7 @@ namespace FileCabinetApp
                 return;
             }
 
-            if (id < MinValueOfId || id > fileCabinetService.GetStat())
+            if (!fileCabinetService.StoredIdentifiers.Contains(id))
             {
                 Console.WriteLine($"#{id} record is not found.");
                 Console.WriteLine();
@@ -395,7 +398,7 @@ namespace FileCabinetApp
             Console.Write("Salary: ");
             var salary = ReadInput(salaryConverter, salaryValidator);
 
-            var userInputData = new UserInputData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
+            var userInputData = new UnverifiedData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
             fileCabinetService.EditRecord(id, userInputData);
             Console.WriteLine($"Record #{id} is updated.");
         }
@@ -521,7 +524,7 @@ namespace FileCabinetApp
                 try
                 {
                     using var streamWriter = new StreamWriter(filePath, append, Encoding.Unicode);
-                    var snapshot = (fileCabinetService as FileCabinetMemoryService).MakeSnapshot();
+                    var snapshot = fileCabinetService.MakeSnapshot();
                     if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
                     {
                         snapshot.SaveToCsv(streamWriter);
@@ -542,6 +545,90 @@ namespace FileCabinetApp
             else
             {
                 Console.WriteLine("Wrong type of file parameter.");
+            }
+        }
+
+        private static void Import(string parameters)
+        {
+            if (string.IsNullOrWhiteSpace(parameters))
+            {
+                Console.WriteLine("Enter export parameters.");
+                return;
+            }
+
+            var splittedParameters = parameters.Split(SpaceSymbol, NumberOfParameters, StringSplitOptions.RemoveEmptyEntries);
+            string typeOfFile;
+            string filePath;
+            try
+            {
+                typeOfFile = splittedParameters[FirstElementIndex];
+                filePath = splittedParameters[SecondElementIndex].Trim(QuoteSymbol);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Invalid number of parameters.");
+                return;
+            }
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Import error: file {filePath} is not exist.");
+                return;
+            }
+
+            if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
+            {
+                using var reader = new StreamReader(filePath, Encoding.Unicode);
+                var snapshot = new FileCabinetServiceSnapshot();
+                try
+                {
+                    snapshot.LoadFromCsv(reader, fileCabinetService.Validator);
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("One of the record's properties has invalid format.");
+                    return;
+                }
+                catch (IndexOutOfRangeException)
+                {
+                    Console.WriteLine("One of the record's has invalid number of properties.");
+                    return;
+                }
+
+                foreach (var record in snapshot.InvalidRecords)
+                {
+                    Console.WriteLine($"Record #{record.Item1.Id} was skipped: {record.Item2}");
+                }
+
+                fileCabinetService.Restore(snapshot);
+                Console.WriteLine($"{snapshot.Records.Count} records were imported.");
+            }
+            else if (typeOfFile.Equals(XmlFileExtension, StringComparison.InvariantCultureIgnoreCase))
+            {
+                using var reader = XmlReader.Create(filePath);
+                var snapshot = new FileCabinetServiceSnapshot();
+                try
+                {
+                    snapshot.LoadFromXml(reader, fileCabinetService.Validator);
+                }
+                catch (InvalidOperationException)
+                {
+                    Console.WriteLine("One of the record's properties has invalid format.");
+                    return;
+                }
+
+                foreach (var record in snapshot.InvalidRecords)
+                {
+                    Console.WriteLine($"Record #{record.Item1.Id} was skipped: {record.Item2}");
+                }
+
+                fileCabinetService.Restore(snapshot);
+                Console.WriteLine($"{snapshot.Records.Count} records were imported.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid type of file.");
+                return;
             }
         }
 

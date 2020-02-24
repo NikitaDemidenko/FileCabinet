@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp
 {
     /// <summary>Provides methods for interaction with records in file system.</summary>
-    /// <seealso cref="FileCabinetApp.IFileCabinetService" />
+    /// <seealso cref="IFileCabinetService" />
     public class FileCabinetFilesystemService : IFileCabinetService
     {
+        private readonly List<int> storedIdentifiers = new List<int>();
         private readonly FileStream fileStream;
-        private readonly IRecordValidator validator;
         private int recordsCount;
 
         /// <summary>Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.</summary>
@@ -23,47 +24,44 @@ namespace FileCabinetApp
         public FileCabinetFilesystemService(FileStream fileStream, IRecordValidator validator)
         {
             this.fileStream = fileStream ?? throw new ArgumentNullException(nameof(fileStream));
-            this.validator = validator ?? throw new ArgumentNullException(nameof(validator));
+            this.Validator = validator ?? throw new ArgumentNullException(nameof(validator));
             this.recordsCount = 0;
         }
+
+        /// <summary>Gets the validator of this <see cref="FileCabinetFilesystemService"/> object.</summary>
+        /// <value>The validator.</value>
+        public IRecordValidator Validator { get; }
+
+        /// <summary>Gets the collection of stored identifiers.</summary>
+        /// <value>Collections of identifiers strored in the file cabinet service.</value>
+        public ReadOnlyCollection<int> StoredIdentifiers => new ReadOnlyCollection<int>(this.storedIdentifiers);
 
         /// <summary>Creates new <see cref="FileCabinetRecord"/> instance.</summary>
         /// <param name="userInputData">User input data.</param>
         /// <returns>Returns identifier of the new <see cref="FileCabinetRecord"/> instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
-        public int CreateRecord(UserInputData userInputData)
+        public int CreateRecord(UnverifiedData userInputData)
         {
             if (userInputData == null)
             {
                 throw new ArgumentNullException(nameof(userInputData));
             }
 
-            using var writer = new BinaryWriter(this.fileStream, Encoding.Unicode, true);
-            this.validator.ValidateParameters(userInputData);
-            var firstNameCharArray = new char[MaxNumberOfSymbols];
-            var lastNameCharArray = new char[MaxNumberOfSymbols];
-            for (int i = 0; i < userInputData.FirstName.Length; i++)
+            this.Validator.ValidateParameters(userInputData);
+
+            int id = this.storedIdentifiers.Count != 0 ? this.storedIdentifiers.Max() + 1 : MinValueOfId;
+            var record = new FileCabinetRecord
             {
-                firstNameCharArray[i] = userInputData.FirstName[i];
-            }
+                Id = id,
+                Name = new FullName(userInputData.FirstName, userInputData.LastName),
+                DateOfBirth = userInputData.DateOfBirth,
+                Sex = userInputData.Sex,
+                NumberOfReviews = userInputData.NumberOfReviews,
+                Salary = userInputData.Salary,
+            };
 
-            for (int i = 0; i < userInputData.LastName.Length; i++)
-            {
-                lastNameCharArray[i] = userInputData.LastName[i];
-            }
-
-            this.fileStream.Seek(IdOffset, SeekOrigin.End);
-            writer.Write(++this.recordsCount);
-            writer.Write(firstNameCharArray);
-            writer.Write(lastNameCharArray);
-            writer.Write(userInputData.DateOfBirth.Year);
-            writer.Write(userInputData.DateOfBirth.Month);
-            writer.Write(userInputData.DateOfBirth.Day);
-            writer.Write(userInputData.Sex);
-            writer.Write(userInputData.NumberOfReviews);
-            writer.Write(userInputData.Salary);
-
-            return this.recordsCount;
+            this.AddRecord(record);
+            return id;
         }
 
         /// <summary>Edits record by identifier.</summary>
@@ -71,9 +69,9 @@ namespace FileCabinetApp
         /// <param name="userInputData">User input data.</param>
         /// <exception cref="ArgumentNullException">Thrown when <em>userInput </em>is null.</exception>
         /// <exception cref="ArgumentException">Thrown when identifier is invalid.</exception>
-        public void EditRecord(int id, UserInputData userInputData)
+        public void EditRecord(int id, UnverifiedData userInputData)
         {
-            if (id < MinValueOfId || id > this.recordsCount)
+            if (!this.storedIdentifiers.Contains(id))
             {
                 throw new ArgumentException($"There is no #{id} record.");
             }
@@ -83,7 +81,7 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(userInputData));
             }
 
-            this.validator.ValidateParameters(userInputData);
+            this.Validator.ValidateParameters(userInputData);
             var firstNameCharArray = new char[MaxNumberOfSymbols];
             var lastNameCharArray = new char[MaxNumberOfSymbols];
             for (int i = 0; i < userInputData.FirstName.Length; i++)
@@ -143,8 +141,7 @@ namespace FileCabinetApp
                     var record = new FileCabinetRecord
                     {
                         Id = reader.ReadInt32(),
-                        FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
-                        LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
+                        Name = new FullName(new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter), new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter)),
                         DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                         Sex = reader.ReadChar(),
                         NumberOfReviews = reader.ReadInt16(),
@@ -184,8 +181,7 @@ namespace FileCabinetApp
                     var record = new FileCabinetRecord
                     {
                         Id = reader.ReadInt32(),
-                        FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
-                        LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
+                        Name = new FullName(new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter), new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter)),
                         DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                         Sex = reader.ReadChar(),
                         NumberOfReviews = reader.ReadInt16(),
@@ -220,8 +216,7 @@ namespace FileCabinetApp
                     var record = new FileCabinetRecord
                     {
                         Id = reader.ReadInt32(),
-                        FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
-                        LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter),
+                        Name = new FullName(new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter), new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter)),
                         DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                         Sex = reader.ReadChar(),
                         NumberOfReviews = reader.ReadInt16(),
@@ -252,8 +247,7 @@ namespace FileCabinetApp
                 var record = new FileCabinetRecord
                 {
                     Id = reader.ReadInt32(),
-                    FirstName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
-                    LastName = new string(reader.ReadChars(MaxNumberOfSymbols)).Trim('\0'),
+                    Name = new FullName(new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter), new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter)),
                     DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                     Sex = reader.ReadChar(),
                     NumberOfReviews = reader.ReadInt16(),
@@ -270,5 +264,64 @@ namespace FileCabinetApp
         /// <summary>Gets the stat of records in the file cabinet.</summary>
         /// <returns>Returns number of records.</returns>
         public int GetStat() => this.recordsCount;
+
+        /// <summary>Makes snapshot of current <see cref="FileCabinetFilesystemService"/> object state.</summary>
+        /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot() => new FileCabinetServiceSnapshot(this.GetRecords());
+
+        /// <summary>Restores the specified snapshot.</summary>
+        /// <param name="snapshot">Snapshot.</param>
+        /// <exception cref="ArgumentNullException">Thrown when snapshot is null.</exception>
+        public void Restore(FileCabinetServiceSnapshot snapshot)
+        {
+            if (snapshot == null)
+            {
+                throw new ArgumentNullException(nameof(snapshot));
+            }
+
+            UnverifiedData data;
+            foreach (var record in snapshot.Records)
+            {
+                if (this.storedIdentifiers.Contains(record.Id))
+                {
+                    data = new UnverifiedData(record);
+                    this.EditRecord(record.Id, data);
+                }
+                else
+                {
+                    this.AddRecord(record);
+                }
+            }
+        }
+
+        private void AddRecord(FileCabinetRecord record)
+        {
+            using var writer = new BinaryWriter(this.fileStream, Encoding.Unicode, true);
+            var firstNameCharArray = new char[MaxNumberOfSymbols];
+            var lastNameCharArray = new char[MaxNumberOfSymbols];
+            for (int i = 0; i < record.Name.FirstName.Length; i++)
+            {
+                firstNameCharArray[i] = record.Name.FirstName[i];
+            }
+
+            for (int i = 0; i < record.Name.LastName.Length; i++)
+            {
+                lastNameCharArray[i] = record.Name.LastName[i];
+            }
+
+            this.fileStream.Seek(IdOffset, SeekOrigin.End);
+            writer.Write(record.Id);
+            writer.Write(firstNameCharArray);
+            writer.Write(lastNameCharArray);
+            writer.Write(record.DateOfBirth.Year);
+            writer.Write(record.DateOfBirth.Month);
+            writer.Write(record.DateOfBirth.Day);
+            writer.Write(record.Sex);
+            writer.Write(record.NumberOfReviews);
+            writer.Write(record.Salary);
+
+            this.storedIdentifiers.Add(record.Id);
+            this.recordsCount++;
+        }
     }
 }

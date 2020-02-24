@@ -9,10 +9,18 @@ namespace FileCabinetApp
     /// <summary>Provides functionality for interaction with records in the file cabinet.</summary>
     public interface IFileCabinetService
     {
+        /// <summary>Gets the validator of this <see cref="IFileCabinetService"/> object.</summary>
+        /// <value>The validator.</value>
+        public IRecordValidator Validator { get; }
+
+        /// <summary>Gets the collection of stored identifiers.</summary>
+        /// <value>Collections of identifiers strored in the file cabinet service.</value>
+        public ReadOnlyCollection<int> StoredIdentifiers { get; }
+
         /// <summary>Creates new <see cref="FileCabinetRecord"/> instance.</summary>
-        /// <param name="userInputData">User input data.</param>
+        /// <param name="unverifiedData">Raw data.</param>
         /// <returns>Returns identifier of the new <see cref="FileCabinetRecord"/> instance.</returns>
-        public int CreateRecord(UserInputData userInputData);
+        public int CreateRecord(UnverifiedData unverifiedData);
 
         /// <summary>Gets the records.</summary>
         /// <returns>Returns a read-only collection  of records.</returns>
@@ -24,8 +32,8 @@ namespace FileCabinetApp
 
         /// <summary>Edits record by identifier.</summary>
         /// <param name="id">Identifier.</param>
-        /// <param name="userInputData">User input data.</param>
-        public void EditRecord(int id, UserInputData userInputData);
+        /// <param name="unverifiedData">User input data.</param>
+        public void EditRecord(int id, UnverifiedData unverifiedData);
 
         /// <summary>Finds records by first name.</summary>
         /// <param name="firstName">First name to find.</param>
@@ -41,5 +49,14 @@ namespace FileCabinetApp
         /// <param name="dateOfBirth">Date of birth to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth);
+
+        /// <summary>Makes snapshot of current object state.</summary>
+        /// /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
+        public FileCabinetServiceSnapshot MakeSnapshot();
+
+        /// <summary>Restores the specified snapshot.</summary>
+        /// <param name="snapshot">Snapshot.</param>
+        /// <exception cref="ArgumentNullException">Thrown when snapshot is null.</exception>
+        public void Restore(FileCabinetServiceSnapshot snapshot);
     }
 }
