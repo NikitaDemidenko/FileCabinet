@@ -284,6 +284,11 @@
             <param name="snapshot">Snapshot.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when snapshot is null.</exception>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.RemoveRecord(System.Int32)">
+            <summary>Removes the record from object.</summary>
+            <param name="id">Identifier of the record to delete.</param>
+            <exception cref="T:System.ArgumentException">Thrown when record is not found.</exception>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>Provides properties for records.</summary>
         </member>
