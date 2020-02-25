@@ -27,6 +27,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("create", Create),
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
+            new Tuple<string, Action<string>>("remove", Remove),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("export", Export),
@@ -40,6 +41,7 @@ namespace FileCabinetApp
             new string[] { "create", "creates new record", "The 'create' command creates new record." },
             new string[] { "edit", "edits a record by Id", "The 'edit' command edits a record by Id." },
             new string[] { "find", "finds records by selected property", "The 'find' command finds records by selected property" },
+            new string[] { "remove", "removes record by id", "The 'remove' command removes record by id" },
             new string[] { "list", "prints all records", "The 'list' command prints the records." },
             new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
             new string[] { "export", "exports records to file", "The 'export' command exports records to file." },
@@ -630,6 +632,25 @@ namespace FileCabinetApp
                 Console.WriteLine("Invalid type of file.");
                 return;
             }
+        }
+
+        private static void Remove(string parameters)
+        {
+            if (!int.TryParse(parameters, out int id))
+            {
+                Console.WriteLine("Invalid characters.");
+                Console.WriteLine();
+                return;
+            }
+
+            if (!fileCabinetService.StoredIdentifiers.Contains(id))
+            {
+                Console.WriteLine($"Record #{id} doesn't exist.");
+                Console.WriteLine();
+                return;
+            }
+
+            Console.WriteLine($"Record #{id} is removed.");
         }
 
         private static Flags ParseFlags(string[] args)
