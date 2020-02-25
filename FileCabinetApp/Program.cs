@@ -650,7 +650,7 @@ namespace FileCabinetApp
                 return;
             }
 
-            (fileCabinetService as FileCabinetMemoryService).RemoveRecord(id);
+            fileCabinetService.RemoveRecord(id);
             Console.WriteLine($"Record #{id} is removed.");
         }
 

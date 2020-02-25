@@ -35,6 +35,10 @@ namespace FileCabinetApp
         /// <param name="unverifiedData">User input data.</param>
         public void EditRecord(int id, UnverifiedData unverifiedData);
 
+        /// <summary>Removes the record from <see cref="IFileCabinetService"/> object.</summary>
+        /// <param name="id">Identifier of the record to delete.</param>
+        public void RemoveRecord(int id);
+
         /// <summary>Finds records by first name.</summary>
         /// <param name="firstName">First name to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
@@ -56,7 +60,6 @@ namespace FileCabinetApp
 
         /// <summary>Restores the specified snapshot.</summary>
         /// <param name="snapshot">Snapshot.</param>
-        /// <exception cref="ArgumentNullException">Thrown when snapshot is null.</exception>
         public void Restore(FileCabinetServiceSnapshot snapshot);
     }
 }

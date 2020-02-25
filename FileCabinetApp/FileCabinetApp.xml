@@ -61,6 +61,12 @@
         <member name="F:FileCabinetApp.Constants.IdOffset">
             <summary>Identifier offset.</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.DeletedBitMask">
+            <summary>The deleted bit bit mask.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.BeginOfFile">
+            <summary>Begin of the file.</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.InputDateFormat">
             <summary>Input date format.</summary>
         </member>
@@ -222,6 +228,11 @@
             <param name="snapshot">Snapshot.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when snapshot is null.</exception>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.RemoveRecord(System.Int32)">
+            <summary>Removes the record from <see cref="T:FileCabinetApp.FileCabinetFilesystemService"/> object.</summary>
+            <param name="id">Identifier of the record to delete.</param>
+            <exception cref="T:System.ArgumentException">Thrown when record is not found.</exception>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>Provides methods for interaction with records in memory.</summary>
             <seealso cref="T:FileCabinetApp.IFileCabinetService" />
@@ -285,7 +296,7 @@
             <exception cref="T:System.ArgumentNullException">Thrown when snapshot is null.</exception>
         </member>
         <member name="M:FileCabinetApp.FileCabinetMemoryService.RemoveRecord(System.Int32)">
-            <summary>Removes the record from object.</summary>
+            <summary>Removes the record from <see cref="T:FileCabinetApp.FileCabinetMemoryService"/> object.</summary>
             <param name="id">Identifier of the record to delete.</param>
             <exception cref="T:System.ArgumentException">Thrown when record is not found.</exception>
         </member>
@@ -480,6 +491,10 @@
             <param name="id">Identifier.</param>
             <param name="unverifiedData">User input data.</param>
         </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.RemoveRecord(System.Int32)">
+            <summary>Removes the record from <see cref="T:FileCabinetApp.IFileCabinetService"/> object.</summary>
+            <param name="id">Identifier of the record to delete.</param>
+        </member>
         <member name="M:FileCabinetApp.IFileCabinetService.FindByFirstName(System.String)">
             <summary>Finds records by first name.</summary>
             <param name="firstName">First name to find.</param>
@@ -502,7 +517,6 @@
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">Snapshot.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when snapshot is null.</exception>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>

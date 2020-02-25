@@ -111,11 +111,12 @@ namespace FileCabinetApp
                     writer.Write(userInputData.NumberOfReviews);
                     writer.Write(userInputData.Salary);
 
-                    this.fileStream.Seek(0, SeekOrigin.End);
                     isNotFound = false;
                 }
-
-                this.fileStream.Seek(RecordLenghtInBytes - sizeof(int), SeekOrigin.Current);
+                else
+                {
+                    this.fileStream.Seek(RecordLenghtInBytes - sizeof(int), SeekOrigin.Current);
+                }
             }
             while (isNotFound);
         }
@@ -130,11 +131,20 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(firstName));
             }
 
-            this.fileStream.Seek(FirstNameOffset, SeekOrigin.Begin);
+            this.fileStream.Seek(BeginOfFile, SeekOrigin.Begin);
             using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             var searchResult = new List<FileCabinetRecord>();
+            short reservedField;
             while (reader.PeekChar() > -1)
             {
+                reservedField = reader.ReadInt16();
+                if ((reservedField & DeletedBitMask) == DeletedBitMask)
+                {
+                    this.fileStream.Seek(RecordLenghtInBytes - sizeof(short), SeekOrigin.Current);
+                    continue;
+                }
+
+                this.fileStream.Seek(FirstNameOffset - sizeof(short), SeekOrigin.Current);
                 if (new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter).Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     this.fileStream.Seek((-2 * MaxNumberOfSymbols) - sizeof(int), SeekOrigin.Current);
@@ -149,11 +159,10 @@ namespace FileCabinetApp
                     };
 
                     searchResult.Add(record);
-                    this.fileStream.Seek(FirstNameOffset, SeekOrigin.Current);
                 }
                 else
                 {
-                    this.fileStream.Seek(RecordLenghtInBytes - (2 * MaxNumberOfSymbols), SeekOrigin.Current);
+                    this.fileStream.Seek(RecordLenghtInBytes - (2 * MaxNumberOfSymbols) - FirstNameOffset, SeekOrigin.Current);
                 }
             }
 
@@ -170,11 +179,20 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(lastName));
             }
 
-            this.fileStream.Seek(LastNameOffset, SeekOrigin.Begin);
+            this.fileStream.Seek(BeginOfFile, SeekOrigin.Begin);
             using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             var searchResult = new List<FileCabinetRecord>();
+            short reservedField;
             while (reader.PeekChar() > -1)
             {
+                reservedField = reader.ReadInt16();
+                if ((reservedField & DeletedBitMask) == DeletedBitMask)
+                {
+                    this.fileStream.Seek(RecordLenghtInBytes - sizeof(short), SeekOrigin.Current);
+                    continue;
+                }
+
+                this.fileStream.Seek(LastNameOffset - sizeof(short), SeekOrigin.Current);
                 if (new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter).Equals(lastName, StringComparison.InvariantCultureIgnoreCase))
                 {
                     this.fileStream.Seek((-4 * MaxNumberOfSymbols) - sizeof(int), SeekOrigin.Current);
@@ -189,11 +207,10 @@ namespace FileCabinetApp
                     };
 
                     searchResult.Add(record);
-                    this.fileStream.Seek(LastNameOffset, SeekOrigin.Current);
                 }
                 else
                 {
-                    this.fileStream.Seek(RecordLenghtInBytes - (2 * MaxNumberOfSymbols), SeekOrigin.Current);
+                    this.fileStream.Seek(RecordLenghtInBytes - (4 * MaxNumberOfSymbols) - FirstNameOffset, SeekOrigin.Current);
                 }
             }
 
@@ -205,11 +222,20 @@ namespace FileCabinetApp
         /// <returns>Returns a read-only collection of found records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
-            this.fileStream.Seek(DateOfBirthOffset, SeekOrigin.Begin);
+            this.fileStream.Seek(BeginOfFile, SeekOrigin.Begin);
             using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             var searchResult = new List<FileCabinetRecord>();
+            short reservedField;
             while (reader.PeekChar() > -1)
             {
+                reservedField = reader.ReadInt16();
+                if ((reservedField & DeletedBitMask) == DeletedBitMask)
+                {
+                    this.fileStream.Seek(RecordLenghtInBytes - sizeof(short), SeekOrigin.Current);
+                    continue;
+                }
+
+                this.fileStream.Seek(DateOfBirthOffset - sizeof(short), SeekOrigin.Current);
                 if (reader.ReadInt32() == dateOfBirth.Year & reader.ReadInt32() == dateOfBirth.Month & reader.ReadInt32() == dateOfBirth.Day)
                 {
                     this.fileStream.Seek((-4 * MaxNumberOfSymbols) - (4 * sizeof(int)), SeekOrigin.Current);
@@ -224,11 +250,10 @@ namespace FileCabinetApp
                     };
 
                     searchResult.Add(record);
-                    this.fileStream.Seek(DateOfBirthOffset, SeekOrigin.Current);
                 }
                 else
                 {
-                    this.fileStream.Seek(RecordLenghtInBytes - (3 * sizeof(int)), SeekOrigin.Current);
+                    this.fileStream.Seek(RecordLenghtInBytes - (3 * sizeof(int)) - DateOfBirthOffset, SeekOrigin.Current);
                 }
             }
 
@@ -239,11 +264,19 @@ namespace FileCabinetApp
         /// <returns>Returns a read-only collection  of records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> GetRecords()
         {
-            this.fileStream.Seek(IdOffset, SeekOrigin.Begin);
+            this.fileStream.Seek(BeginOfFile, SeekOrigin.Begin);
             using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
             var records = new List<FileCabinetRecord>();
+            short reservedField;
             while (reader.PeekChar() > -1)
             {
+                reservedField = reader.ReadInt16();
+                if ((reservedField & DeletedBitMask) == DeletedBitMask)
+                {
+                    this.fileStream.Seek(RecordLenghtInBytes - sizeof(short), SeekOrigin.Current);
+                    continue;
+                }
+
                 var record = new FileCabinetRecord
                 {
                     Id = reader.ReadInt32(),
@@ -254,7 +287,6 @@ namespace FileCabinetApp
                     Salary = reader.ReadDecimal(),
                 };
 
-                this.fileStream.Seek(IdOffset, SeekOrigin.Current);
                 records.Add(record);
             }
 
@@ -292,6 +324,41 @@ namespace FileCabinetApp
                     this.AddRecord(record);
                 }
             }
+        }
+
+        /// <summary>Removes the record from <see cref="FileCabinetFilesystemService"/> object.</summary>
+        /// <param name="id">Identifier of the record to delete.</param>
+        /// <exception cref="ArgumentException">Thrown when record is not found.</exception>
+        public void RemoveRecord(int id)
+        {
+            if (!this.storedIdentifiers.Contains(id))
+            {
+                throw new ArgumentException($"There is no #{id} record.");
+            }
+
+            this.fileStream.Seek(IdOffset, SeekOrigin.Begin);
+            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+            using var writer = new BinaryWriter(this.fileStream, Encoding.Unicode, true);
+            bool isNotFound = true;
+            do
+            {
+                if (id == reader.ReadInt32())
+                {
+                    this.fileStream.Seek(-FirstNameOffset, SeekOrigin.Current);
+                    var reservedField = reader.ReadInt16();
+                    reservedField |= DeletedBitMask;
+                    this.fileStream.Seek(-sizeof(short), SeekOrigin.Current);
+                    writer.Write(reservedField);
+                    this.storedIdentifiers.Remove(id);
+                    this.recordsCount--;
+                    isNotFound = false;
+                }
+                else
+                {
+                    this.fileStream.Seek(RecordLenghtInBytes - sizeof(int), SeekOrigin.Current);
+                }
+            }
+            while (isNotFound);
         }
 
         private void AddRecord(FileCabinetRecord record)
