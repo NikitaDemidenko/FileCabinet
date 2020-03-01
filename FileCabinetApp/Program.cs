@@ -28,6 +28,7 @@ namespace FileCabinetApp
             new Tuple<string, Action<string>>("edit", Edit),
             new Tuple<string, Action<string>>("find", Find),
             new Tuple<string, Action<string>>("remove", Remove),
+            new Tuple<string, Action<string>>("purge", Purge),
             new Tuple<string, Action<string>>("list", List),
             new Tuple<string, Action<string>>("stat", Stat),
             new Tuple<string, Action<string>>("export", Export),
@@ -42,6 +43,7 @@ namespace FileCabinetApp
             new string[] { "edit", "edits a record by Id", "The 'edit' command edits a record by Id." },
             new string[] { "find", "finds records by selected property", "The 'find' command finds records by selected property" },
             new string[] { "remove", "removes record by id", "The 'remove' command removes record by id" },
+            new string[] { "purge", "defragments the data file (file system only)", "The 'purge' command defragments the data file" },
             new string[] { "list", "prints all records", "The 'list' command prints the records." },
             new string[] { "stat", "shows the number of records", "The 'stat' command shows the number of records." },
             new string[] { "export", "exports records to file", "The 'export' command exports records to file." },
@@ -652,6 +654,30 @@ namespace FileCabinetApp
 
             fileCabinetService.RemoveRecord(id);
             Console.WriteLine($"Record #{id} is removed.");
+        }
+
+        private static void Purge(string parameters)
+        {
+            if (fileCabinetService is FileCabinetFilesystemService fileCabinetFilesystemService)
+            {
+                try
+                {
+                    fileCabinetFilesystemService.Purge();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    return;
+                }
+
+                int purgedRecordsCount = fileCabinetFilesystemService.AllRecordsCount - fileCabinetFilesystemService.GetStat();
+                Console.WriteLine($"Data file processing is completed: {purgedRecordsCount} of {fileCabinetFilesystemService.AllRecordsCount} records were purged.");
+            }
+            else
+            {
+                Console.WriteLine("This command works with file system only.");
+                return;
+            }
         }
 
         private static Flags ParseFlags(string[] args)

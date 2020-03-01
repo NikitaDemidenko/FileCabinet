@@ -179,6 +179,10 @@
             <summary>Gets the validator of this <see cref="T:FileCabinetApp.FileCabinetFilesystemService"/> object.</summary>
             <value>The validator.</value>
         </member>
+        <member name="P:FileCabinetApp.FileCabinetFilesystemService.AllRecordsCount">
+            <summary>Gets all records count.</summary>
+            <value>All records count.</value>
+        </member>
         <member name="P:FileCabinetApp.FileCabinetFilesystemService.StoredIdentifiers">
             <summary>Gets the collection of stored identifiers.</summary>
             <value>Collections of identifiers strored in the file cabinet service.</value>
@@ -232,6 +236,10 @@
             <summary>Removes the record from <see cref="T:FileCabinetApp.FileCabinetFilesystemService"/> object.</summary>
             <param name="id">Identifier of the record to delete.</param>
             <exception cref="T:System.ArgumentException">Thrown when record is not found.</exception>
+        </member>
+        <member name="M:FileCabinetApp.FileCabinetFilesystemService.Purge">
+            <summary>Defragments the data file.</summary>
+            <exception cref="T:System.InvalidOperationException">Thrown when there are no deleted records in the data file.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetMemoryService">
             <summary>Provides methods for interaction with records in memory.</summary>

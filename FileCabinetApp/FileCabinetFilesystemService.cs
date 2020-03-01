@@ -14,8 +14,9 @@ namespace FileCabinetApp
     public class FileCabinetFilesystemService : IFileCabinetService
     {
         private readonly List<int> storedIdentifiers = new List<int>();
-        private readonly FileStream fileStream;
-        private int recordsCount;
+        private FileStream fileStream;
+        private int undeletedRecordsCount;
+        private int allRecordsCount;
 
         /// <summary>Initializes a new instance of the <see cref="FileCabinetFilesystemService"/> class.</summary>
         /// <param name="fileStream">File stream.</param>
@@ -25,12 +26,16 @@ namespace FileCabinetApp
         {
             this.fileStream = fileStream ?? throw new ArgumentNullException(nameof(fileStream));
             this.Validator = validator ?? throw new ArgumentNullException(nameof(validator));
-            this.recordsCount = 0;
+            this.undeletedRecordsCount = 0;
         }
 
         /// <summary>Gets the validator of this <see cref="FileCabinetFilesystemService"/> object.</summary>
         /// <value>The validator.</value>
         public IRecordValidator Validator { get; }
+
+        /// <summary>Gets all records count.</summary>
+        /// <value>All records count.</value>
+        public int AllRecordsCount => this.allRecordsCount;
 
         /// <summary>Gets the collection of stored identifiers.</summary>
         /// <value>Collections of identifiers strored in the file cabinet service.</value>
@@ -61,6 +66,8 @@ namespace FileCabinetApp
             };
 
             this.AddRecord(record);
+            this.storedIdentifiers.Add(record.Id);
+            this.undeletedRecordsCount++;
             return id;
         }
 
@@ -295,7 +302,7 @@ namespace FileCabinetApp
 
         /// <summary>Gets the stat of records in the file cabinet.</summary>
         /// <returns>Returns number of records.</returns>
-        public int GetStat() => this.recordsCount;
+        public int GetStat() => this.undeletedRecordsCount;
 
         /// <summary>Makes snapshot of current <see cref="FileCabinetFilesystemService"/> object state.</summary>
         /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
@@ -322,6 +329,8 @@ namespace FileCabinetApp
                 else
                 {
                     this.AddRecord(record);
+                    this.storedIdentifiers.Add(record.Id);
+                    this.undeletedRecordsCount++;
                 }
             }
         }
@@ -350,7 +359,7 @@ namespace FileCabinetApp
                     this.fileStream.Seek(-sizeof(short), SeekOrigin.Current);
                     writer.Write(reservedField);
                     this.storedIdentifiers.Remove(id);
-                    this.recordsCount--;
+                    this.undeletedRecordsCount--;
                     isNotFound = false;
                 }
                 else
@@ -359,6 +368,26 @@ namespace FileCabinetApp
                 }
             }
             while (isNotFound);
+        }
+
+        /// <summary>Defragments the data file.</summary>
+        /// <exception cref="InvalidOperationException">Thrown when there are no deleted records in the data file.</exception>
+        public void Purge()
+        {
+            string filePath = this.fileStream.Name;
+            this.allRecordsCount = (int)this.fileStream.Length / RecordLenghtInBytes;
+            if (this.GetStat() == this.allRecordsCount)
+            {
+                throw new InvalidOperationException("There are no deleted records.");
+            }
+
+            var records = this.GetRecords();
+            this.fileStream.Dispose();
+            this.fileStream = File.Create(filePath);
+            foreach (var record in records)
+            {
+                this.AddRecord(record);
+            }
         }
 
         private void AddRecord(FileCabinetRecord record)
@@ -386,9 +415,6 @@ namespace FileCabinetApp
             writer.Write(record.Sex);
             writer.Write(record.NumberOfReviews);
             writer.Write(record.Salary);
-
-            this.storedIdentifiers.Add(record.Id);
-            this.recordsCount++;
         }
     }
 }
