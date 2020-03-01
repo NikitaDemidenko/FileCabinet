@@ -60,6 +60,12 @@ namespace FileCabinetApp
         /// <summary>Identifier offset.</summary>
         public const int IdOffset = 2;
 
+        /// <summary>The deleted bit bit mask.</summary>
+        public const short DeletedBitMask = 4;
+
+        /// <summary>Begin of the file.</summary>
+        public const long BeginOfFile = 0;
+
         /// <summary>Input date format.</summary>
         public const string InputDateFormat = "MM/dd/yyyy";
 

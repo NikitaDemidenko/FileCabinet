@@ -28,6 +28,10 @@ namespace FileCabinetApp
         /// <value>Collections of identifiers strored in the file cabinet service.</value>
         public ReadOnlyCollection<int> StoredIdentifiers => new ReadOnlyCollection<int>(this.storedIdentifiers);
 
+        /// <summary>Gets all records count.</summary>
+        /// <value>All records count.</value>
+        public int AllRecordsCount => this.list.Count;
+
         /// <summary>Gets the validator of this <see cref="FileCabinetMemoryService"/> object.</summary>
         /// <value>The validator.</value>
         public IRecordValidator Validator { get; }
@@ -189,6 +193,30 @@ namespace FileCabinetApp
                 else
                 {
                     this.AddRecord(record);
+                }
+            }
+        }
+
+        /// <summary>Removes the record from <see cref="FileCabinetMemoryService"/> object.</summary>
+        /// <param name="id">Identifier of the record to delete.</param>
+        /// <exception cref="ArgumentException">Thrown when record is not found.</exception>
+        public void RemoveRecord(int id)
+        {
+            if (!this.storedIdentifiers.Contains(id))
+            {
+                throw new ArgumentException($"There is no #{id} record.");
+            }
+
+            foreach (var record in this.list)
+            {
+                if (record.Id == id)
+                {
+                    this.firstNameDictionary[record.Name.FirstName.ToUpperInvariant()].Remove(record);
+                    this.lastNameDictionary[record.Name.LastName.ToUpperInvariant()].Remove(record);
+                    this.dateOfBirthDictionary[record.DateOfBirth].Remove(record);
+                    this.storedIdentifiers.Remove(id);
+                    this.list.Remove(record);
+                    return;
                 }
             }
         }
