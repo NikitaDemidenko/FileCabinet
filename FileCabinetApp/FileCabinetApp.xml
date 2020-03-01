@@ -254,6 +254,10 @@
             <summary>Gets the collection of stored identifiers.</summary>
             <value>Collections of identifiers strored in the file cabinet service.</value>
         </member>
+        <member name="P:FileCabinetApp.FileCabinetMemoryService.AllRecordsCount">
+            <summary>Gets all records count.</summary>
+            <value>All records count.</value>
+        </member>
         <member name="P:FileCabinetApp.FileCabinetMemoryService.Validator">
             <summary>Gets the validator of this <see cref="T:FileCabinetApp.FileCabinetMemoryService"/> object.</summary>
             <value>The validator.</value>
@@ -480,6 +484,10 @@
         <member name="P:FileCabinetApp.IFileCabinetService.StoredIdentifiers">
             <summary>Gets the collection of stored identifiers.</summary>
             <value>Collections of identifiers strored in the file cabinet service.</value>
+        </member>
+        <member name="P:FileCabinetApp.IFileCabinetService.AllRecordsCount">
+            <summary>Gets all records count.</summary>
+            <value>All records count.</value>
         </member>
         <member name="M:FileCabinetApp.IFileCabinetService.CreateRecord(FileCabinetApp.UnverifiedData)">
             <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>

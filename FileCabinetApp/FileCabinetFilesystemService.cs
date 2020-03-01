@@ -302,7 +302,11 @@ namespace FileCabinetApp
 
         /// <summary>Gets the stat of records in the file cabinet.</summary>
         /// <returns>Returns number of records.</returns>
-        public int GetStat() => this.undeletedRecordsCount;
+        public int GetStat()
+        {
+            this.allRecordsCount = (int)this.fileStream.Length / RecordLenghtInBytes;
+            return this.undeletedRecordsCount;
+        }
 
         /// <summary>Makes snapshot of current <see cref="FileCabinetFilesystemService"/> object state.</summary>
         /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
@@ -375,7 +379,6 @@ namespace FileCabinetApp
         public void Purge()
         {
             string filePath = this.fileStream.Name;
-            this.allRecordsCount = (int)this.fileStream.Length / RecordLenghtInBytes;
             if (this.GetStat() == this.allRecordsCount)
             {
                 throw new InvalidOperationException("There are no deleted records.");

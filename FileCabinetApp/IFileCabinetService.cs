@@ -17,6 +17,10 @@ namespace FileCabinetApp
         /// <value>Collections of identifiers strored in the file cabinet service.</value>
         public ReadOnlyCollection<int> StoredIdentifiers { get; }
 
+        /// <summary>Gets all records count.</summary>
+        /// <value>All records count.</value>
+        public int AllRecordsCount { get; }
+
         /// <summary>Creates new <see cref="FileCabinetRecord"/> instance.</summary>
         /// <param name="unverifiedData">Raw data.</param>
         /// <returns>Returns identifier of the new <see cref="FileCabinetRecord"/> instance.</returns>

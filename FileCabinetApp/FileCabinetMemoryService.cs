@@ -28,6 +28,10 @@ namespace FileCabinetApp
         /// <value>Collections of identifiers strored in the file cabinet service.</value>
         public ReadOnlyCollection<int> StoredIdentifiers => new ReadOnlyCollection<int>(this.storedIdentifiers);
 
+        /// <summary>Gets all records count.</summary>
+        /// <value>All records count.</value>
+        public int AllRecordsCount => this.list.Count;
+
         /// <summary>Gets the validator of this <see cref="FileCabinetMemoryService"/> object.</summary>
         /// <value>The validator.</value>
         public IRecordValidator Validator { get; }
