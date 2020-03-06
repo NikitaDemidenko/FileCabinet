@@ -5,10 +5,12 @@ using System.Text;
 namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Command handler base.</summary>
-    /// <seealso cref="FileCabinetApp.CommandHandlers.ICommandHandler" />
+    /// <seealso cref="ICommandHandler" />
     public abstract class CommandHandlerBase : ICommandHandler
     {
-        private ICommandHandler nextHandler;
+        /// <summary>Gets the next handler.</summary>
+        /// <value>The next handler.</value>
+        public ICommandHandler NextHandler { get; private set; }
 
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
@@ -19,7 +21,7 @@ namespace FileCabinetApp.CommandHandlers
         /// <exception cref="ArgumentNullException">Thrown when handler is null.</exception>
         public void SetNext(ICommandHandler handler)
         {
-            this.nextHandler = handler ?? throw new ArgumentNullException(nameof(handler));
+            this.NextHandler = handler;
         }
     }
 }
