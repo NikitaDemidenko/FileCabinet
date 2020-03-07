@@ -8,13 +8,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="ServiceCommandHandlerBase" />
     public class ListCommandHandler : ServiceCommandHandlerBase
     {
+        private readonly IRecordPrinter printer;
+
         /// <summary>Initializes a new instance of the <see cref="ListCommandHandler"/> class.</summary>
         /// <param name="fileCabinetService">The file cabinet service.</param>
-        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// <param name="printer">The printer.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService or printer
         /// is null.</exception>
-        public ListCommandHandler(IFileCabinetService fileCabinetService)
+        public ListCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
             : base(fileCabinetService)
         {
+            this.printer = printer ?? throw new ArgumentNullException(nameof(printer));
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -55,10 +59,7 @@ namespace FileCabinetApp.CommandHandlers
             }
 
             var records = this.fileCabinetService.GetRecords();
-            foreach (var record in records)
-            {
-                Console.WriteLine(record);
-            }
+            this.printer.Print(records);
         }
     }
 }

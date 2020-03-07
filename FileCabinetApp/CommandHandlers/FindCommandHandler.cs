@@ -10,13 +10,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="ServiceCommandHandlerBase" />
     public class FindCommandHandler : ServiceCommandHandlerBase
     {
+        private readonly IRecordPrinter printer;
+
         /// <summary>Initializes a new instance of the <see cref="FindCommandHandler"/> class.</summary>
         /// <param name="fileCabinetService">The file cabinet service.</param>
-        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// <param name="printer">The printer.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService or printer
         /// is null.</exception>
-        public FindCommandHandler(IFileCabinetService fileCabinetService)
+        public FindCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
             : base(fileCabinetService)
         {
+            this.printer = printer ?? throw new ArgumentNullException(nameof(printer));
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -74,10 +78,7 @@ namespace FileCabinetApp.CommandHandlers
                 var searchResult = this.fileCabinetService.FindByFirstName(propertyValue);
                 if (searchResult != null)
                 {
-                    foreach (var record in searchResult)
-                    {
-                        Console.WriteLine(record);
-                    }
+                    this.printer.Print(searchResult);
                 }
                 else
                 {
@@ -89,10 +90,7 @@ namespace FileCabinetApp.CommandHandlers
                 var searchResult = this.fileCabinetService.FindByLastName(propertyValue);
                 if (searchResult != null)
                 {
-                    foreach (var record in searchResult)
-                    {
-                        Console.WriteLine(record);
-                    }
+                    this.printer.Print(searchResult);
                 }
                 else
                 {
@@ -106,10 +104,7 @@ namespace FileCabinetApp.CommandHandlers
                     var searchResult = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
                     if (searchResult != null)
                     {
-                        foreach (var record in searchResult)
-                        {
-                            Console.WriteLine(record);
-                        }
+                        this.printer.Print(searchResult);
                     }
                     else
                     {

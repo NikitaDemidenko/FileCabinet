@@ -108,10 +108,11 @@
             <summary>Find command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase" />
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+        <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
             <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.FindCommandHandler"/> class.</summary>
             <param name="fileCabinetService">The file cabinet service.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when fileCabinetService
+            <param name="printer">The printer.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when fileCabinetService or printer
             is null.</exception>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.FindCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
@@ -159,10 +160,11 @@
             <summary>List command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase" />
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+        <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,FileCabinetApp.IRecordPrinter)">
             <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ListCommandHandler"/> class.</summary>
             <param name="fileCabinetService">The file cabinet service.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when fileCabinetService
+            <param name="printer">The printer.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when fileCabinetService or printer
             is null.</exception>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ListCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
@@ -379,6 +381,16 @@
             <param name="unverifiedData">Raw data.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
             <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
+        </member>
+        <member name="T:FileCabinetApp.DefaultRecordPrinter">
+            <summary>Default record printer.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordPrinter" />
+        </member>
+        <member name="M:FileCabinetApp.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>Prints the specified records.</summary>
+            <param name="records">The records.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when records
+            is null.</exception>
         </member>
         <member name="T:FileCabinetApp.DefaultValidator">
             <summary>Performs default validation on user input data.</summary>
@@ -758,6 +770,13 @@
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">Snapshot.</param>
+        </member>
+        <member name="T:FileCabinetApp.IRecordPrinter">
+            <summary>Record printer interface.</summary>
+        </member>
+        <member name="M:FileCabinetApp.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
+            <summary>Prints the specified records.</summary>
+            <param name="records">The records.</param>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
