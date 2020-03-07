@@ -10,14 +10,14 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="ServiceCommandHandlerBase" />
     public class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IRecordPrinter printer;
+        private readonly Action<IEnumerable<FileCabinetRecord>> printer;
 
         /// <summary>Initializes a new instance of the <see cref="FindCommandHandler"/> class.</summary>
         /// <param name="fileCabinetService">The file cabinet service.</param>
         /// <param name="printer">The printer.</param>
         /// <exception cref="ArgumentNullException">Thrown when fileCabinetService or printer
         /// is null.</exception>
-        public FindCommandHandler(IFileCabinetService fileCabinetService, IRecordPrinter printer)
+        public FindCommandHandler(IFileCabinetService fileCabinetService, Action<IEnumerable<FileCabinetRecord>> printer)
             : base(fileCabinetService)
         {
             this.printer = printer ?? throw new ArgumentNullException(nameof(printer));
@@ -78,7 +78,7 @@ namespace FileCabinetApp.CommandHandlers
                 var searchResult = this.fileCabinetService.FindByFirstName(propertyValue);
                 if (searchResult != null)
                 {
-                    this.printer.Print(searchResult);
+                    this.printer(searchResult);
                 }
                 else
                 {
@@ -90,7 +90,7 @@ namespace FileCabinetApp.CommandHandlers
                 var searchResult = this.fileCabinetService.FindByLastName(propertyValue);
                 if (searchResult != null)
                 {
-                    this.printer.Print(searchResult);
+                    this.printer(searchResult);
                 }
                 else
                 {
@@ -104,7 +104,7 @@ namespace FileCabinetApp.CommandHandlers
                     var searchResult = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
                     if (searchResult != null)
                     {
-                        this.printer.Print(searchResult);
+                        this.printer(searchResult);
                     }
                     else
                     {
