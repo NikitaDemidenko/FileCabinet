@@ -19,44 +19,69 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(unverifiedData));
             }
 
-            if (string.IsNullOrWhiteSpace(unverifiedData.FirstName))
+            this.ValidateFirstName(unverifiedData.FirstName);
+            this.ValidateLastName(unverifiedData.LastName);
+            this.ValidateDateOfBirth(unverifiedData.DateOfBirth);
+            this.ValidateSex(unverifiedData.Sex);
+            this.ValidateNumberOfReviews(unverifiedData.NumberOfReviews);
+            this.ValidateSalary(unverifiedData.Salary);
+        }
+
+        private void ValidateFirstName(string firstName)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
             {
                 throw new ArgumentException("First name is empty.");
             }
 
-            if (string.IsNullOrWhiteSpace(unverifiedData.LastName))
+            if (firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols ||
+                !Regex.IsMatch(firstName, AllowedCharacters))
+            {
+                throw new ArgumentException("First name's length is out of range or has invalid characters.");
+            }
+        }
+
+        private void ValidateLastName(string lastName)
+        {
+            if (string.IsNullOrWhiteSpace(lastName))
             {
                 throw new ArgumentException("Last name is empty.");
             }
 
-            if (unverifiedData.FirstName.Length < MinNumberOfSymbols || unverifiedData.FirstName.Length > MaxNumberOfSymbols ||
-                !Regex.IsMatch(unverifiedData.FirstName, AllowedCharacters))
-            {
-                throw new ArgumentException("First name's length is out of range or has invalid characters.");
-            }
-
-            if (unverifiedData.LastName.Length < MinNumberOfSymbols || unverifiedData.LastName.Length > MaxNumberOfSymbols ||
-                !Regex.IsMatch(unverifiedData.LastName, AllowedCharacters))
+            if (lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols ||
+                !Regex.IsMatch(lastName, AllowedCharacters))
             {
                 throw new ArgumentException("Last name's length is out of range or has invalid characters.");
             }
+        }
 
-            if (unverifiedData.DateOfBirth < MinDateOfBirth || unverifiedData.DateOfBirth >= DateTime.Now)
+        private void ValidateDateOfBirth(DateTime dateOfBirth)
+        {
+            if (dateOfBirth < MinDateOfBirth || dateOfBirth >= DateTime.Now)
             {
                 throw new ArgumentException("Invalid date of birth.");
             }
+        }
 
-            if (unverifiedData.Sex != MaleSex && unverifiedData.Sex != FemaleSex)
+        private void ValidateSex(char sex)
+        {
+            if (sex != MaleSex && sex != FemaleSex)
             {
                 throw new ArgumentException("Wrong sex.");
             }
+        }
 
-            if (unverifiedData.NumberOfReviews < MinNumberOfReviewsCustom)
+        private void ValidateNumberOfReviews(short numberOfReviews)
+        {
+            if (numberOfReviews < MinNumberOfReviewsCustom)
             {
                 throw new ArgumentException("Number of reviews is too small.");
             }
+        }
 
-            if (unverifiedData.Salary < MinValueOfSalaryCustom)
+        private void ValidateSalary(decimal salary)
+        {
+            if (salary < MinValueOfSalaryCustom)
             {
                 throw new ArgumentException("Salary is too small.");
             }

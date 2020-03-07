@@ -18,42 +18,67 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(unverifiedData));
             }
 
-            if (string.IsNullOrWhiteSpace(unverifiedData.FirstName))
+            this.ValidateFirstName(unverifiedData.FirstName);
+            this.ValidateLastName(unverifiedData.LastName);
+            this.ValidateDateOfBirth(unverifiedData.DateOfBirth);
+            this.ValidateSex(unverifiedData.Sex);
+            this.ValidateNumberOfReviews(unverifiedData.NumberOfReviews);
+            this.ValidateSalary(unverifiedData.Salary);
+        }
+
+        private void ValidateFirstName(string firstName)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
             {
                 throw new ArgumentException("First name is empty.");
             }
 
-            if (string.IsNullOrWhiteSpace(unverifiedData.LastName))
+            if (firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols)
+            {
+                throw new ArgumentException("First name's length is out of range.");
+            }
+        }
+
+        private void ValidateLastName(string lastName)
+        {
+            if (string.IsNullOrWhiteSpace(lastName))
             {
                 throw new ArgumentException("Last name is empty.");
             }
 
-            if (unverifiedData.FirstName.Length < MinNumberOfSymbols || unverifiedData.FirstName.Length > MaxNumberOfSymbols)
-            {
-                throw new ArgumentException("First name's length is out of range.");
-            }
-
-            if (unverifiedData.LastName.Length < MinNumberOfSymbols || unverifiedData.LastName.Length > MaxNumberOfSymbols)
+            if (lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols)
             {
                 throw new ArgumentException("Last name's length is out of range.");
             }
+        }
 
-            if (unverifiedData.DateOfBirth >= DateTime.Now)
+        private void ValidateDateOfBirth(DateTime dateOfBirth)
+        {
+            if (dateOfBirth >= DateTime.Now)
             {
                 throw new ArgumentException("Invalid date of birth.");
             }
+        }
 
-            if (unverifiedData.Sex != MaleSex && unverifiedData.Sex != FemaleSex)
+        private void ValidateSex(char sex)
+        {
+            if (sex != MaleSex && sex != FemaleSex)
             {
                 throw new ArgumentException("Wrong sex.");
             }
+        }
 
-            if (unverifiedData.NumberOfReviews < MinNumberOfReviews)
+        private void ValidateNumberOfReviews(short numberOfReviews)
+        {
+            if (numberOfReviews < MinNumberOfReviews)
             {
                 throw new ArgumentException("Number of reviews cannot be less than zero.");
             }
+        }
 
-            if (unverifiedData.Salary < MinValueOfSalary)
+        private void ValidateSalary(decimal salary)
+        {
+            if (salary < MinValueOfSalary)
             {
                 throw new ArgumentException("Salary cannot be less than zero.");
             }
