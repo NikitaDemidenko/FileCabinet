@@ -9,6 +9,8 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="ServiceCommandHandlerBase" />
     public class EditCommandHandler : ServiceCommandHandlerBase
     {
+        private static bool isCustomValidationRules;
+
         private Func<string, Tuple<bool, string, string>> stringConverter = input =>
         {
             return new Tuple<bool, string, string>(true, null, input);
@@ -44,7 +46,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private Func<string, Tuple<bool, string>> firstNameValidator = firstName =>
         {
-            return Program.isCustomValidationRules
+            return isCustomValidationRules
                 ? firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols ||
                 !Regex.IsMatch(firstName, AllowedCharacters)
                     ? new Tuple<bool, string>(false, "First name's length is out of range or has invalid characters")
@@ -56,7 +58,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private Func<string, Tuple<bool, string>> lastNameValidator = lastName =>
         {
-            return Program.isCustomValidationRules
+            return isCustomValidationRules
                 ? lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols ||
                 !Regex.IsMatch(lastName, AllowedCharacters)
                     ? new Tuple<bool, string>(false, "First name's length is out of range or has invalid characters")
@@ -68,7 +70,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = dateOfBirth =>
         {
-            return Program.isCustomValidationRules
+            return isCustomValidationRules
                 ? dateOfBirth < MinDateOfBirth || dateOfBirth >= DateTime.Now
                     ? new Tuple<bool, string>(false, "Date of birth is greater than the current date or less than 1950-Jan-01")
                     : new Tuple<bool, string>(true, null)
@@ -84,7 +86,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private Func<short, Tuple<bool, string>> numberOfReviewsValidator = numberOfReviews =>
         {
-            return Program.isCustomValidationRules
+            return isCustomValidationRules
                 ? numberOfReviews < MinNumberOfReviewsCustom
                     ? new Tuple<bool, string>(false, "Number of reviews is too small. It must be greater than 50")
                     : new Tuple<bool, string>(true, null)
@@ -95,7 +97,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private Func<decimal, Tuple<bool, string>> salaryValidator = salary =>
         {
-            return Program.isCustomValidationRules
+            return isCustomValidationRules
                 ? salary < MinValueOfSalaryCustom
                     ? new Tuple<bool, string>(false, "Salary is too small. It must be greater than 200")
                     : new Tuple<bool, string>(true, null)
@@ -106,11 +108,13 @@ namespace FileCabinetApp.CommandHandlers
 
         /// <summary>Initializes a new instance of the <see cref="EditCommandHandler"/> class.</summary>
         /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <param name="isCustomValidationRules">Determines wether validation rules are custom.</param>
         /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
         /// is null.</exception>
-        public EditCommandHandler(IFileCabinetService fileCabinetService)
+        public EditCommandHandler(IFileCabinetService fileCabinetService, bool isCustomValidationRules)
             : base(fileCabinetService)
         {
+            EditCommandHandler.isCustomValidationRules = isCustomValidationRules;
         }
 
         /// <summary>Handles the specified request.</summary>

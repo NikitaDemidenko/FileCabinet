@@ -6,6 +6,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="CommandHandlerBase" />
     public class ExitCommandHandler : CommandHandlerBase
     {
+        private readonly Action<bool> setProgramStatus;
+
+        /// <summary>Initializes a new instance of the <see cref="ExitCommandHandler"/> class.</summary>
+        /// <param name="setProgramStatus">Sets program status.</param>
+        /// <exception cref="ArgumentNullException">Thrown when setProgramStatus
+        /// is null.</exception>
+        public ExitCommandHandler(Action<bool> setProgramStatus)
+        {
+            this.setProgramStatus = setProgramStatus ?? throw new ArgumentNullException(nameof(setProgramStatus));
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">Thrown when request is null.</exception>
@@ -37,7 +48,8 @@ namespace FileCabinetApp.CommandHandlers
         private void Exit(string parameters)
         {
             Console.WriteLine("Exiting an application...");
-            Program.isRunning = false;
+            bool isRunning = false;
+            this.setProgramStatus(isRunning);
         }
     }
 }

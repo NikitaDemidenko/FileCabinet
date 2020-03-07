@@ -46,9 +46,10 @@
             <summary>Create command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase" />
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+        <member name="M:FileCabinetApp.CommandHandlers.CreateCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Boolean)">
             <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.CreateCommandHandler"/> class.</summary>
             <param name="fileCabinetService">The file cabinet service.</param>
+            <param name="isCustomValidationRules">Determines wether validation rules are custom.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when fileCabinetService
             is null.</exception>
         </member>
@@ -61,9 +62,10 @@
             <summary>Edit command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.ServiceCommandHandlerBase" />
         </member>
-        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService)">
+        <member name="M:FileCabinetApp.CommandHandlers.EditCommandHandler.#ctor(FileCabinetApp.IFileCabinetService,System.Boolean)">
             <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.EditCommandHandler"/> class.</summary>
             <param name="fileCabinetService">The file cabinet service.</param>
+            <param name="isCustomValidationRules">Determines wether validation rules are custom.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when fileCabinetService
             is null.</exception>
         </member>
@@ -75,6 +77,12 @@
         <member name="T:FileCabinetApp.CommandHandlers.ExitCommandHandler">
             <summary>Exit command handler.</summary>
             <seealso cref="T:FileCabinetApp.CommandHandlers.CommandHandlerBase" />
+        </member>
+        <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.#ctor(System.Action{System.Boolean})">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.CommandHandlers.ExitCommandHandler"/> class.</summary>
+            <param name="setProgramStatus">Sets program status.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when setProgramStatus
+            is null.</exception>
         </member>
         <member name="M:FileCabinetApp.CommandHandlers.ExitCommandHandler.Handle(FileCabinetApp.CommandHandlers.AppCommandRequest)">
             <summary>Handles the specified request.</summary>

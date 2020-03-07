@@ -10,9 +10,6 @@ namespace FileCabinetApp
     /// <summary>Main class of the project.</summary>
     public static class Program
     {
-        public static bool isRunning = true;
-        public static bool isCustomValidationRules = false;
-
         private const string DeveloperName = "Nikita Demidenko";
         private const string HintMessage = "Enter your command, or enter 'help' to get help.";
 
@@ -20,6 +17,12 @@ namespace FileCabinetApp
         private static List<string> commandLineArguments;
         private static IFileCabinetService fileCabinetService;
         private static FileStream fileStream;
+
+        private static bool isRunning = true;
+        private static bool isCustomValidationRules = false;
+
+        private static Action<bool> setProgramStatus =
+            isRunning => Program.isRunning = isRunning;
 
         /// <summary>Defines the entry point of the application.</summary>
         /// <param name="args">The arguments.</param>
@@ -152,9 +155,9 @@ namespace FileCabinetApp
         private static ICommandHandler CreateCommandHandlers()
         {
             var helpHandler = new HelpCommandHandler();
-            var createHandler = new CreateCommandHandler(fileCabinetService);
-            var editHandler = new EditCommandHandler(fileCabinetService);
-            var exitHandler = new ExitCommandHandler();
+            var createHandler = new CreateCommandHandler(fileCabinetService, isCustomValidationRules);
+            var editHandler = new EditCommandHandler(fileCabinetService, isCustomValidationRules);
+            var exitHandler = new ExitCommandHandler(setProgramStatus);
             var exporthandler = new ExportCommandHandler(fileCabinetService);
             var findHandler = new FindCommandHandler(fileCabinetService);
             var importHandler = new ImportCommandHandler(fileCabinetService);
