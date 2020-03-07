@@ -29,7 +29,7 @@ namespace FileCabinetApp.CommandHandlers
                 }
                 else
                 {
-                    this.PrintMissedCommandInfo(request.Command);
+                    PrintMissedCommandInfo(request.Command);
                 }
             }
         }
@@ -38,12 +38,6 @@ namespace FileCabinetApp.CommandHandlers
         {
             Console.WriteLine("Exiting an application...");
             Program.isRunning = false;
-        }
-
-        private void PrintMissedCommandInfo(string command)
-        {
-            Console.WriteLine($"There is no '{command}' command.");
-            Console.WriteLine();
         }
     }
 }

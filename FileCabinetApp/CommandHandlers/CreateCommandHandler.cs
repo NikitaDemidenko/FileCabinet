@@ -6,11 +6,9 @@ using static FileCabinetApp.Constants;
 namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Create command handler.</summary>
-    /// <seealso cref="CommandHandlerBase" />
-    public class CreateCommandHandler : CommandHandlerBase
+    /// <seealso cref="ServiceCommandHandlerBase" />
+    public class CreateCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         private Func<string, Tuple<bool, string, string>> stringConverter = input =>
         {
             return new Tuple<bool, string, string>(true, null, input);
@@ -111,8 +109,8 @@ namespace FileCabinetApp.CommandHandlers
         /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
         /// is null.</exception>
         public CreateCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -138,7 +136,7 @@ namespace FileCabinetApp.CommandHandlers
                 }
                 else
                 {
-                    this.PrintMissedCommandInfo(request.Command);
+                    PrintMissedCommandInfo(request.Command);
                 }
             }
         }
@@ -195,12 +193,6 @@ namespace FileCabinetApp.CommandHandlers
                 return value;
             }
             while (IsInvalidInput);
-        }
-
-        private void PrintMissedCommandInfo(string command)
-        {
-            Console.WriteLine($"There is no '{command}' command.");
-            Console.WriteLine();
         }
     }
 }

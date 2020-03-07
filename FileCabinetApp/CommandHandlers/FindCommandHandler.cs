@@ -7,18 +7,16 @@ using static FileCabinetApp.Constants;
 namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Find command handler.</summary>
-    /// <seealso cref="CommandHandlerBase" />
-    public class FindCommandHandler : CommandHandlerBase
+    /// <seealso cref="ServiceCommandHandlerBase" />
+    public class FindCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>Initializes a new instance of the <see cref="FindCommandHandler"/> class.</summary>
         /// <param name="fileCabinetService">The file cabinet service.</param>
         /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
         /// is null.</exception>
         public FindCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -44,7 +42,7 @@ namespace FileCabinetApp.CommandHandlers
                 }
                 else
                 {
-                    this.PrintMissedCommandInfo(request.Command);
+                    PrintMissedCommandInfo(request.Command);
                 }
             }
         }
@@ -127,12 +125,6 @@ namespace FileCabinetApp.CommandHandlers
             {
                 Console.WriteLine("Invalid property.");
             }
-        }
-
-        private void PrintMissedCommandInfo(string command)
-        {
-            Console.WriteLine($"There is no '{command}' command.");
-            Console.WriteLine();
         }
     }
 }

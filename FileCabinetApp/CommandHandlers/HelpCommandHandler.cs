@@ -50,7 +50,7 @@ namespace FileCabinetApp.CommandHandlers
                 }
                 else
                 {
-                    this.PrintMissedCommandInfo(request.Command);
+                    PrintMissedCommandInfo(request.Command);
                 }
             }
         }
@@ -79,12 +79,6 @@ namespace FileCabinetApp.CommandHandlers
                 }
             }
 
-            Console.WriteLine();
-        }
-
-        private void PrintMissedCommandInfo(string command)
-        {
-            Console.WriteLine($"There is no '{command}' command.");
             Console.WriteLine();
         }
     }

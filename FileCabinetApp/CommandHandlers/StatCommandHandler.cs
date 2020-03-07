@@ -5,18 +5,16 @@ using System.Text;
 namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Stat command handler.</summary>
-    /// <seealso cref="CommandHandlerBase" />
-    public class StatCommandHandler : CommandHandlerBase
+    /// <seealso cref="ServiceCommandHandlerBase" />
+    public class StatCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>Initializes a new instance of the <see cref="StatCommandHandler"/> class.</summary>
         /// <param name="fileCabinetService">The file cabinet service.</param>
         /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
         /// is null.</exception>
         public StatCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -42,7 +40,7 @@ namespace FileCabinetApp.CommandHandlers
                 }
                 else
                 {
-                    this.PrintMissedCommandInfo(request.Command);
+                    PrintMissedCommandInfo(request.Command);
                 }
             }
         }
@@ -52,12 +50,6 @@ namespace FileCabinetApp.CommandHandlers
             var recordsCount = this.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
             Console.WriteLine($"{this.fileCabinetService.AllRecordsCount - recordsCount} record(s) has been deleted.");
-        }
-
-        private void PrintMissedCommandInfo(string command)
-        {
-            Console.WriteLine($"There is no '{command}' command.");
-            Console.WriteLine();
         }
     }
 }

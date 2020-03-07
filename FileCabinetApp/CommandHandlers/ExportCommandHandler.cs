@@ -7,18 +7,16 @@ using static FileCabinetApp.Constants;
 namespace FileCabinetApp.CommandHandlers
 {
     /// <summary>Export command handler.</summary>
-    /// <seealso cref="CommandHandlerBase" />
-    public class ExportCommandHandler : CommandHandlerBase
+    /// <seealso cref="ServiceCommandHandlerBase" />
+    public class ExportCommandHandler : ServiceCommandHandlerBase
     {
-        private readonly IFileCabinetService fileCabinetService;
-
         /// <summary>Initializes a new instance of the <see cref="ExportCommandHandler"/> class.</summary>
         /// <param name="fileCabinetService">The file cabinet service.</param>
         /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
         /// is null.</exception>
         public ExportCommandHandler(IFileCabinetService fileCabinetService)
+            : base(fileCabinetService)
         {
-            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
         }
 
         /// <summary>Handles the specified request.</summary>
@@ -44,7 +42,7 @@ namespace FileCabinetApp.CommandHandlers
                 }
                 else
                 {
-                    this.PrintMissedCommandInfo(request.Command);
+                    PrintMissedCommandInfo(request.Command);
                 }
             }
         }
@@ -112,12 +110,6 @@ namespace FileCabinetApp.CommandHandlers
             {
                 Console.WriteLine("Wrong type of file parameter.");
             }
-        }
-
-        private void PrintMissedCommandInfo(string command)
-        {
-            Console.WriteLine($"There is no '{command}' command.");
-            Console.WriteLine();
         }
     }
 }

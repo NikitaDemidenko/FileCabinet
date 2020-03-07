@@ -12,6 +12,14 @@ namespace FileCabinetApp.CommandHandlers
         /// <value>The next handler.</value>
         public ICommandHandler NextHandler { get; private set; }
 
+        /// <summary>Prints the missed command information.</summary>
+        /// <param name="command">The command.</param>
+        public static void PrintMissedCommandInfo(string command)
+        {
+            Console.WriteLine($"There is no '{command}' command.");
+            Console.WriteLine();
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         public abstract void Handle(AppCommandRequest request);
