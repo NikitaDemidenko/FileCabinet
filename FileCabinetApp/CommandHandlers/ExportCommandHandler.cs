@@ -10,6 +10,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="CommandHandlerBase" />
     public class ExportCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>Initializes a new instance of the <see cref="ExportCommandHandler"/> class.</summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// is null.</exception>
+        public ExportCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">Thrown when request is null.</exception>
@@ -79,7 +90,7 @@ namespace FileCabinetApp.CommandHandlers
                 try
                 {
                     using var streamWriter = new StreamWriter(filePath, append, Encoding.Unicode);
-                    var snapshot = Program.fileCabinetService.MakeSnapshot();
+                    var snapshot = this.fileCabinetService.MakeSnapshot();
                     if (typeOfFile.Equals(CsvFileExtension, StringComparison.InvariantCultureIgnoreCase))
                     {
                         snapshot.SaveToCsv(streamWriter);

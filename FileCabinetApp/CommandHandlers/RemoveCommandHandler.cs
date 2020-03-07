@@ -8,6 +8,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="CommandHandlerBase" />
     public class RemoveCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>Initializes a new instance of the <see cref="RemoveCommandHandler"/> class.</summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// is null.</exception>
+        public RemoveCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">Thrown when request is null.</exception>
@@ -45,14 +56,14 @@ namespace FileCabinetApp.CommandHandlers
                 return;
             }
 
-            if (!Program.fileCabinetService.StoredIdentifiers.Contains(id))
+            if (!this.fileCabinetService.StoredIdentifiers.Contains(id))
             {
                 Console.WriteLine($"Record #{id} doesn't exist.");
                 Console.WriteLine();
                 return;
             }
 
-            Program.fileCabinetService.RemoveRecord(id);
+            this.fileCabinetService.RemoveRecord(id);
             Console.WriteLine($"Record #{id} is removed.");
         }
 

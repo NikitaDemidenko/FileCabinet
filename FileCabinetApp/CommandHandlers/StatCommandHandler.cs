@@ -8,6 +8,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="CommandHandlerBase" />
     public class StatCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>Initializes a new instance of the <see cref="StatCommandHandler"/> class.</summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// is null.</exception>
+        public StatCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">Thrown when request is null.</exception>
@@ -38,9 +49,9 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Stat(string parameters)
         {
-            var recordsCount = Program.fileCabinetService.GetStat();
+            var recordsCount = this.fileCabinetService.GetStat();
             Console.WriteLine($"{recordsCount} record(s).");
-            Console.WriteLine($"{Program.fileCabinetService.AllRecordsCount - recordsCount} record(s) has been deleted.");
+            Console.WriteLine($"{this.fileCabinetService.AllRecordsCount - recordsCount} record(s) has been deleted.");
         }
 
         private void PrintMissedCommandInfo(string command)

@@ -8,6 +8,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="CommandHandlerBase" />
     public class PurgeCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>Initializes a new instance of the <see cref="PurgeCommandHandler"/> class.</summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// is null.</exception>
+        public PurgeCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">Thrown when request is null.</exception>
@@ -38,7 +49,7 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Purge(string parameters)
         {
-            if (Program.fileCabinetService is FileCabinetFilesystemService fileCabinetFilesystemService)
+            if (this.fileCabinetService is FileCabinetFilesystemService fileCabinetFilesystemService)
             {
                 try
                 {

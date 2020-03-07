@@ -8,6 +8,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="CommandHandlerBase" />
     public class ListCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>Initializes a new instance of the <see cref="ListCommandHandler"/> class.</summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// is null.</exception>
+        public ListCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">Thrown when request
@@ -39,13 +50,13 @@ namespace FileCabinetApp.CommandHandlers
 
         private void List(string parameters)
         {
-            if (Program.fileCabinetService.GetStat() == 0)
+            if (this.fileCabinetService.GetStat() == 0)
             {
                 Console.WriteLine("There are no records.");
                 return;
             }
 
-            var records = Program.fileCabinetService.GetRecords();
+            var records = this.fileCabinetService.GetRecords();
             foreach (var record in records)
             {
                 Console.WriteLine(record);

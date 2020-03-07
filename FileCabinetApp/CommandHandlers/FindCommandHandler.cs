@@ -10,6 +10,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="CommandHandlerBase" />
     public class FindCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>Initializes a new instance of the <see cref="FindCommandHandler"/> class.</summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// is null.</exception>
+        public FindCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">Thrown when request is null.</exception>
@@ -62,7 +73,7 @@ namespace FileCabinetApp.CommandHandlers
 
             if (propertyName.Equals(FirstNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
-                var searchResult = Program.fileCabinetService.FindByFirstName(propertyValue);
+                var searchResult = this.fileCabinetService.FindByFirstName(propertyValue);
                 if (searchResult != null)
                 {
                     foreach (var record in searchResult)
@@ -77,7 +88,7 @@ namespace FileCabinetApp.CommandHandlers
             }
             else if (propertyName.Equals(LastNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
-                var searchResult = Program.fileCabinetService.FindByLastName(propertyValue);
+                var searchResult = this.fileCabinetService.FindByLastName(propertyValue);
                 if (searchResult != null)
                 {
                     foreach (var record in searchResult)
@@ -94,7 +105,7 @@ namespace FileCabinetApp.CommandHandlers
             {
                 if (DateTime.TryParse(propertyValue, out DateTime dateOfBirth))
                 {
-                    var searchResult = Program.fileCabinetService.FindByDateOfBirth(dateOfBirth);
+                    var searchResult = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
                     if (searchResult != null)
                     {
                         foreach (var record in searchResult)

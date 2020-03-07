@@ -11,6 +11,17 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="CommandHandlerBase" />
     public class ImportCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
+        /// <summary>Initializes a new instance of the <see cref="ImportCommandHandler"/> class.</summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// is null.</exception>
+        public ImportCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">Thrown when request
@@ -74,7 +85,7 @@ namespace FileCabinetApp.CommandHandlers
                 var snapshot = new FileCabinetServiceSnapshot();
                 try
                 {
-                    snapshot.LoadFromCsv(reader, Program.fileCabinetService.Validator);
+                    snapshot.LoadFromCsv(reader, this.fileCabinetService.Validator);
                 }
                 catch (FormatException)
                 {
@@ -92,7 +103,7 @@ namespace FileCabinetApp.CommandHandlers
                     Console.WriteLine($"Record #{record.Item1.Id} was skipped: {record.Item2}");
                 }
 
-                Program.fileCabinetService.Restore(snapshot);
+                this.fileCabinetService.Restore(snapshot);
                 Console.WriteLine($"{snapshot.Records.Count} records were imported.");
             }
             else if (typeOfFile.Equals(XmlFileExtension, StringComparison.InvariantCultureIgnoreCase))
@@ -101,7 +112,7 @@ namespace FileCabinetApp.CommandHandlers
                 var snapshot = new FileCabinetServiceSnapshot();
                 try
                 {
-                    snapshot.LoadFromXml(reader, Program.fileCabinetService.Validator);
+                    snapshot.LoadFromXml(reader, this.fileCabinetService.Validator);
                 }
                 catch (InvalidOperationException)
                 {
@@ -114,7 +125,7 @@ namespace FileCabinetApp.CommandHandlers
                     Console.WriteLine($"Record #{record.Item1.Id} was skipped: {record.Item2}");
                 }
 
-                Program.fileCabinetService.Restore(snapshot);
+                this.fileCabinetService.Restore(snapshot);
                 Console.WriteLine($"{snapshot.Records.Count} records were imported.");
             }
             else

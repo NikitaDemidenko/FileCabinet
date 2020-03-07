@@ -9,6 +9,8 @@ namespace FileCabinetApp.CommandHandlers
     /// <seealso cref="CommandHandlerBase" />
     public class CreateCommandHandler : CommandHandlerBase
     {
+        private readonly IFileCabinetService fileCabinetService;
+
         private Func<string, Tuple<bool, string, string>> stringConverter = input =>
         {
             return new Tuple<bool, string, string>(true, null, input);
@@ -104,6 +106,15 @@ namespace FileCabinetApp.CommandHandlers
                     : new Tuple<bool, string>(true, null);
         };
 
+        /// <summary>Initializes a new instance of the <see cref="CreateCommandHandler"/> class.</summary>
+        /// <param name="fileCabinetService">The file cabinet service.</param>
+        /// <exception cref="ArgumentNullException">Thrown when fileCabinetService
+        /// is null.</exception>
+        public CreateCommandHandler(IFileCabinetService fileCabinetService)
+        {
+            this.fileCabinetService = fileCabinetService ?? throw new ArgumentNullException(nameof(fileCabinetService));
+        }
+
         /// <summary>Handles the specified request.</summary>
         /// <param name="request">The request.</param>
         /// <exception cref="ArgumentNullException">Thrown when request is null.</exception>
@@ -153,7 +164,7 @@ namespace FileCabinetApp.CommandHandlers
             var salary = this.ReadInput(this.salaryConverter, this.salaryValidator);
 
             var userInputData = new UnverifiedData(firstName, lastName, dateOfBirth, sex, numberOfReviews, salary);
-            int id = Program.fileCabinetService.CreateRecord(userInputData);
+            int id = this.fileCabinetService.CreateRecord(userInputData);
             Console.WriteLine($"Record #{id} is created.");
         }
 
