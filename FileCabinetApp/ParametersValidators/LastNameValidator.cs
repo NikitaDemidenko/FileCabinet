@@ -39,37 +39,34 @@ namespace FileCabinetApp.ParametersValidators
         }
 
         /// <summary>Validates user input data.</summary>
-        /// <param name="parameters">Parameters to validate.</param>
+        /// <param name="data">Data to validate.</param>
+        /// <exception cref="ArgumentNullException">Thrown when data is null.</exception>
         /// <exception cref="ArgumentException">Last name is empty
         /// or
-        /// Last name's length is out of range or has invalid characters
-        /// or
-        /// parameters isn't string.</exception>
-        public void ValidateParameters(object parameters)
+        /// Last name's length is out of range or has invalid characters.</exception>
+        public void ValidateParameters(UnverifiedData data)
         {
-            if (parameters is string lastName)
+            if (data == null)
             {
-                if (string.IsNullOrWhiteSpace(lastName))
-                {
-                    throw new ArgumentException("Last name is empty.");
-                }
-
-                if (lastName.Length < this.minLength || lastName.Length > this.maxLength)
-                {
-                    throw new ArgumentException("Last name's length is out of range.");
-                }
-
-                if (this.isCustomValidationRules)
-                {
-                    if (!Regex.IsMatch(lastName, AllowedCharacters))
-                    {
-                        throw new ArgumentException("Last name has invalid characters.");
-                    }
-                }
+                throw new ArgumentNullException(nameof(data));
             }
-            else
+
+            if (string.IsNullOrWhiteSpace(data.LastName))
             {
-                throw new ArgumentException($"{nameof(parameters)} must be string.");
+                throw new ArgumentException("Last name is empty.");
+            }
+
+            if (data.LastName.Length < this.minLength || data.LastName.Length > this.maxLength)
+            {
+                throw new ArgumentException("Last name's length is out of range.");
+            }
+
+            if (this.isCustomValidationRules)
+            {
+                if (!Regex.IsMatch(data.LastName, AllowedCharacters))
+                {
+                    throw new ArgumentException("Last name has invalid characters.");
+                }
             }
         }
     }

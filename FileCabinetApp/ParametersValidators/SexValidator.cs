@@ -8,22 +8,19 @@ namespace FileCabinetApp.ParametersValidators
     public class SexValidator : IRecordValidator
     {
         /// <summary>Validates user input data.</summary>
-        /// <param name="parameters">Parameters to validate.</param>
-        /// <exception cref="ArgumentException">Wrong sex
-        /// or
-        /// parameters isn't char.</exception>
-        public void ValidateParameters(object parameters)
+        /// <param name="data">Data to validate.</param>
+        /// <exception cref="ArgumentNullException">Thrown when data is null.</exception>
+        /// <exception cref="ArgumentException">Wrong sex.</exception>
+        public void ValidateParameters(UnverifiedData data)
         {
-            if (parameters is char sex)
+            if (data == null)
             {
-                if (sex != MaleSex && sex != FemaleSex)
-                {
-                    throw new ArgumentException("Wrong sex.");
-                }
+                throw new ArgumentNullException(nameof(data));
             }
-            else
+
+            if (data.Sex != MaleSex && data.Sex != FemaleSex)
             {
-                throw new ArgumentException($"{nameof(parameters)} must be char.");
+                throw new ArgumentException("Wrong sex.");
             }
         }
     }

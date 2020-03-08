@@ -24,21 +24,19 @@ namespace FileCabinetApp.ParametersValidators
         }
 
         /// <summary>Validates user input data.</summary>
-        /// <param name="parameters">Parameters to validate.</param>
-        /// <exception cref="ArgumentException">Invalid date of birth or
-        /// parameters isn't DateTime.</exception>
-        public void ValidateParameters(object parameters)
+        /// <param name="data">Data to validate.</param>
+        /// <exception cref="ArgumentNullException">Thrown when data is null.</exception>
+        /// <exception cref="ArgumentException">Invalid date of birth.</exception>
+        public void ValidateParameters(UnverifiedData data)
         {
-            if (parameters is DateTime dateOfBirth)
+            if (data == null)
             {
-                if (dateOfBirth < this.from || dateOfBirth >= this.to)
-                {
-                    throw new ArgumentException("Invalid date of birth.");
-                }
+                throw new ArgumentNullException(nameof(data));
             }
-            else
+
+            if (data.DateOfBirth < this.from || data.DateOfBirth >= this.to)
             {
-                throw new ArgumentException($"{nameof(parameters)} must be DateTime.");
+                throw new ArgumentException("Invalid date of birth.");
             }
         }
     }

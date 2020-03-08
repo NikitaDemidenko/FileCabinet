@@ -21,22 +21,19 @@ namespace FileCabinetApp.ParametersValidators
         }
 
         /// <summary>Validates user input data.</summary>
-        /// <param name="parameters">Parameters to validate.</param>
-        /// <exception cref="ArgumentException">Number of reviews is less than MinNumberOfReviewsCustom
-        /// or
-        /// parameters isn't short.</exception>
-        public void ValidateParameters(object parameters)
+        /// <param name="data">Data to validate.</param>
+        /// <exception cref="ArgumentNullException">Thrown when data is null.</exception>
+        /// <exception cref="ArgumentException">Number of reviews is less than specified number.</exception>
+        public void ValidateParameters(UnverifiedData data)
         {
-            if (parameters is short numberOfReviews)
+            if (data == null)
             {
-                if (numberOfReviews < this.minNumber)
-                {
-                    throw new ArgumentException("Number of reviews is too small.");
-                }
+                throw new ArgumentNullException(nameof(data));
             }
-            else
+
+            if (data.NumberOfReviews < this.minNumber)
             {
-                throw new ArgumentException($"{nameof(parameters)} must be short.");
+                throw new ArgumentException("Number of reviews is too small.");
             }
         }
     }

@@ -21,22 +21,19 @@ namespace FileCabinetApp.ParametersValidators
         }
 
         /// <summary>Validates user input data.</summary>
-        /// <param name="parameters">Parameters to validate.</param>
-        /// <exception cref="ArgumentException">Salary is less than MinValueOfSalaryCustom
-        /// or
-        /// parameters isn't decimal.</exception>
-        public void ValidateParameters(object parameters)
+        /// <param name="data">Data to validate.</param>
+        /// <exception cref="ArgumentNullException">Thrown when data is null.</exception>
+        /// <exception cref="ArgumentException">Salary is less than specified value.</exception>
+        public void ValidateParameters(UnverifiedData data)
         {
-            if (parameters is decimal salary)
+            if (data == null)
             {
-                if (salary < this.minSalary)
-                {
-                    throw new ArgumentException("Salary is too small.");
-                }
+                throw new ArgumentNullException(nameof(data));
             }
-            else
+
+            if (data.Salary < this.minSalary)
             {
-                throw new ArgumentException($"{nameof(parameters)} must be decimal.");
+                throw new ArgumentException("Salary is too small.");
             }
         }
     }
