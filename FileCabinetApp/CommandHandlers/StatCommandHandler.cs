@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -27,7 +26,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("stat", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(StatCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Stat(request.Parameters);
                 return;

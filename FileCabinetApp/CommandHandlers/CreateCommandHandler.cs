@@ -127,7 +127,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("create", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(CreateCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Create(request.Parameters);
                 return;

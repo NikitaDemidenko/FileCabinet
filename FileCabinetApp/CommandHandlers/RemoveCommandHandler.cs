@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -27,7 +26,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("remove", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(RemoveCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Remove(request.Parameters);
                 return;

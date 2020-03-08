@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using static FileCabinetApp.Constants;
@@ -29,7 +28,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("export", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(ExportCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Export(request.Parameters);
                 return;

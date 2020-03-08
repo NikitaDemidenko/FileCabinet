@@ -309,6 +309,39 @@
         <member name="F:FileCabinetApp.Constants.LastNamePropertyName">
             <summary>Last name property name.</summary>
         </member>
+        <member name="F:FileCabinetApp.Constants.CreateCommand">
+            <summary>Create command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.EditCommand">
+            <summary>Edit command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.ExitCommand">
+            <summary>Exit command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.ExportCommand">
+            <summary>Export command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.FindCommand">
+            <summary>Find command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.HelpCommand">
+            <summary>Help command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.ImportCommand">
+            <summary>Import command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.ListCommand">
+            <summary>List command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.PurgeCommand">
+            <summary>Purge command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.RemoveCommand">
+            <summary>Remove command.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Constants.StatCommand">
+            <summary>Stat command.</summary>
+        </member>
         <member name="F:FileCabinetApp.Constants.DateOfBirthPropertyName">
             <summary>Date of birth property name.</summary>
         </member>
@@ -375,16 +408,6 @@
         </member>
         <member name="F:FileCabinetApp.Constants.Culture">
             <summary>Culture.</summary>
-        </member>
-        <member name="T:FileCabinetApp.DefaultRecordPrinter">
-            <summary>Default record printer.</summary>
-            <seealso cref="T:FileCabinetApp.IRecordPrinter" />
-        </member>
-        <member name="M:FileCabinetApp.DefaultRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
-            <summary>Prints the specified records.</summary>
-            <param name="records">The records.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when records
-            is null.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetFilesystemService">
             <summary>Provides methods for interaction with records in file system.</summary>
@@ -755,13 +778,6 @@
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">Snapshot.</param>
         </member>
-        <member name="T:FileCabinetApp.IRecordPrinter">
-            <summary>Record printer interface.</summary>
-        </member>
-        <member name="M:FileCabinetApp.IRecordPrinter.Print(System.Collections.Generic.IEnumerable{FileCabinetApp.FileCabinetRecord})">
-            <summary>Prints the specified records.</summary>
-            <param name="records">The records.</param>
-        </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
               <para>Provides functionality to validate parameters.</para>
@@ -785,13 +801,6 @@
             <summary>Validates user input data.</summary>
             <param name="data">Data to validate.</param>
         </member>
-        <member name="T:FileCabinetApp.ParametersValidators.CustomValidator">
-            <summary>Performs custom validation on user input data.</summary>
-            <seealso cref="T:FileCabinetApp.IRecordValidator" />
-        </member>
-        <member name="M:FileCabinetApp.ParametersValidators.CustomValidator.#ctor">
-            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.ParametersValidators.CustomValidator"/> class.</summary>
-        </member>
         <member name="T:FileCabinetApp.ParametersValidators.DateOfBirthValidator">
             <summary>Date of birth validator.</summary>
             <seealso cref="T:FileCabinetApp.IRecordValidator" />
@@ -806,13 +815,6 @@
             <param name="data">Data to validate.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when data is null.</exception>
             <exception cref="T:System.ArgumentException">Invalid date of birth.</exception>
-        </member>
-        <member name="T:FileCabinetApp.ParametersValidators.DefaultValidator">
-            <summary>Performs default validation on user input data.</summary>
-            <seealso cref="T:FileCabinetApp.IRecordValidator" />
-        </member>
-        <member name="M:FileCabinetApp.ParametersValidators.DefaultValidator.#ctor">
-            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.ParametersValidators.DefaultValidator"/> class.</summary>
         </member>
         <member name="T:FileCabinetApp.ParametersValidators.FirstNameValidator">
             <summary>First name validator.</summary>

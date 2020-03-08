@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FileCabinetGenerator
+﻿namespace FileCabinetGenerator
 {
     /// <summary>Provides constatnts for work with FileCabinetGenerator.</summary>
     public static class Constants

@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -27,7 +26,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("purge", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(PurgeCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Purge(request.Parameters);
                 return;

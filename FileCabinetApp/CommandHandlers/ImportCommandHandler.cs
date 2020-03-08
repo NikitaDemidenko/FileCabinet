@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -31,7 +30,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("import", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(ImportCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Import(request.Parameters);
                 return;

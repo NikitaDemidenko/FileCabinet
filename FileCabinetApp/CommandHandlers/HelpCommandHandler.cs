@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -37,7 +36,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("help", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(HelpCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.PrintHelp(request.Parameters);
                 return;

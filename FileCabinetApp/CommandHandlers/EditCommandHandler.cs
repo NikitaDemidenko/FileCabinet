@@ -127,7 +127,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("edit", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(EditCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Edit(request.Parameters);
                 return;

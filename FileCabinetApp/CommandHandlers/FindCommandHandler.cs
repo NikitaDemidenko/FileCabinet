@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.CommandHandlers
@@ -33,7 +32,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("find", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(FindCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Find(request.Parameters);
                 return;

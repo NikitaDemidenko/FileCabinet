@@ -1,4 +1,5 @@
 ﻿using System;
+using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -27,7 +28,7 @@ namespace FileCabinetApp.CommandHandlers
                 throw new ArgumentNullException(nameof(request));
             }
 
-            if (string.Equals("exit", request.Command, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(ExitCommand, request.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 this.Exit(request.Parameters);
                 return;

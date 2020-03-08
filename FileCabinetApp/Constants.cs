@@ -81,6 +81,39 @@ namespace FileCabinetApp
         /// <summary>Last name property name.</summary>
         public const string LastNamePropertyName = "LastName";
 
+        /// <summary>Create command.</summary>
+        public const string CreateCommand = "create";
+
+        /// <summary>Edit command.</summary>
+        public const string EditCommand = "edit";
+
+        /// <summary>Exit command.</summary>
+        public const string ExitCommand = "exit";
+
+        /// <summary>Export command.</summary>
+        public const string ExportCommand = "export";
+
+        /// <summary>Find command.</summary>
+        public const string FindCommand = "find";
+
+        /// <summary>Help command.</summary>
+        public const string HelpCommand = "help";
+
+        /// <summary>Import command.</summary>
+        public const string ImportCommand = "import";
+
+        /// <summary>List command.</summary>
+        public const string ListCommand = "list";
+
+        /// <summary>Purge command.</summary>
+        public const string PurgeCommand = "purge";
+
+        /// <summary>Remove command.</summary>
+        public const string RemoveCommand = "remove";
+
+        /// <summary>Stat command.</summary>
+        public const string StatCommand = "stat";
+
         /// <summary>Date of birth property name.</summary>
         public const string DateOfBirthPropertyName = "DateOfBirth";
 
