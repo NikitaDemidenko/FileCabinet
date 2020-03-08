@@ -10,7 +10,7 @@ namespace FileCabinetApp
     public interface IRecordValidator
     {
         /// <summary>Validates user input data.</summary>
-        /// <param name="unverifiedData">Raw data.</param>
-        public void ValidateParameters(UnverifiedData unverifiedData);
+        /// <param name="parameters">Parameters to validate.</param>
+        public void ValidateParameters(object parameters);
     }
 }

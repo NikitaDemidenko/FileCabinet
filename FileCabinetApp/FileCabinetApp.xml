@@ -372,16 +372,6 @@
         <member name="F:FileCabinetApp.Constants.Culture">
             <summary>Culture.</summary>
         </member>
-        <member name="T:FileCabinetApp.CustomValidator">
-            <summary>Performs custom validation on user input data.</summary>
-            <seealso cref="T:FileCabinetApp.IRecordValidator" />
-        </member>
-        <member name="M:FileCabinetApp.CustomValidator.ValidateParameters(FileCabinetApp.UnverifiedData)">
-            <summary>Validates user input parameters using custom validation rules.</summary>
-            <param name="unverifiedData">Raw data.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
-            <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
-        </member>
         <member name="T:FileCabinetApp.DefaultRecordPrinter">
             <summary>Default record printer.</summary>
             <seealso cref="T:FileCabinetApp.IRecordPrinter" />
@@ -391,16 +381,6 @@
             <param name="records">The records.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when records
             is null.</exception>
-        </member>
-        <member name="T:FileCabinetApp.DefaultValidator">
-            <summary>Performs default validation on user input data.</summary>
-            <seealso cref="T:FileCabinetApp.IRecordValidator" />
-        </member>
-        <member name="M:FileCabinetApp.DefaultValidator.ValidateParameters(FileCabinetApp.UnverifiedData)">
-            <summary>Validates user input parameters using default validation rules.</summary>
-            <param name="unverifiedData">Raw data.</param>
-            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
-            <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
         </member>
         <member name="T:FileCabinetApp.FileCabinetFilesystemService">
             <summary>Provides methods for interaction with records in file system.</summary>
@@ -783,9 +763,163 @@
               <para>Provides functionality to validate parameters.</para>
             </summary>
         </member>
-        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(FileCabinetApp.UnverifiedData)">
+        <member name="M:FileCabinetApp.IRecordValidator.ValidateParameters(System.Object)">
             <summary>Validates user input data.</summary>
-            <param name="unverifiedData">Raw data.</param>
+            <param name="parameters">Parameters to validate.</param>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.CustomDateOfBirthValidator">
+            <summary>Custom date of birth validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.CustomDateOfBirthValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Invalid date of birth or
+            parameters isn't DateTime.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.CustomFirstNameValidator">
+            <summary>Custom first name validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.CustomFirstNameValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">First name is empty
+            or
+            First name's length is out of range or has invalid characters or parameters isn't string.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.CustomLastNameValidator">
+            <summary>Custom last name validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.CustomLastNameValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Last name is empty
+            or
+            Last name's length is out of range or has invalid characters
+            or
+            parameters isn't string.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.CustomNumberOfReviewsValidator">
+            <summary>Custom number of reviews validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.CustomNumberOfReviewsValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Number of reviews is less than MinNumberOfReviewsCustom
+            or
+            parameters isn't short.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.CustomSalaryValidator">
+            <summary>Custom salary validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.CustomSalaryValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Salary is less than MinValueOfSalaryCustom
+            or
+            parameters isn't decimal.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.CustomSexValidator">
+            <summary>Custom sex validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.CustomSexValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Wrong sex
+            or
+            parameters isn't char.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.CustomValidator">
+            <summary>Performs custom validation on user input data.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.CustomValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input parameters using custom validation rules.</summary>
+            <param name="parameters">Raw data.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>userInput</em> is <em>null</em>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.DefaultDateOfBirthValidator">
+            <summary>Default date of birth validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.DefaultDateOfBirthValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Invalid date of birth or
+            parameters isn't DateTime.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.DefaultFirstNameValidator">
+            <summary>Default first name validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.DefaultFirstNameValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">First name is empty
+            or
+            First name's length is out of range or parameters isn't string.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.DefaultLastNameValidator">
+            <summary>Default last name validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.DefaultLastNameValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Last name is empty
+            or
+            Last name's length is out of range
+            or
+            parameters isn't string.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.DefaultNumberOfReviewsValidator">
+            <summary>Default number of reviews validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.DefaultNumberOfReviewsValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Number of reviews is less than zero
+            or
+            parameters isn't short.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.DefaultSalaryValidator">
+            <summary>Default salary validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.DefaultSalaryValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Salary is less than zero
+            or
+            parameters isn't decimal.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.DefaultSexValidator">
+            <summary>Default sex validator.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.DefaultSexValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input data.</summary>
+            <param name="parameters">Parameters to validate.</param>
+            <exception cref="T:System.ArgumentException">Wrong sex
+            or
+            parameters isn't char.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ParametersValidators.DefaultValidator">
+            <summary>Performs default validation on user input data.</summary>
+            <seealso cref="T:FileCabinetApp.IRecordValidator" />
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.DefaultValidator.ValidateParameters(System.Object)">
+            <summary>Validates user input parameters using default validation rules.</summary>
+            <param name="parameters">Raw data.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when <em>parameters</em> is <em>null</em>.</exception>
+            <exception cref="T:System.ArgumentException">Thrown when one of the user input parameters is invalid.</exception>
         </member>
         <member name="T:FileCabinetApp.Program">
             <summary>Main class of the project.</summary>
