@@ -5,7 +5,7 @@ namespace FileCabinetApp.ParametersValidators
 {
     /// <summary>Composite validator.</summary>
     /// <seealso cref="IRecordValidator" />
-    public abstract class CompositeValidator : IRecordValidator
+    public class CompositeValidator : IRecordValidator
     {
         private readonly List<IRecordValidator> validators = new List<IRecordValidator>();
 
@@ -13,7 +13,7 @@ namespace FileCabinetApp.ParametersValidators
         /// <param name="validators">Validators.</param>
         /// <exception cref="ArgumentNullException">Thrown when validators
         /// is null.</exception>
-        protected CompositeValidator(IEnumerable<IRecordValidator> validators)
+        public CompositeValidator(IEnumerable<IRecordValidator> validators)
         {
             if (validators == null)
             {

@@ -888,6 +888,47 @@
             <exception cref="T:System.ArgumentNullException">Thrown when data is null.</exception>
             <exception cref="T:System.ArgumentException">Wrong sex.</exception>
         </member>
+        <member name="T:FileCabinetApp.ParametersValidators.ValidatorBuilder">
+            <summary>Validator builder.</summary>
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.ValidatorBuilder.ValidateFirstName(System.Int32,System.Int32,System.Boolean)">
+            <summary>Validates the first name.</summary>
+            <param name="minLength">The minimum length.</param>
+            <param name="maxLength">The maximum length.</param>
+            <param name="isCustomValidationRules">if set to <c>true</c> then validation rules are custom.</param>
+            <returns>Returns <see cref="T:FileCabinetApp.ParametersValidators.ValidatorBuilder"/> object.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.ValidatorBuilder.ValidateLastName(System.Int32,System.Int32,System.Boolean)">
+            <summary>Validates the last name.</summary>
+            <param name="minLength">The minimum length.</param>
+            <param name="maxLength">The maximum length.</param>
+            <param name="isCustomValidationRules">if set to <c>true</c> then validation rules are custom.</param>
+            <returns>Returns <see cref="T:FileCabinetApp.ParametersValidators.ValidatorBuilder"/> object.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.ValidatorBuilder.ValidateDateOfBirth(System.DateTime,System.DateTime)">
+            <summary>Validates the date of birth.</summary>
+            <param name="from">From data.</param>
+            <param name="to">To date.</param>
+            <returns>Returns <see cref="T:FileCabinetApp.ParametersValidators.ValidatorBuilder"/> object.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.ValidatorBuilder.ValidateSex">
+            <summary>Validates the sex.</summary>
+            <returns>Returns <see cref="T:FileCabinetApp.ParametersValidators.ValidatorBuilder"/> object.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.ValidatorBuilder.ValidateNumberOfReviews(System.Int16)">
+            <summary>Validates the number of reviews.</summary>
+            <param name="minNumber">The minimum number.</param>
+            <returns>Returns <see cref="T:FileCabinetApp.ParametersValidators.ValidatorBuilder"/> object.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.ValidatorBuilder.ValidateSalary(System.Decimal)">
+            <summary>Validates the salary.</summary>
+            <param name="minSalary">The minimum salary.</param>
+            <returns>Returns <see cref="T:FileCabinetApp.ParametersValidators.ValidatorBuilder"/> object.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.ValidatorBuilder.Create">
+            <summary>Creates <see cref="T:FileCabinetApp.ParametersValidators.CompositeValidator"/> instance.</summary>
+            <returns>Returns <see cref="T:FileCabinetApp.ParametersValidators.CompositeValidator"/> object.</returns>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>Main class of the project.</summary>
         </member>

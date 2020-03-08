@@ -25,6 +25,24 @@ namespace FileCabinetApp
         private static Action<bool> setProgramStatus =
             isRunning => Program.isRunning = isRunning;
 
+        private static IRecordValidator defaultValidator = new ValidatorBuilder()
+                        .ValidateFirstName(MinNumberOfSymbols, MaxNumberOfSymbols, false)
+                        .ValidateLastName(MinNumberOfSymbols, MaxNumberOfSymbols, false)
+                        .ValidateDateOfBirth(MinDateOfBirth, DateTime.Now)
+                        .ValidateSex()
+                        .ValidateNumberOfReviews(MinNumberOfReviews)
+                        .ValidateSalary(MinValueOfSalary)
+                        .Create();
+
+        private static IRecordValidator customValidator = new ValidatorBuilder()
+                        .ValidateFirstName(MinNumberOfSymbols, MaxNumberOfSymbols, true)
+                        .ValidateLastName(MinNumberOfSymbols, MaxNumberOfSymbols, true)
+                        .ValidateDateOfBirth(MinDateOfBirthCustom, DateTime.Now)
+                        .ValidateSex()
+                        .ValidateNumberOfReviews(MinNumberOfReviewsCustom)
+                        .ValidateSalary(MinValueOfSalaryCustom)
+                        .Create();
+
         /// <summary>Defines the entry point of the application.</summary>
         /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
@@ -39,19 +57,19 @@ namespace FileCabinetApp
             {
                 case Flags.Default:
                     Console.WriteLine("Using default validation rules. Records will be stored in memory.");
-                    fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                    fileCabinetService = new FileCabinetMemoryService(defaultValidator);
                     break;
                 case Flags.ValidationRules:
                     if (commandLineArguments.Contains(DefaultValidationRulesName))
                     {
                         Console.WriteLine("Using default validation rules. Records will be stored in memory.");
-                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        fileCabinetService = new FileCabinetMemoryService(defaultValidator);
                         break;
                     }
                     else if (commandLineArguments.Contains(CustomValidationRulesName))
                     {
                         Console.WriteLine("Using custom validation rules. Records will be stored in memory.");
-                        fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
+                        fileCabinetService = new FileCabinetMemoryService(customValidator);
                         isCustomValidationRules = true;
                         break;
                     }
@@ -59,7 +77,7 @@ namespace FileCabinetApp
                     {
                         Console.WriteLine("Invalid arguments.");
                         Console.WriteLine("Using default validation rules. Records will be stored in memory.");
-                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        fileCabinetService = new FileCabinetMemoryService(defaultValidator);
                         break;
                     }
 
@@ -67,21 +85,21 @@ namespace FileCabinetApp
                     if (commandLineArguments.Contains(MemoryStorageName))
                     {
                         Console.WriteLine("Using default validation rules. Records will be stored in memory.");
-                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        fileCabinetService = new FileCabinetMemoryService(defaultValidator);
                         break;
                     }
                     else if (commandLineArguments.Contains(FileStorageName))
                     {
                         Console.WriteLine("Using default validation rules. Records will be stored in file system.");
                         fileStream = new FileStream(DbFileName, FileMode.Create);
-                        fileCabinetService = new FileCabinetFilesystemService(fileStream, new DefaultValidator());
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, defaultValidator);
                         break;
                     }
                     else
                     {
                         Console.WriteLine("Invalid arguments.");
                         Console.WriteLine("Using default validation rules. Records will be stored in memory.");
-                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        fileCabinetService = new FileCabinetMemoryService(defaultValidator);
                         break;
                     }
 
@@ -89,13 +107,13 @@ namespace FileCabinetApp
                     if (commandLineArguments.Contains(DefaultValidationRulesName) && commandLineArguments.Contains(MemoryStorageName))
                     {
                         Console.WriteLine("Using default validation rules. Records will be stored in memory.");
-                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        fileCabinetService = new FileCabinetMemoryService(defaultValidator);
                         break;
                     }
                     else if (commandLineArguments.Contains(CustomValidationRulesName) && commandLineArguments.Contains(MemoryStorageName))
                     {
                         Console.WriteLine("Using custom validation rules. Records will be stored in memory.");
-                        fileCabinetService = new FileCabinetMemoryService(new CustomValidator());
+                        fileCabinetService = new FileCabinetMemoryService(customValidator);
                         isCustomValidationRules = true;
                         break;
                     }
@@ -103,14 +121,14 @@ namespace FileCabinetApp
                     {
                         Console.WriteLine("Using default validation rules. Records will be stored in file system.");
                         fileStream = new FileStream(DbFileName, FileMode.Create);
-                        fileCabinetService = new FileCabinetFilesystemService(fileStream, new DefaultValidator());
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, defaultValidator);
                         break;
                     }
                     else if (commandLineArguments.Contains(CustomValidationRulesName) && commandLineArguments.Contains(FileStorageName))
                     {
                         Console.WriteLine("Using custom validation rules. Records will be stored in file system.");
                         fileStream = new FileStream(DbFileName, FileMode.Create);
-                        fileCabinetService = new FileCabinetFilesystemService(fileStream, new CustomValidator());
+                        fileCabinetService = new FileCabinetFilesystemService(fileStream, customValidator);
                         isCustomValidationRules = true;
                         break;
                     }
@@ -118,7 +136,7 @@ namespace FileCabinetApp
                     {
                         Console.WriteLine("Invalid arguments.");
                         Console.WriteLine("Using default validation rules. Records will be stored in memory.");
-                        fileCabinetService = new FileCabinetMemoryService(new DefaultValidator());
+                        fileCabinetService = new FileCabinetMemoryService(defaultValidator);
                         break;
                     }
             }
