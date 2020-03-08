@@ -25,23 +25,9 @@ namespace FileCabinetApp
         private static Action<bool> setProgramStatus =
             isRunning => Program.isRunning = isRunning;
 
-        private static IRecordValidator defaultValidator = new ValidatorBuilder()
-                        .ValidateFirstName(MinNumberOfSymbols, MaxNumberOfSymbols, false)
-                        .ValidateLastName(MinNumberOfSymbols, MaxNumberOfSymbols, false)
-                        .ValidateDateOfBirth(MinDateOfBirth, DateTime.Now)
-                        .ValidateSex()
-                        .ValidateNumberOfReviews(MinNumberOfReviews)
-                        .ValidateSalary(MinValueOfSalary)
-                        .Create();
+        private static IRecordValidator defaultValidator = new ValidatorBuilder().CreateDefault();
 
-        private static IRecordValidator customValidator = new ValidatorBuilder()
-                        .ValidateFirstName(MinNumberOfSymbols, MaxNumberOfSymbols, true)
-                        .ValidateLastName(MinNumberOfSymbols, MaxNumberOfSymbols, true)
-                        .ValidateDateOfBirth(MinDateOfBirthCustom, DateTime.Now)
-                        .ValidateSex()
-                        .ValidateNumberOfReviews(MinNumberOfReviewsCustom)
-                        .ValidateSalary(MinValueOfSalaryCustom)
-                        .Create();
+        private static IRecordValidator customValidator = new ValidatorBuilder().CreateCustom();
 
         /// <summary>Defines the entry point of the application.</summary>
         /// <param name="args">The arguments.</param>

@@ -929,6 +929,21 @@
             <summary>Creates <see cref="T:FileCabinetApp.ParametersValidators.CompositeValidator"/> instance.</summary>
             <returns>Returns <see cref="T:FileCabinetApp.ParametersValidators.CompositeValidator"/> object.</returns>
         </member>
+        <member name="T:FileCabinetApp.ParametersValidators.ValidatorBuilderExtension">
+            <summary>Provides extension methods for <see cref="T:FileCabinetApp.ParametersValidators.ValidatorBuilder"/> class.</summary>
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.ValidatorBuilderExtension.CreateDefault(FileCabinetApp.ParametersValidators.ValidatorBuilder)">
+            <summary>Creates default validator.</summary>
+            <param name="builder">Builder.</param>
+            <returns>Returns <see cref="T:FileCabinetApp.IRecordValidator"/> object.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when builder is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.ParametersValidators.ValidatorBuilderExtension.CreateCustom(FileCabinetApp.ParametersValidators.ValidatorBuilder)">
+            <summary>Creates custom validator.</summary>
+            <param name="builder">Builder.</param>
+            <returns>Returns <see cref="T:FileCabinetApp.IRecordValidator"/> object.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when builder is null.</exception>
+        </member>
         <member name="T:FileCabinetApp.Program">
             <summary>Main class of the project.</summary>
         </member>
