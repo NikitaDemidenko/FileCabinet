@@ -1,4 +1,5 @@
 ﻿using System;
+using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.ParametersValidators
 {
@@ -19,12 +20,12 @@ namespace FileCabinetApp.ParametersValidators
 
             if (parameters is UnverifiedData data)
             {
-                new DefaultFirstNameValidator().ValidateParameters(data.FirstName);
-                new DefaultLastNameValidator().ValidateParameters(data.LastName);
-                new DefaultDateOfBirthValidator().ValidateParameters(data.DateOfBirth);
-                new DefaultSexValidator().ValidateParameters(data.Sex);
-                new DefaultNumberOfReviewsValidator().ValidateParameters(data.NumberOfReviews);
-                new DefaultSalaryValidator().ValidateParameters(data.Salary);
+                new FirstNameValidator(MinNumberOfSymbols, MaxNumberOfSymbols, false).ValidateParameters(data.FirstName);
+                new LastNameValidator(MinNumberOfSymbols, MaxNumberOfSymbols, false).ValidateParameters(data.LastName);
+                new DateOfBirthValidator(MinDateOfBirth, DateTime.Now).ValidateParameters(data.DateOfBirth);
+                new SexValidator().ValidateParameters(data.Sex);
+                new NumberOfReviewsValidator(MinNumberOfReviews).ValidateParameters(data.NumberOfReviews);
+                new SalaryValidator(MinValueOfSalary).ValidateParameters(data.Salary);
             }
             else
             {

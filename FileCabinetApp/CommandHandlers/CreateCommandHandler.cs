@@ -71,10 +71,10 @@ namespace FileCabinetApp.CommandHandlers
         private Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = dateOfBirth =>
         {
             return isCustomValidationRules
-                ? dateOfBirth < MinDateOfBirth || dateOfBirth >= DateTime.Now
+                ? dateOfBirth < MinDateOfBirthCustom || dateOfBirth >= DateTime.Now
                     ? new Tuple<bool, string>(false, "Date of birth is greater than the current date or less than 1950-Jan-01")
                     : new Tuple<bool, string>(true, null)
-                : dateOfBirth >= DateTime.Now
+                : dateOfBirth < MinDateOfBirth || dateOfBirth >= DateTime.Now
                     ? new Tuple<bool, string>(false, "Date of birth is greater than the current date")
                     : new Tuple<bool, string>(true, null);
         };

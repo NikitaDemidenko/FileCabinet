@@ -3,9 +3,9 @@ using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.ParametersValidators
 {
-    /// <summary>Default sex validator.</summary>
+    /// <summary>Sex validator.</summary>
     /// <seealso cref="IRecordValidator" />
-    public class DefaultSexValidator : IRecordValidator
+    public class SexValidator : IRecordValidator
     {
         /// <summary>Validates user input data.</summary>
         /// <param name="parameters">Parameters to validate.</param>

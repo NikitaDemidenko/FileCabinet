@@ -189,7 +189,7 @@ namespace FileCabinetGenerator
             {
                 firstName = GetRandomString(random.Next(MinNumberOfSymbols, MaxNumberOfSymbols));
                 lastName = GetRandomString(random.Next(MinNumberOfSymbols, MaxNumberOfSymbols));
-                int year = random.Next(1, DateTime.Now.Year);
+                int year = random.Next(MinDateOfBirth.Year, DateTime.Now.Year);
                 int month = random.Next(1, 12);
                 int day = month == 2 ? random.Next(1, 28) : random.Next(1, 30);
                 dateOfBirth = new DateTime(year, month, day);

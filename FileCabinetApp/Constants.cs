@@ -138,8 +138,12 @@ namespace FileCabinetApp
         /// <summary>CSV file separator.</summary>
         public const char CsvFileSeparator = ';';
 
-        /// <summary>Minimum date of birth.</summary>
-        public static readonly DateTime MinDateOfBirth = new DateTime(1950, 01, 01);
+        /// <summary>Minimum date of birth (custom).</summary>
+        public static readonly DateTime MinDateOfBirthCustom = new DateTime(1950, 01, 01);
+
+        /// <summary>Minimum date of birth
+        /// (default).</summary>
+        public static readonly DateTime MinDateOfBirth = new DateTime(1900, 01, 01);
 
         /// <summary>Culture.</summary>
         public static readonly CultureInfo Culture = new CultureInfo("en-US");

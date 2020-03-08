@@ -1,12 +1,25 @@
 ﻿using System;
-using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.ParametersValidators
 {
-    /// <summary>Custom number of reviews validator.</summary>
+    /// <summary>Number of reviews validator.</summary>
     /// <seealso cref="IRecordValidator" />
-    public class CustomNumberOfReviewsValidator : IRecordValidator
+    public class NumberOfReviewsValidator : IRecordValidator
     {
+        private short minNumber;
+
+        /// <summary>Initializes a new instance of the <see cref="NumberOfReviewsValidator"/> class.</summary>
+        /// <param name="minNumber">The minimum number of reviews.</param>
+        public NumberOfReviewsValidator(short minNumber)
+        {
+            if (minNumber < 0)
+            {
+                throw new ArgumentException($"Number cannot be negative");
+            }
+
+            this.minNumber = minNumber;
+        }
+
         /// <summary>Validates user input data.</summary>
         /// <param name="parameters">Parameters to validate.</param>
         /// <exception cref="ArgumentException">Number of reviews is less than MinNumberOfReviewsCustom
@@ -16,7 +29,7 @@ namespace FileCabinetApp.ParametersValidators
         {
             if (parameters is short numberOfReviews)
             {
-                if (numberOfReviews < MinNumberOfReviewsCustom)
+                if (numberOfReviews < this.minNumber)
                 {
                     throw new ArgumentException("Number of reviews is too small.");
                 }

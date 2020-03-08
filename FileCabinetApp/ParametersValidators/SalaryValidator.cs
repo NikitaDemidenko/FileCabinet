@@ -1,12 +1,25 @@
 ﻿using System;
-using static FileCabinetApp.Constants;
 
 namespace FileCabinetApp.ParametersValidators
 {
-    /// <summary>Custom salary validator.</summary>
+    /// <summary>Salary validator.</summary>
     /// <seealso cref="IRecordValidator" />
-    public class CustomSalaryValidator : IRecordValidator
+    public class SalaryValidator : IRecordValidator
     {
+        private decimal minSalary;
+
+        /// <summary>Initializes a new instance of the <see cref="SalaryValidator"/> class.</summary>
+        /// <param name="minSalary">The minimum salary.</param>
+        public SalaryValidator(decimal minSalary)
+        {
+            if (minSalary < 0)
+            {
+                throw new ArgumentException($"{nameof(minSalary)} cannot be negative.");
+            }
+
+            this.minSalary = minSalary;
+        }
+
         /// <summary>Validates user input data.</summary>
         /// <param name="parameters">Parameters to validate.</param>
         /// <exception cref="ArgumentException">Salary is less than MinValueOfSalaryCustom
@@ -16,7 +29,7 @@ namespace FileCabinetApp.ParametersValidators
         {
             if (parameters is decimal salary)
             {
-                if (salary < MinValueOfSalaryCustom)
+                if (salary < this.minSalary)
                 {
                     throw new ArgumentException("Salary is too small.");
                 }
