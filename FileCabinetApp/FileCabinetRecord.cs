@@ -32,7 +32,7 @@ namespace FileCabinetApp
         /// <summary>Gets or sets the sex.</summary>
         /// <value>Sex.</value>
         [XmlElement("sex")]
-        public char Sex { get; set;  }
+        public char Sex { get; set; }
 
         /// <summary>Gets or sets the number of reviews.</summary>
         /// <value>Number of reviews.</value>
