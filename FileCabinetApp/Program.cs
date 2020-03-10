@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using FileCabinetApp.CommandHandlers;
 using FileCabinetApp.ParametersValidators;
-using static FileCabinetApp.Constants;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp
 {
@@ -140,7 +140,7 @@ namespace FileCabinetApp
                     continue;
                 }
 
-                var inputs = input.Split(' ', 2);
+                var inputs = input.Split(SpaceSymbol, NumberOfParameters);
                 const int commandIndex = 0;
                 const int parametersIndex = 1;
                 var command = inputs[commandIndex];

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using static FileCabinetApp.Constants;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp.CommandHandlers
 {

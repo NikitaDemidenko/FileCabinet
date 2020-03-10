@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using static FileCabinetApp.Constants;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp.ParametersValidators
 {
@@ -23,7 +23,7 @@ namespace FileCabinetApp.ParametersValidators
                 throw new ArgumentException($"Length cannot be negative.");
             }
 
-            if (maxLength > MaxNumberOfSymbols)
+            if (maxLength > MaxLastNameLength)
             {
                 throw new ArgumentException($"{nameof(maxLength)} cannot be greater than MaxNumberOfSymbols.");
             }

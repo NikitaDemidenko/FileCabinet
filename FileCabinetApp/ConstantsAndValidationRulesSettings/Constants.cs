@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace FileCabinetApp
+namespace FileCabinetApp.ConstantsAndValidationRulesSettings
 {
     /// <summary>Provides constatnts for work with FileCabinetApp.</summary>
     public static class Constants
@@ -15,18 +18,6 @@ namespace FileCabinetApp
         /// <summary>Female sex.</summary>
         public const char FemaleSex = 'F';
 
-        /// <summary>Minimum value of salary.</summary>
-        public const decimal MinValueOfSalary = 0M;
-
-        /// <summary>Minimum value of salary (custom).</summary>
-        public const decimal MinValueOfSalaryCustom = 200M;
-
-        /// <summary>Minimum number of symbols.</summary>
-        public const int MinNumberOfSymbols = 2;
-
-        /// <summary>Maximum number of symbols.</summary>
-        public const int MaxNumberOfSymbols = 60;
-
         /// <summary>Minimum value of identifier.</summary>
         public const int MinValueOfId = 1;
 
@@ -39,23 +30,8 @@ namespace FileCabinetApp
         /// <summary>Index of the second element of the collection.</summary>
         public const int SecondElementIndex = 1;
 
-        /// <summary>Minimum number of reviews.</summary>
-        public const int MinNumberOfReviews = 0;
-
-        /// <summary>Minimum number of reviews (custom).</summary>
-        public const int MinNumberOfReviewsCustom = 50;
-
-        /// <summary>The record's lenght in bytes.</summary>
-        public const int RecordLenghtInBytes = 278;
-
         /// <summary>First name offset.</summary>
         public const int FirstNameOffset = 6;
-
-        /// <summary>Last name offset.</summary>
-        public const int LastNameOffset = 126;
-
-        /// <summary>Date of birth offset.</summary>
-        public const int DateOfBirthOffset = 246;
 
         /// <summary>Identifier offset.</summary>
         public const int IdOffset = 2;
@@ -171,14 +147,68 @@ namespace FileCabinetApp
         /// <summary>CSV file separator.</summary>
         public const char CsvFileSeparator = ';';
 
-        /// <summary>Minimum date of birth (custom).</summary>
-        public static readonly DateTime MinDateOfBirthCustom = new DateTime(1950, 01, 01);
-
-        /// <summary>Minimum date of birth
-        /// (default).</summary>
-        public static readonly DateTime MinDateOfBirth = new DateTime(1900, 01, 01);
+        private static readonly Limits Limits = JsonSerializer.Deserialize<Limits>(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "validation-rules.json")));
 
         /// <summary>Culture.</summary>
         public static readonly CultureInfo Culture = new CultureInfo("en-US");
+
+        /// <summary>Minimum value of salary (default).</summary>
+        public static readonly decimal MinValueOfSalary = Limits.Default.SalaryLimits.MinSalary;
+
+        /// <summary>Minimum value of salary (custom).</summary>
+        public static readonly decimal MinValueOfSalaryCustom = Limits.Custom.SalaryLimits.MinSalary;
+
+        /// <summary>The minimum first name length.</summary>
+        public static readonly int MinFirstNameLength = Limits.Default.FirstNameLimits.MinLength;
+
+        /// <summary>The minimum first name length (custom).</summary>
+        public static readonly int MinFirstNameLengthCustom = Limits.Custom.FirstNameLimits.MinLength;
+
+        /// <summary>The maximum first name length.</summary>
+        public static readonly int MaxFirstNameLength = Limits.Default.FirstNameLimits.MaxLength;
+
+        /// <summary>The maximum first name length (custom).</summary>
+        public static readonly int MaxFirstNameLengthCustom = Limits.Custom.FirstNameLimits.MaxLength;
+
+        /// <summary>The minimum last name length.</summary>
+        public static readonly int MinLastNameLength = Limits.Default.LastNameLimits.MinLength;
+
+        /// <summary>The minimum last name length (custom).</summary>
+        public static readonly int MinLastNameLengthCustom = Limits.Custom.LastNameLimits.MinLength;
+
+        /// <summary>The maximum last name length.</summary>
+        public static readonly int MaxLastNameLength = Limits.Default.LastNameLimits.MaxLength;
+
+        /// <summary>The maximum last name length (custom).</summary>
+        public static readonly int MaxLastNameLengthCustom = Limits.Custom.LastNameLimits.MaxLength;
+
+        /// <summary>Minimum number of reviews.</summary>
+        public static readonly short MinNumberOfReviews = Limits.Default.NumberOfReviewsLimits.MinNumber;
+
+        /// <summary>Minimum number of reviews (custom).</summary>
+        public static readonly short MinNumberOfReviewsCustom = Limits.Custom.NumberOfReviewsLimits.MinNumber;
+
+        /// <summary>Minimum date of birth (custom).</summary>
+        public static readonly DateTime MinDateOfBirthCustom = DateTime.Parse(Limits.Custom.DateOfBirthLimits.From, Culture);
+
+        /// <summary>Minimum date of birth
+        /// (default).</summary>
+        public static readonly DateTime MinDateOfBirth = DateTime.Parse(Limits.Default.DateOfBirthLimits.From, Culture);
+
+        /// <summary>Maximum date of birth
+        /// (default).</summary>
+        public static readonly DateTime MaxDateOfBirth = DateTime.Parse(Limits.Default.DateOfBirthLimits.To, Culture);
+
+        /// <summary>Maximum date of birth (custom).</summary>
+        public static readonly DateTime MaxDateOfBirthCustom = DateTime.Parse(Limits.Custom.DateOfBirthLimits.To, Culture);
+
+        /// <summary>The record's lenght in bytes.</summary>
+        public static readonly int RecordLenghtInBytes = (2 * sizeof(short)) + (2 * MaxFirstNameLength) + (2 * MaxLastNameLength) + (4 * sizeof(int)) + sizeof(char) + sizeof(decimal);
+
+        /// <summary>Last name offset.</summary>
+        public static readonly int LastNameOffset = FirstNameOffset + (2 * MaxFirstNameLength);
+
+        /// <summary>Date of birth offset.</summary>
+        public static readonly int DateOfBirthOffset = LastNameOffset + (2 * MaxLastNameLength);
     }
 }
