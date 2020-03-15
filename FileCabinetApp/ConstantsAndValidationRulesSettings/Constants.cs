@@ -105,6 +105,9 @@ namespace FileCabinetApp.ConstantsAndValidationRulesSettings
         /// <summary>Storage shortcut property name.</summary>
         public const string StorageShortcutPropertyName = "-S";
 
+        /// <summary>The stopwatch property name.</summary>
+        public const string StopwatchPropertyName = "--USE-STOPWATCH";
+
         /// <summary>Default validation rules name.</summary>
         public const string DefaultValidationRulesName = "DEFAULT";
 

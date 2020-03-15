@@ -14,5 +14,9 @@ namespace FileCabinetApp
 
         /// <summary>Storage flag.</summary>
         Storage = 2,
+
+        /// <summary>Stopwatch
+        /// flag.</summary>
+        Stopwatch = 4,
     }
 }

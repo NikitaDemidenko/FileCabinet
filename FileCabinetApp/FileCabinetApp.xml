@@ -330,6 +330,9 @@
         <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.StorageShortcutPropertyName">
             <summary>Storage shortcut property name.</summary>
         </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.StopwatchPropertyName">
+            <summary>The stopwatch property name.</summary>
+        </member>
         <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.DefaultValidationRulesName">
             <summary>Default validation rules name.</summary>
         </member>
@@ -801,6 +804,10 @@
         <member name="F:FileCabinetApp.Flags.Storage">
             <summary>Storage flag.</summary>
         </member>
+        <member name="F:FileCabinetApp.Flags.Stopwatch">
+            <summary>Stopwatch
+            flag.</summary>
+        </member>
         <member name="T:FileCabinetApp.FullName">
             <summary>Full name.</summary>
         </member>
@@ -1058,6 +1065,73 @@
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.ServiceMeter">
+            <summary>Service meter.</summary>
+            <seealso cref="T:FileCabinetApp.IFileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceMeter"/> class.</summary>
+            <param name="service">The service.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when service
+            is null.</exception>
+        </member>
+        <member name="P:FileCabinetApp.ServiceMeter.Validator">
+            <summary>Gets the validator of this <see cref="T:FileCabinetApp.IFileCabinetService"/> object.</summary>
+            <value>The validator.</value>
+        </member>
+        <member name="P:FileCabinetApp.ServiceMeter.StoredIdentifiers">
+            <summary>Gets the collection of stored identifiers.</summary>
+            <value>Collections of identifiers strored in the file cabinet service.</value>
+        </member>
+        <member name="P:FileCabinetApp.ServiceMeter.AllRecordsCount">
+            <summary>Gets all records count.</summary>
+            <value>All records count.</value>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.CreateRecord(FileCabinetApp.UnverifiedData)">
+            <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
+            <param name="unverifiedData">Raw data.</param>
+            <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.EditRecord(System.Int32,FileCabinetApp.UnverifiedData)">
+            <summary>Edits record by identifier.</summary>
+            <param name="id">Identifier.</param>
+            <param name="unverifiedData">User input data.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByDateOfBirth(System.DateTime)">
+            <summary>Finds records by date of birth.</summary>
+            <param name="dateOfBirth">Date of birth to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByFirstName(System.String)">
+            <summary>Finds records by first name.</summary>
+            <param name="firstName">First name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByLastName(System.String)">
+            <summary>Finds records by last name.</summary>
+            <param name="lastName">Last name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetRecords">
+            <summary>Gets the records.</summary>
+            <returns>Returns a read-only collection  of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetStat">
+            <summary>Gets the stat of records in the file cabinet.</summary>
+            <returns>Returns number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.MakeSnapshot">
+            <summary>Makes snapshot of current object state.</summary>
+            <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/>.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.RemoveRecord(System.Int32)">
+            <summary>Removes the record from <see cref="T:FileCabinetApp.IFileCabinetService"/> object.</summary>
+            <param name="id">Identifier of the record to delete.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>Restores the specified snapshot.</summary>
+            <param name="snapshot">Snapshot.</param>
         </member>
         <member name="T:FileCabinetApp.UnverifiedData">
             <summary>Provides methods for user data input.</summary>
