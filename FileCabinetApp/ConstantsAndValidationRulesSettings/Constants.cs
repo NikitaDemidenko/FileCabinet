@@ -48,6 +48,9 @@ namespace FileCabinetApp.ConstantsAndValidationRulesSettings
         /// <summary>Output date format.</summary>
         public const string OutputDateFormat = "yyyy-MMM-dd";
 
+        /// <summary>Log date format.</summary>
+        public const string LogDateFormat = "MM/dd/yyyy HH:mm";
+
         /// <summary>Allowed characters for user input.</summary>
         public const string AllowedCharacters = @"^[a-zA-Z-]+$";
 
@@ -108,6 +111,9 @@ namespace FileCabinetApp.ConstantsAndValidationRulesSettings
         /// <summary>The stopwatch property name.</summary>
         public const string StopwatchPropertyName = "--USE-STOPWATCH";
 
+        /// <summary>The logger property name.</summary>
+        public const string LoggerPropertyName = "--USE-LOGGER";
+
         /// <summary>Default validation rules name.</summary>
         public const string DefaultValidationRulesName = "DEFAULT";
 
@@ -122,6 +128,9 @@ namespace FileCabinetApp.ConstantsAndValidationRulesSettings
 
         /// <summary>The database file name.</summary>
         public const string DbFileName = "cabinet-records.db";
+
+        /// <summary>Log file name.</summary>
+        public const string LogFileName = "log.txt";
 
         /// <summary>Currency format.</summary>
         public const string CurrencyFormat = "C";

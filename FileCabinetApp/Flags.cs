@@ -18,5 +18,9 @@ namespace FileCabinetApp
         /// <summary>Stopwatch
         /// flag.</summary>
         Stopwatch = 4,
+
+        /// <summary>Logger
+        /// flag.</summary>
+        Logger = 8,
     }
 }

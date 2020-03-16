@@ -41,10 +41,6 @@ namespace FileCabinetApp
             Console.WriteLine($"File Cabinet Application, developed by {Program.DeveloperName}");
             switch (ParseFlags(args))
             {
-                case Flags.Default:
-                    Console.WriteLine("Using default validation rules. Records will be stored in memory.");
-                    fileCabinetService = new FileCabinetMemoryService(defaultValidator);
-                    break;
                 case Flags.ValidationRules:
                     if (commandLineArguments.Contains(DefaultValidationRulesName))
                     {
@@ -70,7 +66,7 @@ namespace FileCabinetApp
                 case Flags.ValidationRules | Flags.Stopwatch:
                     if (commandLineArguments.Contains(DefaultValidationRulesName))
                     {
-                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter)");
                         fileCabinetService = new ServiceMeter(new FileCabinetMemoryService(defaultValidator));
                         break;
                     }
@@ -86,6 +82,28 @@ namespace FileCabinetApp
                         Console.WriteLine("Invalid arguments.");
                         Console.WriteLine("Using default validation rules. Records will be stored in memory.");
                         fileCabinetService = new ServiceMeter(new FileCabinetMemoryService(defaultValidator));
+                        break;
+                    }
+
+                case Flags.ValidationRules | Flags.Stopwatch | Flags.Logger:
+                    if (commandLineArguments.Contains(DefaultValidationRulesName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter and ServiceLogger)");
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(defaultValidator)));
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(CustomValidationRulesName))
+                    {
+                        Console.WriteLine("Using custom validation rules. Records will be stored in memory. (using ServiceMeter and ServiceLogger)");
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(customValidator)));
+                        isCustomValidationRules = true;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid arguments.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter and ServiceLogger)");
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(defaultValidator)));
                         break;
                     }
 
@@ -114,13 +132,13 @@ namespace FileCabinetApp
                 case Flags.Storage | Flags.Stopwatch:
                     if (commandLineArguments.Contains(MemoryStorageName))
                     {
-                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter)");
                         fileCabinetService = new ServiceMeter(new FileCabinetMemoryService(defaultValidator));
                         break;
                     }
                     else if (commandLineArguments.Contains(FileStorageName))
                     {
-                        Console.WriteLine("Using default validation rules. Records will be stored in file system.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in file system. (using ServiceMeter)");
                         fileStream = new FileStream(DbFileName, FileMode.Create);
                         fileCabinetService = new ServiceMeter(new FileCabinetFilesystemService(fileStream, defaultValidator));
                         break;
@@ -128,14 +146,41 @@ namespace FileCabinetApp
                     else
                     {
                         Console.WriteLine("Invalid arguments.");
-                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter)");
                         fileCabinetService = new ServiceMeter(new FileCabinetMemoryService(defaultValidator));
                         break;
                     }
 
+                case Flags.Storage | Flags.Stopwatch | Flags.Logger:
+                    if (commandLineArguments.Contains(MemoryStorageName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter and ServiceLogger)");
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(defaultValidator)));
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(FileStorageName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in file system. (using ServiceMeter and ServiceLogger)");
+                        fileStream = new FileStream(DbFileName, FileMode.Create);
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetFilesystemService(fileStream, defaultValidator)));
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid arguments.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter and ServiceLogger)");
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(defaultValidator)));
+                        break;
+                    }
+
                 case Flags.Stopwatch:
-                    Console.WriteLine("Using default validation rules. Records will be stored in memory123.");
+                    Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter)");
                     fileCabinetService = new ServiceMeter(new FileCabinetMemoryService(defaultValidator));
+                    break;
+
+                case Flags.Stopwatch | Flags.Logger:
+                    Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter and ServiceLogger)");
+                    fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(defaultValidator)));
                     break;
 
                 case Flags.ValidationRules | Flags.Storage:
@@ -178,27 +223,27 @@ namespace FileCabinetApp
                 case Flags.ValidationRules | Flags.Storage | Flags.Stopwatch:
                     if (commandLineArguments.Contains(DefaultValidationRulesName) && commandLineArguments.Contains(MemoryStorageName))
                     {
-                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter)");
                         fileCabinetService = new ServiceMeter(new FileCabinetMemoryService(defaultValidator));
                         break;
                     }
                     else if (commandLineArguments.Contains(CustomValidationRulesName) && commandLineArguments.Contains(MemoryStorageName))
                     {
-                        Console.WriteLine("Using custom validation rules. Records will be stored in memory.");
+                        Console.WriteLine("Using custom validation rules. Records will be stored in memory. (using ServiceMeter)");
                         fileCabinetService = new ServiceMeter(new FileCabinetMemoryService(customValidator));
                         isCustomValidationRules = true;
                         break;
                     }
                     else if (commandLineArguments.Contains(DefaultValidationRulesName) && commandLineArguments.Contains(FileStorageName))
                     {
-                        Console.WriteLine("Using default validation rules. Records will be stored in file system.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in file system. (using ServiceMeter)");
                         fileStream = new FileStream(DbFileName, FileMode.Create);
                         fileCabinetService = new ServiceMeter(new FileCabinetFilesystemService(fileStream, defaultValidator));
                         break;
                     }
                     else if (commandLineArguments.Contains(CustomValidationRulesName) && commandLineArguments.Contains(FileStorageName))
                     {
-                        Console.WriteLine("Using custom validation rules. Records will be stored in file system.");
+                        Console.WriteLine("Using custom validation rules. Records will be stored in file system. (using ServiceMeter)");
                         fileStream = new FileStream(DbFileName, FileMode.Create);
                         fileCabinetService = new ServiceMeter(new FileCabinetFilesystemService(fileStream, customValidator));
                         isCustomValidationRules = true;
@@ -207,10 +252,52 @@ namespace FileCabinetApp
                     else
                     {
                         Console.WriteLine("Invalid arguments.");
-                        Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter)");
                         fileCabinetService = new ServiceMeter(new FileCabinetMemoryService(defaultValidator));
                         break;
                     }
+
+                case Flags.ValidationRules | Flags.Storage | Flags.Stopwatch | Flags.Logger:
+                    if (commandLineArguments.Contains(DefaultValidationRulesName) && commandLineArguments.Contains(MemoryStorageName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter and ServiceLogger)");
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(defaultValidator)));
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(CustomValidationRulesName) && commandLineArguments.Contains(MemoryStorageName))
+                    {
+                        Console.WriteLine("Using custom validation rules. Records will be stored in memory. (using ServiceMeter and ServiceLogger)");
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(customValidator)));
+                        isCustomValidationRules = true;
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(DefaultValidationRulesName) && commandLineArguments.Contains(FileStorageName))
+                    {
+                        Console.WriteLine("Using default validation rules. Records will be stored in file system. (using ServiceMeter and ServiceLogger)");
+                        fileStream = new FileStream(DbFileName, FileMode.Create);
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetFilesystemService(fileStream, defaultValidator)));
+                        break;
+                    }
+                    else if (commandLineArguments.Contains(CustomValidationRulesName) && commandLineArguments.Contains(FileStorageName))
+                    {
+                        Console.WriteLine("Using custom validation rules. Records will be stored in file system. (using ServiceMeter and ServiceLogger)");
+                        fileStream = new FileStream(DbFileName, FileMode.Create);
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetFilesystemService(fileStream, customValidator)));
+                        isCustomValidationRules = true;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid arguments.");
+                        Console.WriteLine("Using default validation rules. Records will be stored in memory. (using ServiceMeter and ServiceLogger)");
+                        fileCabinetService = new ServiceLogger(new ServiceMeter(new FileCabinetMemoryService(defaultValidator)));
+                        break;
+                    }
+
+                default:
+                    Console.WriteLine("Using default validation rules. Records will be stored in memory.");
+                    fileCabinetService = new FileCabinetMemoryService(defaultValidator);
+                    break;
             }
 
             Console.WriteLine(Program.HintMessage);
@@ -325,6 +412,9 @@ namespace FileCabinetApp
                         break;
                     case StopwatchPropertyName:
                         flags |= Flags.Stopwatch;
+                        break;
+                    case LoggerPropertyName:
+                        flags |= Flags.Logger;
                         break;
                     default:
                         break;
