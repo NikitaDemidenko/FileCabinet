@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
-using static FileCabinetApp.Constants;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp.CommandHandlers
 {

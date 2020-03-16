@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text;
 using System.Xml.Serialization;
-using static FileCabinetApp.Constants;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp
 {

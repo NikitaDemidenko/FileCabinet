@@ -231,183 +231,301 @@
             <param name="request">The request.</param>
             <exception cref="T:System.ArgumentNullException">Thrown when request is null.</exception>
         </member>
-        <member name="T:FileCabinetApp.Constants">
+        <member name="T:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants">
             <summary>Provides constatnts for work with FileCabinetApp.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.IsInvalidInput">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.IsInvalidInput">
             <summary>Indicates whether the user input is invalid.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.MaleSex">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MaleSex">
             <summary>Male sex.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.FemaleSex">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.FemaleSex">
             <summary>Female sex.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.MinValueOfSalary">
-            <summary>Minimum value of salary.</summary>
-        </member>
-        <member name="F:FileCabinetApp.Constants.MinValueOfSalaryCustom">
-            <summary>Minimum value of salary (custom).</summary>
-        </member>
-        <member name="F:FileCabinetApp.Constants.MinNumberOfSymbols">
-            <summary>Minimum number of symbols.</summary>
-        </member>
-        <member name="F:FileCabinetApp.Constants.MaxNumberOfSymbols">
-            <summary>Maximum number of symbols.</summary>
-        </member>
-        <member name="F:FileCabinetApp.Constants.MinValueOfId">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinValueOfId">
             <summary>Minimum value of identifier.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.NumberOfParameters">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.NumberOfParameters">
             <summary>Number of parameters.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.FirstElementIndex">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.FirstElementIndex">
             <summary>Index of the first element of the collection.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.SecondElementIndex">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.SecondElementIndex">
             <summary>Index of the second element of the collection.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.MinNumberOfReviews">
-            <summary>Minimum number of reviews.</summary>
-        </member>
-        <member name="F:FileCabinetApp.Constants.MinNumberOfReviewsCustom">
-            <summary>Minimum number of reviews (custom).</summary>
-        </member>
-        <member name="F:FileCabinetApp.Constants.RecordLenghtInBytes">
-            <summary>The record's lenght in bytes.</summary>
-        </member>
-        <member name="F:FileCabinetApp.Constants.FirstNameOffset">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.FirstNameOffset">
             <summary>First name offset.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.LastNameOffset">
-            <summary>Last name offset.</summary>
-        </member>
-        <member name="F:FileCabinetApp.Constants.DateOfBirthOffset">
-            <summary>Date of birth offset.</summary>
-        </member>
-        <member name="F:FileCabinetApp.Constants.IdOffset">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.IdOffset">
             <summary>Identifier offset.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.DeletedBitMask">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.DeletedBitMask">
             <summary>The deleted bit bit mask.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.BeginOfFile">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.BeginOfFile">
             <summary>Begin of the file.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.InputDateFormat">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.InputDateFormat">
             <summary>Input date format.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.OutputDateFormat">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.OutputDateFormat">
             <summary>Output date format.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.AllowedCharacters">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.LogDateFormat">
+            <summary>Log date format.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.AllowedCharacters">
             <summary>Allowed characters for user input.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.FirstNamePropertyName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.FirstNamePropertyName">
             <summary>First name property name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.LastNamePropertyName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.LastNamePropertyName">
             <summary>Last name property name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.CreateCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.CreateCommand">
             <summary>Create command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.EditCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.EditCommand">
             <summary>Edit command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.ExitCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.ExitCommand">
             <summary>Exit command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.ExportCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.ExportCommand">
             <summary>Export command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.FindCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.FindCommand">
             <summary>Find command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.HelpCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.HelpCommand">
             <summary>Help command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.ImportCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.ImportCommand">
             <summary>Import command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.ListCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.ListCommand">
             <summary>List command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.PurgeCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.PurgeCommand">
             <summary>Purge command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.RemoveCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.RemoveCommand">
             <summary>Remove command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.StatCommand">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.StatCommand">
             <summary>Stat command.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.DateOfBirthPropertyName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.DateOfBirthPropertyName">
             <summary>Date of birth property name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.ValidationRulesFullPropertyName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.ValidationRulesFullPropertyName">
             <summary>Validation rules full property name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.ValidationRulesShortcutPropertyName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.ValidationRulesShortcutPropertyName">
             <summary>Validation rules shortcut property name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.StorageFullPropertyName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.StorageFullPropertyName">
             <summary>Storage full property name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.StorageShortcutPropertyName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.StorageShortcutPropertyName">
             <summary>Storage shortcut property name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.DefaultValidationRulesName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.StopwatchPropertyName">
+            <summary>The stopwatch property name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.LoggerPropertyName">
+            <summary>The logger property name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.DefaultValidationRulesName">
             <summary>Default validation rules name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.CustomValidationRulesName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.CustomValidationRulesName">
             <summary>Custom validation rules name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.MemoryStorageName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MemoryStorageName">
             <summary>Memory storage argument name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.FileStorageName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.FileStorageName">
             <summary>File storage argument name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.DbFileName">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.DbFileName">
             <summary>The database file name.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.CurrencyFormat">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.LogFileName">
+            <summary>Log file name.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.CurrencyFormat">
             <summary>Currency format.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.CsvFileExtension">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.CsvFileExtension">
             <summary>CSV file extension.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.XmlFileExtension">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.XmlFileExtension">
             <summary>XML file extension.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.PositiveUserAnswer">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.PositiveUserAnswer">
             <summary>Positive user answer.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.SpaceSymbol">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.SpaceSymbol">
             <summary>Space symbol.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.QuoteSymbol">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.QuoteSymbol">
             <summary>Quote symbol.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.EqualSignSymbol">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.EqualSignSymbol">
             <summary>An equal sign symbol.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.NullCharacter">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.NullCharacter">
             <summary>Null character.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.CsvFileSeparator">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.CsvFileSeparator">
             <summary>CSV file separator.</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.MinDateOfBirthCustom">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.Culture">
+            <summary>Culture.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinValueOfSalary">
+            <summary>Minimum value of salary (default).</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinValueOfSalaryCustom">
+            <summary>Minimum value of salary (custom).</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinFirstNameLength">
+            <summary>The minimum first name length.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinFirstNameLengthCustom">
+            <summary>The minimum first name length (custom).</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MaxFirstNameLength">
+            <summary>The maximum first name length.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MaxFirstNameLengthCustom">
+            <summary>The maximum first name length (custom).</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinLastNameLength">
+            <summary>The minimum last name length.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinLastNameLengthCustom">
+            <summary>The minimum last name length (custom).</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MaxLastNameLength">
+            <summary>The maximum last name length.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MaxLastNameLengthCustom">
+            <summary>The maximum last name length (custom).</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinNumberOfReviews">
+            <summary>Minimum number of reviews.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinNumberOfReviewsCustom">
+            <summary>Minimum number of reviews (custom).</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinDateOfBirthCustom">
             <summary>Minimum date of birth (custom).</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.MinDateOfBirth">
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MinDateOfBirth">
             <summary>Minimum date of birth
             (default).</summary>
         </member>
-        <member name="F:FileCabinetApp.Constants.Culture">
-            <summary>Culture.</summary>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MaxDateOfBirth">
+            <summary>Maximum date of birth
+            (default).</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.MaxDateOfBirthCustom">
+            <summary>Maximum date of birth (custom).</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.RecordLenghtInBytes">
+            <summary>The record's lenght in bytes.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.LastNameOffset">
+            <summary>Last name offset.</summary>
+        </member>
+        <member name="F:FileCabinetApp.ConstantsAndValidationRulesSettings.Constants.DateOfBirthOffset">
+            <summary>Date of birth offset.</summary>
+        </member>
+        <member name="T:FileCabinetApp.ConstantsAndValidationRulesSettings.DateOfBirthLimits">
+            <summary>Date of birth limits.</summary>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.DateOfBirthLimits.From">
+            <summary>Gets or sets from date.</summary>
+            <value>From date.</value>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.DateOfBirthLimits.To">
+            <summary>Gets or sets to date.</summary>
+            <value>To date.</value>
+        </member>
+        <member name="T:FileCabinetApp.ConstantsAndValidationRulesSettings.FirstNameLimits">
+            <summary>First name limits.</summary>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.FirstNameLimits.MinLength">
+            <summary>Gets or sets the minimum length.</summary>
+            <value>The minimum length.</value>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.FirstNameLimits.MaxLength">
+            <summary>Gets or sets the maximum length.</summary>
+            <value>The maximum length.</value>
+        </member>
+        <member name="T:FileCabinetApp.ConstantsAndValidationRulesSettings.LastNameLimits">
+            <summary>Last name limits.</summary>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.LastNameLimits.MinLength">
+            <summary>Gets or sets the minimum length.</summary>
+            <value>The minimum length.</value>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.LastNameLimits.MaxLength">
+            <summary>Gets or sets the maximum length.</summary>
+            <value>The maximum length.</value>
+        </member>
+        <member name="T:FileCabinetApp.ConstantsAndValidationRulesSettings.Limits">
+            <summary>Limits.</summary>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.Limits.Default">
+            <summary>Gets or sets the default validation rules.</summary>
+            <value>The default validation rules.</value>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.Limits.Custom">
+            <summary>Gets or sets the custom validation rules.</summary>
+            <value>The custom validation rules.</value>
+        </member>
+        <member name="T:FileCabinetApp.ConstantsAndValidationRulesSettings.NumberOfReviewsLimits">
+            <summary>Number of reviews limits.</summary>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.NumberOfReviewsLimits.MinNumber">
+            <summary>Gets or sets the minimum number of reviews.</summary>
+            <value>The minimum number of reviews.</value>
+        </member>
+        <member name="T:FileCabinetApp.ConstantsAndValidationRulesSettings.SalaryLimits">
+            <summary>Salary limits.</summary>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.SalaryLimits.MinSalary">
+            <summary>Gets or sets the minimum salary.</summary>
+            <value>The minimum salary.</value>
+        </member>
+        <member name="T:FileCabinetApp.ConstantsAndValidationRulesSettings.ValidationRule">
+            <summary>Validation rule.</summary>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.ValidationRule.FirstNameLimits">
+            <summary>Gets or sets the first name limits.</summary>
+            <value>The first name limits.</value>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.ValidationRule.LastNameLimits">
+            <summary>Gets or sets the last name limits.</summary>
+            <value>The last name limits.</value>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.ValidationRule.DateOfBirthLimits">
+            <summary>Gets or sets the date of birth limits.</summary>
+            <value>The date of birth limits.</value>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.ValidationRule.NumberOfReviewsLimits">
+            <summary>Gets or sets the number of reviews limits.</summary>
+            <value>The number of reviews limits.</value>
+        </member>
+        <member name="P:FileCabinetApp.ConstantsAndValidationRulesSettings.ValidationRule.SalaryLimits">
+            <summary>Gets or sets the salary limits.</summary>
+            <value>The salary limits.</value>
         </member>
         <member name="T:FileCabinetApp.FileCabinetFilesystemService">
             <summary>Provides methods for interaction with records in file system.</summary>
@@ -695,6 +813,14 @@
         <member name="F:FileCabinetApp.Flags.Storage">
             <summary>Storage flag.</summary>
         </member>
+        <member name="F:FileCabinetApp.Flags.Stopwatch">
+            <summary>Stopwatch
+            flag.</summary>
+        </member>
+        <member name="F:FileCabinetApp.Flags.Logger">
+            <summary>Logger
+            flag.</summary>
+        </member>
         <member name="T:FileCabinetApp.FullName">
             <summary>Full name.</summary>
         </member>
@@ -952,6 +1078,146 @@
         <member name="M:FileCabinetApp.Program.Main(System.String[])">
             <summary>Defines the entry point of the application.</summary>
             <param name="args">The arguments.</param>
+        </member>
+        <member name="T:FileCabinetApp.ServiceLogger">
+            <summary>Service logger.</summary>
+            <seealso cref="T:FileCabinetApp.IFileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceLogger"/> class.</summary>
+            <param name="service">The service.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when service
+            is null.</exception>
+        </member>
+        <member name="P:FileCabinetApp.ServiceLogger.Validator">
+            <summary>Gets the validator of this <see cref="T:FileCabinetApp.IFileCabinetService"/> object.</summary>
+            <value>The validator.</value>
+        </member>
+        <member name="P:FileCabinetApp.ServiceLogger.StoredIdentifiers">
+            <summary>Gets the collection of stored identifiers.</summary>
+            <value>Collections of identifiers strored in the file cabinet service.</value>
+        </member>
+        <member name="P:FileCabinetApp.ServiceLogger.AllRecordsCount">
+            <summary>Gets all records count.</summary>
+            <value>All records count.</value>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.CreateRecord(FileCabinetApp.UnverifiedData)">
+            <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
+            <param name="unverifiedData">Raw data.</param>
+            <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
+            <exception cref="T:System.ArgumentNullException">Thrown when unverifiedData
+            is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.EditRecord(System.Int32,FileCabinetApp.UnverifiedData)">
+            <summary>Edits record by identifier.</summary>
+            <param name="id">Identifier.</param>
+            <param name="unverifiedData">User input data.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when unverifiedData
+            is null.</exception>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByDateOfBirth(System.DateTime)">
+            <summary>Finds records by date of birth.</summary>
+            <param name="dateOfBirth">Date of birth to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByFirstName(System.String)">
+            <summary>Finds records by first name.</summary>
+            <param name="firstName">First name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.FindByLastName(System.String)">
+            <summary>Finds records by last name.</summary>
+            <param name="lastName">Last name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetRecords">
+            <summary>Gets the records.</summary>
+            <returns>Returns a read-only collection  of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.GetStat">
+            <summary>Gets the stat of records in the file cabinet.</summary>
+            <returns>Returns number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.MakeSnapshot">
+            <summary>Makes snapshot of current object state.</summary>
+            <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/>.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.RemoveRecord(System.Int32)">
+            <summary>Removes the record from <see cref="T:FileCabinetApp.IFileCabinetService"/> object.</summary>
+            <param name="id">Identifier of the record to delete.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>Restores the specified snapshot.</summary>
+            <param name="snapshot">Snapshot.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when snapshot
+            is null.</exception>
+        </member>
+        <member name="T:FileCabinetApp.ServiceMeter">
+            <summary>Service meter.</summary>
+            <seealso cref="T:FileCabinetApp.IFileCabinetService" />
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.#ctor(FileCabinetApp.IFileCabinetService)">
+            <summary>Initializes a new instance of the <see cref="T:FileCabinetApp.ServiceMeter"/> class.</summary>
+            <param name="service">The service.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown when service
+            is null.</exception>
+        </member>
+        <member name="P:FileCabinetApp.ServiceMeter.Validator">
+            <summary>Gets the validator of this <see cref="T:FileCabinetApp.IFileCabinetService"/> object.</summary>
+            <value>The validator.</value>
+        </member>
+        <member name="P:FileCabinetApp.ServiceMeter.StoredIdentifiers">
+            <summary>Gets the collection of stored identifiers.</summary>
+            <value>Collections of identifiers strored in the file cabinet service.</value>
+        </member>
+        <member name="P:FileCabinetApp.ServiceMeter.AllRecordsCount">
+            <summary>Gets all records count.</summary>
+            <value>All records count.</value>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.CreateRecord(FileCabinetApp.UnverifiedData)">
+            <summary>Creates new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</summary>
+            <param name="unverifiedData">Raw data.</param>
+            <returns>Returns identifier of the new <see cref="T:FileCabinetApp.FileCabinetRecord"/> instance.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.EditRecord(System.Int32,FileCabinetApp.UnverifiedData)">
+            <summary>Edits record by identifier.</summary>
+            <param name="id">Identifier.</param>
+            <param name="unverifiedData">User input data.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByDateOfBirth(System.DateTime)">
+            <summary>Finds records by date of birth.</summary>
+            <param name="dateOfBirth">Date of birth to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByFirstName(System.String)">
+            <summary>Finds records by first name.</summary>
+            <param name="firstName">First name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.FindByLastName(System.String)">
+            <summary>Finds records by last name.</summary>
+            <param name="lastName">Last name to find.</param>
+            <returns>Returns a read-only collection of found records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetRecords">
+            <summary>Gets the records.</summary>
+            <returns>Returns a read-only collection  of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.GetStat">
+            <summary>Gets the stat of records in the file cabinet.</summary>
+            <returns>Returns number of records.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.MakeSnapshot">
+            <summary>Makes snapshot of current object state.</summary>
+            <returns>Returns new <see cref="T:FileCabinetApp.FileCabinetServiceSnapshot"/>.</returns>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.RemoveRecord(System.Int32)">
+            <summary>Removes the record from <see cref="T:FileCabinetApp.IFileCabinetService"/> object.</summary>
+            <param name="id">Identifier of the record to delete.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
+            <summary>Restores the specified snapshot.</summary>
+            <param name="snapshot">Snapshot.</param>
         </member>
         <member name="T:FileCabinetApp.UnverifiedData">
             <summary>Provides methods for user data input.</summary>

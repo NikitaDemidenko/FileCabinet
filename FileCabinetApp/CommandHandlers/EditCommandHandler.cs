@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using static FileCabinetApp.Constants;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp.CommandHandlers
 {
@@ -47,11 +47,11 @@ namespace FileCabinetApp.CommandHandlers
         private Func<string, Tuple<bool, string>> firstNameValidator = firstName =>
         {
             return isCustomValidationRules
-                ? firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols ||
+                ? firstName.Length < MinFirstNameLengthCustom || firstName.Length > MaxFirstNameLengthCustom ||
                 !Regex.IsMatch(firstName, AllowedCharacters)
                     ? new Tuple<bool, string>(false, "First name's length is out of range or has invalid characters")
                     : new Tuple<bool, string>(true, null)
-                : firstName.Length < MinNumberOfSymbols || firstName.Length > MaxNumberOfSymbols
+                : firstName.Length < MinFirstNameLength || firstName.Length > MaxFirstNameLength
                     ? new Tuple<bool, string>(false, "First name's length is out of range")
                     : new Tuple<bool, string>(true, null);
         };
@@ -59,11 +59,11 @@ namespace FileCabinetApp.CommandHandlers
         private Func<string, Tuple<bool, string>> lastNameValidator = lastName =>
         {
             return isCustomValidationRules
-                ? lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols ||
+                ? lastName.Length < MinLastNameLengthCustom || lastName.Length > MaxLastNameLengthCustom ||
                 !Regex.IsMatch(lastName, AllowedCharacters)
                     ? new Tuple<bool, string>(false, "First name's length is out of range or has invalid characters")
                     : new Tuple<bool, string>(true, null)
-                : lastName.Length < MinNumberOfSymbols || lastName.Length > MaxNumberOfSymbols
+                : lastName.Length < MinLastNameLength || lastName.Length > MaxLastNameLength
                     ? new Tuple<bool, string>(false, "First name's length is out of range")
                     : new Tuple<bool, string>(true, null);
         };
@@ -71,10 +71,10 @@ namespace FileCabinetApp.CommandHandlers
         private Func<DateTime, Tuple<bool, string>> dateOfBirthValidator = dateOfBirth =>
         {
             return isCustomValidationRules
-                ? dateOfBirth < MinDateOfBirthCustom || dateOfBirth >= DateTime.Now
+                ? dateOfBirth < MinDateOfBirthCustom || dateOfBirth >= MaxDateOfBirthCustom
                     ? new Tuple<bool, string>(false, "Date of birth is greater than the current date or less than 1950-Jan-01")
                     : new Tuple<bool, string>(true, null)
-                : dateOfBirth < MinDateOfBirth || dateOfBirth >= DateTime.Now
+                : dateOfBirth < MinDateOfBirth || dateOfBirth >= MaxDateOfBirth
                     ? new Tuple<bool, string>(false, "Date of birth is greater than the current date")
                     : new Tuple<bool, string>(true, null);
         };

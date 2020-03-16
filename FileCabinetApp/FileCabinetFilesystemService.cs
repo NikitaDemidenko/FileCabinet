@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using static FileCabinetApp.Constants;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp
 {
@@ -88,8 +88,8 @@ namespace FileCabinetApp
             }
 
             this.Validator.ValidateParameters(userInputData);
-            var firstNameCharArray = new char[MaxNumberOfSymbols];
-            var lastNameCharArray = new char[MaxNumberOfSymbols];
+            var firstNameCharArray = new char[MaxFirstNameLength];
+            var lastNameCharArray = new char[MaxLastNameLength];
             for (int i = 0; i < userInputData.FirstName.Length; i++)
             {
                 firstNameCharArray[i] = userInputData.FirstName[i];
@@ -151,13 +151,13 @@ namespace FileCabinetApp
                 }
 
                 this.fileStream.Seek(FirstNameOffset - sizeof(short), SeekOrigin.Current);
-                if (new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter).Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
+                if (new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter).Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    this.fileStream.Seek((-2 * MaxNumberOfSymbols) - sizeof(int), SeekOrigin.Current);
+                    this.fileStream.Seek((-2 * MaxFirstNameLength) - sizeof(int), SeekOrigin.Current);
                     var record = new FileCabinetRecord
                     {
                         Id = reader.ReadInt32(),
-                        Name = new FullName(new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter), new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter)),
+                        Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
                         DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                         Sex = reader.ReadChar(),
                         NumberOfReviews = reader.ReadInt16(),
@@ -168,7 +168,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    this.fileStream.Seek(RecordLenghtInBytes - (2 * MaxNumberOfSymbols) - FirstNameOffset, SeekOrigin.Current);
+                    this.fileStream.Seek(RecordLenghtInBytes - (2 * MaxFirstNameLength) - FirstNameOffset, SeekOrigin.Current);
                 }
             }
 
@@ -199,13 +199,13 @@ namespace FileCabinetApp
                 }
 
                 this.fileStream.Seek(LastNameOffset - sizeof(short), SeekOrigin.Current);
-                if (new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter).Equals(lastName, StringComparison.InvariantCultureIgnoreCase))
+                if (new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter).Equals(lastName, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    this.fileStream.Seek((-4 * MaxNumberOfSymbols) - sizeof(int), SeekOrigin.Current);
+                    this.fileStream.Seek((-2 * MaxLastNameLength) - (2 * MaxFirstNameLength) - sizeof(int), SeekOrigin.Current);
                     var record = new FileCabinetRecord
                     {
                         Id = reader.ReadInt32(),
-                        Name = new FullName(new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter), new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter)),
+                        Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
                         DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                         Sex = reader.ReadChar(),
                         NumberOfReviews = reader.ReadInt16(),
@@ -216,7 +216,7 @@ namespace FileCabinetApp
                 }
                 else
                 {
-                    this.fileStream.Seek(RecordLenghtInBytes - (4 * MaxNumberOfSymbols) - FirstNameOffset, SeekOrigin.Current);
+                    this.fileStream.Seek(RecordLenghtInBytes - (2 * MaxLastNameLength) - (2 * MaxFirstNameLength) - FirstNameOffset, SeekOrigin.Current);
                 }
             }
 
@@ -244,11 +244,11 @@ namespace FileCabinetApp
                 this.fileStream.Seek(DateOfBirthOffset - sizeof(short), SeekOrigin.Current);
                 if (reader.ReadInt32() == dateOfBirth.Year & reader.ReadInt32() == dateOfBirth.Month & reader.ReadInt32() == dateOfBirth.Day)
                 {
-                    this.fileStream.Seek((-4 * MaxNumberOfSymbols) - (4 * sizeof(int)), SeekOrigin.Current);
+                    this.fileStream.Seek((-2 * MaxLastNameLength) - (2 * MaxFirstNameLength) - (4 * sizeof(int)), SeekOrigin.Current);
                     var record = new FileCabinetRecord
                     {
                         Id = reader.ReadInt32(),
-                        Name = new FullName(new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter), new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter)),
+                        Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
                         DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                         Sex = reader.ReadChar(),
                         NumberOfReviews = reader.ReadInt16(),
@@ -286,7 +286,7 @@ namespace FileCabinetApp
                 var record = new FileCabinetRecord
                 {
                     Id = reader.ReadInt32(),
-                    Name = new FullName(new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter), new string(reader.ReadChars(MaxNumberOfSymbols)).Trim(NullCharacter)),
+                    Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
                     DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
                     Sex = reader.ReadChar(),
                     NumberOfReviews = reader.ReadInt16(),
@@ -395,8 +395,8 @@ namespace FileCabinetApp
         private void AddRecord(FileCabinetRecord record)
         {
             using var writer = new BinaryWriter(this.fileStream, Encoding.Unicode, true);
-            var firstNameCharArray = new char[MaxNumberOfSymbols];
-            var lastNameCharArray = new char[MaxNumberOfSymbols];
+            var firstNameCharArray = new char[MaxFirstNameLength];
+            var lastNameCharArray = new char[MaxLastNameLength];
             for (int i = 0; i < record.Name.FirstName.Length; i++)
             {
                 firstNameCharArray[i] = record.Name.FirstName[i];

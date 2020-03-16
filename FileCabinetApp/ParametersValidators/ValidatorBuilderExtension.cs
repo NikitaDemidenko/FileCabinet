@@ -1,5 +1,5 @@
 ﻿using System;
-using static FileCabinetApp.Constants;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp.ParametersValidators
 {
@@ -18,9 +18,9 @@ namespace FileCabinetApp.ParametersValidators
             }
 
             return builder
-                .ValidateFirstName(MinNumberOfSymbols, MaxNumberOfSymbols, false)
-                .ValidateLastName(MinNumberOfSymbols, MaxNumberOfSymbols, false)
-                .ValidateDateOfBirth(MinDateOfBirth, DateTime.Now)
+                .ValidateFirstName(MinFirstNameLength, MaxFirstNameLength, false)
+                .ValidateLastName(MinLastNameLength, MaxLastNameLength, false)
+                .ValidateDateOfBirth(MinDateOfBirth, MaxDateOfBirth)
                 .ValidateSex()
                 .ValidateNumberOfReviews(MinNumberOfReviews)
                 .ValidateSalary(MinValueOfSalary)
@@ -39,9 +39,9 @@ namespace FileCabinetApp.ParametersValidators
             }
 
             return builder
-                .ValidateFirstName(MinNumberOfSymbols, MaxNumberOfSymbols, true)
-                .ValidateLastName(MinNumberOfSymbols, MaxNumberOfSymbols, true)
-                .ValidateDateOfBirth(MinDateOfBirthCustom, DateTime.Now)
+                .ValidateFirstName(MinFirstNameLengthCustom, MaxFirstNameLengthCustom, true)
+                .ValidateLastName(MinLastNameLengthCustom, MaxLastNameLengthCustom, true)
+                .ValidateDateOfBirth(MinDateOfBirthCustom, MaxDateOfBirthCustom)
                 .ValidateSex()
                 .ValidateNumberOfReviews(MinNumberOfReviewsCustom)
                 .ValidateSalary(MinValueOfSalaryCustom)

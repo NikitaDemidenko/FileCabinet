@@ -1,5 +1,5 @@
 ﻿using System;
-using static FileCabinetApp.Constants;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp.CommandHandlers
 {

@@ -1,0 +1,42 @@
+{
+	"default": {
+		"firstName": {
+			"min": 2,
+			"max": 60
+		},
+		"lastName": {
+			"min": 2,
+			"max": 60
+		},
+		"dateOfBirth": {
+			"from": "1/1/1900",
+			"to": "3/9/2020"
+		},
+		"numberOfReviews": {
+			"minNumber": 0
+		},
+		"salary": {
+			"minSalary": 0
+		}	
+	},
+	"custom": {
+		"firstName": {
+			"min": 2,
+			"max": 60
+		},
+		"lastName": {
+			"min": 2,
+			"max": 60
+		},
+		"dateOfBirth": {
+			"from": "1/1/1950",
+			"to": "3/9/2020"
+		},
+		"numberOfReviews": {
+			"minNumber": 50
+		},
+		"salary": {
+			"minSalary": 200
+		}
+	}
+}

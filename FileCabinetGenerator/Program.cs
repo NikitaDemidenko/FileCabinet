@@ -1,10 +1,10 @@
-﻿using FileCabinetApp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml.Serialization;
-using static FileCabinetApp.Constants;
+using FileCabinetApp;
+using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 using static FileCabinetGenerator.Constants;
 
 namespace FileCabinetGenerator
@@ -186,9 +186,9 @@ namespace FileCabinetGenerator
             var records = new List<FileCabinetRecord>(count);
             for (int id = startId; id < count + startId; id++)
             {
-                firstName = GetRandomString(random.Next(MinNumberOfSymbols, MaxNumberOfSymbols));
-                lastName = GetRandomString(random.Next(MinNumberOfSymbols, MaxNumberOfSymbols));
-                int year = random.Next(MinDateOfBirth.Year, DateTime.Now.Year);
+                firstName = GetRandomString(random.Next(MinFirstNameLength, MaxFirstNameLength));
+                lastName = GetRandomString(random.Next(MinLastNameLength, MaxLastNameLength));
+                int year = random.Next(MinDateOfBirth.Year, MaxDateOfBirth.Year);
                 int month = random.Next(1, 12);
                 int day = month == 2 ? random.Next(1, 28) : random.Next(1, 30);
                 dateOfBirth = new DateTime(year, month, day);
