@@ -62,5 +62,8 @@ namespace FileCabinetApp
         /// <summary>Restores the specified snapshot.</summary>
         /// <param name="snapshot">Snapshot.</param>
         public void Restore(FileCabinetServiceSnapshot snapshot);
+
+        /// <summary>Defragments the data file.</summary>
+        public void Purge();
     }
 }

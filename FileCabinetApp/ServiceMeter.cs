@@ -154,5 +154,15 @@ namespace FileCabinetApp
             timer.Stop();
             Console.WriteLine($"Restore method execution duration is {timer.ElapsedMilliseconds} ticks.");
         }
+
+        /// <summary>Defragments the data file.</summary>
+        public void Purge()
+        {
+            var timer = new Stopwatch();
+            timer.Start();
+            this.service.Purge();
+            timer.Stop();
+            Console.WriteLine($"Purge method execution duration is {timer.ElapsedMilliseconds} ticks.");
+        }
     }
 }

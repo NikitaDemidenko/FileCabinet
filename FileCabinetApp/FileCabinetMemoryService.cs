@@ -221,6 +221,13 @@ namespace FileCabinetApp
             }
         }
 
+        /// <summary>This method is not supported for <see cref="FileCabinetMemoryService"/>.</summary>
+        /// <exception cref="NotSupportedException">This command works with file system only.</exception>
+        public void Purge()
+        {
+            throw new NotSupportedException();
+        }
+
         private void AddRecord(FileCabinetRecord record)
         {
             if (record == null)

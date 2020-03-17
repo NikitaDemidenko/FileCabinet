@@ -13,6 +13,9 @@ namespace FileCabinetApp
     public class FileCabinetFilesystemService : IFileCabinetService
     {
         private readonly List<int> storedIdentifiers = new List<int>();
+        private readonly Dictionary<string, List<long>> firstNamesOffsets = new Dictionary<string, List<long>>();
+        private readonly Dictionary<string, List<long>> lastNamesOffsets = new Dictionary<string, List<long>>();
+        private readonly Dictionary<DateTime, List<long>> dateOfBirthOffsets = new Dictionary<DateTime, List<long>>();
         private FileStream fileStream;
         private int undeletedRecordsCount;
         private int allRecordsCount;
@@ -108,8 +111,40 @@ namespace FileCabinetApp
             {
                 if (id == reader.ReadInt32())
                 {
+                    var currentRecordOffset = this.fileStream.Position - sizeof(int);
+                    var oldFirstNameKey = new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter).ToUpperInvariant();
+                    this.fileStream.Seek(-2 * MaxFirstNameLength, SeekOrigin.Current);
+                    this.firstNamesOffsets[oldFirstNameKey].Remove(currentRecordOffset);
+                    var newFirstNameKey = userInputData.FirstName.ToUpperInvariant();
+                    if (!this.firstNamesOffsets.ContainsKey(newFirstNameKey))
+                    {
+                        this.firstNamesOffsets.Add(newFirstNameKey, new List<long>());
+                    }
+
+                    this.firstNamesOffsets[newFirstNameKey].Add(currentRecordOffset);
                     writer.Write(firstNameCharArray);
+
+                    var oldLastNameKey = new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter).ToUpperInvariant();
+                    this.fileStream.Seek(-2 * MaxLastNameLength, SeekOrigin.Current);
+                    this.lastNamesOffsets[oldLastNameKey].Remove(currentRecordOffset);
+                    var newLastNameKey = userInputData.LastName.ToUpperInvariant();
+                    if (!this.lastNamesOffsets.ContainsKey(newLastNameKey))
+                    {
+                        this.lastNamesOffsets.Add(newLastNameKey, new List<long>());
+                    }
+
+                    this.lastNamesOffsets[newLastNameKey].Add(currentRecordOffset);
                     writer.Write(lastNameCharArray);
+
+                    var oldDateOfBirthKey = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+                    this.fileStream.Seek(-3 * sizeof(int), SeekOrigin.Current);
+                    this.dateOfBirthOffsets[oldDateOfBirthKey].Remove(currentRecordOffset);
+                    if (!this.dateOfBirthOffsets.ContainsKey(userInputData.DateOfBirth))
+                    {
+                        this.dateOfBirthOffsets.Add(userInputData.DateOfBirth, new List<long>());
+                    }
+
+                    this.dateOfBirthOffsets[userInputData.DateOfBirth].Add(currentRecordOffset);
                     writer.Write(userInputData.DateOfBirth.Year);
                     writer.Write(userInputData.DateOfBirth.Month);
                     writer.Write(userInputData.DateOfBirth.Day);
@@ -137,42 +172,32 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(firstName));
             }
 
-            this.fileStream.Seek(BeginOfFile, SeekOrigin.Begin);
-            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
-            var searchResult = new List<FileCabinetRecord>();
-            short reservedField;
-            while (reader.PeekChar() > -1)
+            var firstNameKey = firstName.ToUpperInvariant();
+            if (this.firstNamesOffsets.ContainsKey(firstNameKey) && this.firstNamesOffsets[firstNameKey].Count != 0)
             {
-                reservedField = reader.ReadInt16();
-                if ((reservedField & DeletedBitMask) == DeletedBitMask)
+                using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+                var searchResult = new List<FileCabinetRecord>();
+                foreach (var offset in this.firstNamesOffsets[firstNameKey])
                 {
-                    this.fileStream.Seek(RecordLenghtInBytes - sizeof(short), SeekOrigin.Current);
-                    continue;
+                    this.fileStream.Seek(offset, SeekOrigin.Begin);
+                    searchResult.Add(
+                        new FileCabinetRecord
+                        {
+                            Id = reader.ReadInt32(),
+                            Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
+                            DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+                            Sex = reader.ReadChar(),
+                            NumberOfReviews = reader.ReadInt16(),
+                            Salary = reader.ReadDecimal(),
+                        });
                 }
 
-                this.fileStream.Seek(FirstNameOffset - sizeof(short), SeekOrigin.Current);
-                if (new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter).Equals(firstName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    this.fileStream.Seek((-2 * MaxFirstNameLength) - sizeof(int), SeekOrigin.Current);
-                    var record = new FileCabinetRecord
-                    {
-                        Id = reader.ReadInt32(),
-                        Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
-                        DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
-                        Sex = reader.ReadChar(),
-                        NumberOfReviews = reader.ReadInt16(),
-                        Salary = reader.ReadDecimal(),
-                    };
-
-                    searchResult.Add(record);
-                }
-                else
-                {
-                    this.fileStream.Seek(RecordLenghtInBytes - (2 * MaxFirstNameLength) - FirstNameOffset, SeekOrigin.Current);
-                }
+                return new ReadOnlyCollection<FileCabinetRecord>(searchResult);
             }
-
-            return searchResult.Count != 0 ? new ReadOnlyCollection<FileCabinetRecord>(searchResult) : null;
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>Finds records by last name.</summary>
@@ -185,42 +210,32 @@ namespace FileCabinetApp
                 throw new ArgumentNullException(nameof(lastName));
             }
 
-            this.fileStream.Seek(BeginOfFile, SeekOrigin.Begin);
-            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
-            var searchResult = new List<FileCabinetRecord>();
-            short reservedField;
-            while (reader.PeekChar() > -1)
+            var lastNameKey = lastName.ToUpperInvariant();
+            if (this.lastNamesOffsets.ContainsKey(lastNameKey) && this.lastNamesOffsets[lastNameKey].Count != 0)
             {
-                reservedField = reader.ReadInt16();
-                if ((reservedField & DeletedBitMask) == DeletedBitMask)
+                using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+                var searchResult = new List<FileCabinetRecord>();
+                foreach (var offset in this.lastNamesOffsets[lastNameKey])
                 {
-                    this.fileStream.Seek(RecordLenghtInBytes - sizeof(short), SeekOrigin.Current);
-                    continue;
+                    this.fileStream.Seek(offset, SeekOrigin.Begin);
+                    searchResult.Add(
+                        new FileCabinetRecord
+                        {
+                            Id = reader.ReadInt32(),
+                            Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
+                            DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+                            Sex = reader.ReadChar(),
+                            NumberOfReviews = reader.ReadInt16(),
+                            Salary = reader.ReadDecimal(),
+                        });
                 }
 
-                this.fileStream.Seek(LastNameOffset - sizeof(short), SeekOrigin.Current);
-                if (new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter).Equals(lastName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    this.fileStream.Seek((-2 * MaxLastNameLength) - (2 * MaxFirstNameLength) - sizeof(int), SeekOrigin.Current);
-                    var record = new FileCabinetRecord
-                    {
-                        Id = reader.ReadInt32(),
-                        Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
-                        DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
-                        Sex = reader.ReadChar(),
-                        NumberOfReviews = reader.ReadInt16(),
-                        Salary = reader.ReadDecimal(),
-                    };
-
-                    searchResult.Add(record);
-                }
-                else
-                {
-                    this.fileStream.Seek(RecordLenghtInBytes - (2 * MaxLastNameLength) - (2 * MaxFirstNameLength) - FirstNameOffset, SeekOrigin.Current);
-                }
+                return new ReadOnlyCollection<FileCabinetRecord>(searchResult);
             }
-
-            return searchResult.Count != 0 ? new ReadOnlyCollection<FileCabinetRecord>(searchResult) : null;
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>Finds records by date of birth.</summary>
@@ -228,42 +243,31 @@ namespace FileCabinetApp
         /// <returns>Returns a read-only collection of found records.</returns>
         public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
-            this.fileStream.Seek(BeginOfFile, SeekOrigin.Begin);
-            using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
-            var searchResult = new List<FileCabinetRecord>();
-            short reservedField;
-            while (reader.PeekChar() > -1)
+            if (this.dateOfBirthOffsets.ContainsKey(dateOfBirth) && this.dateOfBirthOffsets[dateOfBirth].Count != 0)
             {
-                reservedField = reader.ReadInt16();
-                if ((reservedField & DeletedBitMask) == DeletedBitMask)
+                using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
+                var searchResult = new List<FileCabinetRecord>();
+                foreach (var offset in this.dateOfBirthOffsets[dateOfBirth])
                 {
-                    this.fileStream.Seek(RecordLenghtInBytes - sizeof(short), SeekOrigin.Current);
-                    continue;
+                    this.fileStream.Seek(offset, SeekOrigin.Begin);
+                    searchResult.Add(
+                        new FileCabinetRecord
+                        {
+                            Id = reader.ReadInt32(),
+                            Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
+                            DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+                            Sex = reader.ReadChar(),
+                            NumberOfReviews = reader.ReadInt16(),
+                            Salary = reader.ReadDecimal(),
+                        });
                 }
 
-                this.fileStream.Seek(DateOfBirthOffset - sizeof(short), SeekOrigin.Current);
-                if (reader.ReadInt32() == dateOfBirth.Year & reader.ReadInt32() == dateOfBirth.Month & reader.ReadInt32() == dateOfBirth.Day)
-                {
-                    this.fileStream.Seek((-2 * MaxLastNameLength) - (2 * MaxFirstNameLength) - (4 * sizeof(int)), SeekOrigin.Current);
-                    var record = new FileCabinetRecord
-                    {
-                        Id = reader.ReadInt32(),
-                        Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
-                        DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
-                        Sex = reader.ReadChar(),
-                        NumberOfReviews = reader.ReadInt16(),
-                        Salary = reader.ReadDecimal(),
-                    };
-
-                    searchResult.Add(record);
-                }
-                else
-                {
-                    this.fileStream.Seek(RecordLenghtInBytes - (3 * sizeof(int)) - DateOfBirthOffset, SeekOrigin.Current);
-                }
+                return new ReadOnlyCollection<FileCabinetRecord>(searchResult);
             }
-
-            return searchResult.Count != 0 ? new ReadOnlyCollection<FileCabinetRecord>(searchResult) : null;
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>Gets the records.</summary>
@@ -356,11 +360,23 @@ namespace FileCabinetApp
             {
                 if (id == reader.ReadInt32())
                 {
+                    var currentRecordOffset = this.fileStream.Position - sizeof(int);
                     this.fileStream.Seek(-FirstNameOffset, SeekOrigin.Current);
                     var reservedField = reader.ReadInt16();
                     reservedField |= DeletedBitMask;
                     this.fileStream.Seek(-sizeof(short), SeekOrigin.Current);
                     writer.Write(reservedField);
+                    this.fileStream.Seek(FirstNameOffset - sizeof(short), SeekOrigin.Current);
+
+                    var firstNameKey = new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter).ToUpperInvariant();
+                    this.firstNamesOffsets[firstNameKey].Remove(currentRecordOffset);
+
+                    var lastNameKey = new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter).ToUpperInvariant();
+                    this.lastNamesOffsets[lastNameKey].Remove(currentRecordOffset);
+
+                    var dateOfBirthKey = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32());
+                    this.dateOfBirthOffsets[dateOfBirthKey].Remove(currentRecordOffset);
+
                     this.storedIdentifiers.Remove(id);
                     this.undeletedRecordsCount--;
                     isNotFound = false;
@@ -407,10 +423,35 @@ namespace FileCabinetApp
                 lastNameCharArray[i] = record.Name.LastName[i];
             }
 
-            this.fileStream.Seek(IdOffset, SeekOrigin.End);
+            var currentRecordOffset = this.fileStream.Seek(IdOffset, SeekOrigin.End);
             writer.Write(record.Id);
+            var firstNameKey = record.Name.FirstName.ToUpperInvariant();
+            if (!this.firstNamesOffsets.ContainsKey(firstNameKey))
+            {
+                this.firstNamesOffsets.Add(firstNameKey, new List<long>());
+            }
+
+            this.firstNamesOffsets[firstNameKey].Add(currentRecordOffset);
+
             writer.Write(firstNameCharArray);
+
+            var lastNameKey = record.Name.LastName.ToUpperInvariant();
+            if (!this.lastNamesOffsets.ContainsKey(lastNameKey))
+            {
+                this.lastNamesOffsets.Add(lastNameKey, new List<long>());
+            }
+
+            this.lastNamesOffsets[lastNameKey].Add(currentRecordOffset);
+
             writer.Write(lastNameCharArray);
+
+            if (!this.dateOfBirthOffsets.ContainsKey(record.DateOfBirth))
+            {
+                this.dateOfBirthOffsets.Add(record.DateOfBirth, new List<long>());
+            }
+
+            this.dateOfBirthOffsets[record.DateOfBirth].Add(currentRecordOffset);
+
             writer.Write(record.DateOfBirth.Year);
             writer.Write(record.DateOfBirth.Month);
             writer.Write(record.DateOfBirth.Day);

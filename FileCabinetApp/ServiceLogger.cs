@@ -222,5 +222,27 @@ namespace FileCabinetApp
             this.service.Restore(snapshot);
             writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Restore() executed successfully");
         }
+
+        /// <summary>Defragments the data file.</summary>
+        public void Purge()
+        {
+            using var writer = new StreamWriter(LogFileName, true, Encoding.UTF8);
+            writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Calling Purge()");
+            try
+            {
+                this.service.Purge();
+                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Purge() executed successfully");
+            }
+            catch (NotSupportedException)
+            {
+                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Purge() threw an exception: This method works with file system only.");
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Purge() threw an exception: {ex.Message}");
+                throw;
+            }
+        }
     }
 }

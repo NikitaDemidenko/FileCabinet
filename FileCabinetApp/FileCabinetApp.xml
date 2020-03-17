@@ -674,6 +674,10 @@
             <param name="id">Identifier of the record to delete.</param>
             <exception cref="T:System.ArgumentException">Thrown when record is not found.</exception>
         </member>
+        <member name="M:FileCabinetApp.FileCabinetMemoryService.Purge">
+            <summary>This method is not supported for <see cref="T:FileCabinetApp.FileCabinetMemoryService"/>.</summary>
+            <exception cref="T:System.NotSupportedException">This command works with file system only.</exception>
+        </member>
         <member name="T:FileCabinetApp.FileCabinetRecord">
             <summary>Provides properties for records.</summary>
         </member>
@@ -903,6 +907,9 @@
         <member name="M:FileCabinetApp.IFileCabinetService.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">Snapshot.</param>
+        </member>
+        <member name="M:FileCabinetApp.IFileCabinetService.Purge">
+            <summary>Defragments the data file.</summary>
         </member>
         <member name="T:FileCabinetApp.IRecordValidator">
             <summary>
@@ -1152,6 +1159,9 @@
             <exception cref="T:System.ArgumentNullException">Thrown when snapshot
             is null.</exception>
         </member>
+        <member name="M:FileCabinetApp.ServiceLogger.Purge">
+            <summary>Defragments the data file.</summary>
+        </member>
         <member name="T:FileCabinetApp.ServiceMeter">
             <summary>Service meter.</summary>
             <seealso cref="T:FileCabinetApp.IFileCabinetService" />
@@ -1218,6 +1228,9 @@
         <member name="M:FileCabinetApp.ServiceMeter.Restore(FileCabinetApp.FileCabinetServiceSnapshot)">
             <summary>Restores the specified snapshot.</summary>
             <param name="snapshot">Snapshot.</param>
+        </member>
+        <member name="M:FileCabinetApp.ServiceMeter.Purge">
+            <summary>Defragments the data file.</summary>
         </member>
         <member name="T:FileCabinetApp.UnverifiedData">
             <summary>Provides methods for user data input.</summary>
