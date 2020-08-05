@@ -165,7 +165,7 @@ namespace FileCabinetApp
         /// <summary>Finds records by first name.</summary>
         /// <param name="firstName">First name to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -176,34 +176,26 @@ namespace FileCabinetApp
             if (this.firstNamesOffsets.ContainsKey(firstNameKey) && this.firstNamesOffsets[firstNameKey].Count != 0)
             {
                 using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
-                var searchResult = new List<FileCabinetRecord>();
                 foreach (var offset in this.firstNamesOffsets[firstNameKey])
                 {
                     this.fileStream.Seek(offset, SeekOrigin.Begin);
-                    searchResult.Add(
-                        new FileCabinetRecord
-                        {
-                            Id = reader.ReadInt32(),
-                            Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
-                            DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
-                            Sex = reader.ReadChar(),
-                            NumberOfReviews = reader.ReadInt16(),
-                            Salary = reader.ReadDecimal(),
-                        });
+                    yield return new FileCabinetRecord
+                    {
+                        Id = reader.ReadInt32(),
+                        Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
+                        DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+                        Sex = reader.ReadChar(),
+                        NumberOfReviews = reader.ReadInt16(),
+                        Salary = reader.ReadDecimal(),
+                    };
                 }
-
-                return new ReadOnlyCollection<FileCabinetRecord>(searchResult);
-            }
-            else
-            {
-                return null;
             }
         }
 
         /// <summary>Finds records by last name.</summary>
         /// <param name="lastName">Last name to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -214,59 +206,43 @@ namespace FileCabinetApp
             if (this.lastNamesOffsets.ContainsKey(lastNameKey) && this.lastNamesOffsets[lastNameKey].Count != 0)
             {
                 using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
-                var searchResult = new List<FileCabinetRecord>();
                 foreach (var offset in this.lastNamesOffsets[lastNameKey])
                 {
                     this.fileStream.Seek(offset, SeekOrigin.Begin);
-                    searchResult.Add(
-                        new FileCabinetRecord
-                        {
-                            Id = reader.ReadInt32(),
-                            Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
-                            DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
-                            Sex = reader.ReadChar(),
-                            NumberOfReviews = reader.ReadInt16(),
-                            Salary = reader.ReadDecimal(),
-                        });
+                    yield return new FileCabinetRecord
+                    {
+                        Id = reader.ReadInt32(),
+                        Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
+                        DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+                        Sex = reader.ReadChar(),
+                        NumberOfReviews = reader.ReadInt16(),
+                        Salary = reader.ReadDecimal(),
+                    };
                 }
-
-                return new ReadOnlyCollection<FileCabinetRecord>(searchResult);
-            }
-            else
-            {
-                return null;
             }
         }
 
         /// <summary>Finds records by date of birth.</summary>
         /// <param name="dateOfBirth">Date of birth to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             if (this.dateOfBirthOffsets.ContainsKey(dateOfBirth) && this.dateOfBirthOffsets[dateOfBirth].Count != 0)
             {
                 using var reader = new BinaryReader(this.fileStream, Encoding.Unicode, true);
-                var searchResult = new List<FileCabinetRecord>();
                 foreach (var offset in this.dateOfBirthOffsets[dateOfBirth])
                 {
                     this.fileStream.Seek(offset, SeekOrigin.Begin);
-                    searchResult.Add(
-                        new FileCabinetRecord
-                        {
-                            Id = reader.ReadInt32(),
-                            Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
-                            DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
-                            Sex = reader.ReadChar(),
-                            NumberOfReviews = reader.ReadInt16(),
-                            Salary = reader.ReadDecimal(),
-                        });
+                    yield return new FileCabinetRecord
+                    {
+                        Id = reader.ReadInt32(),
+                        Name = new FullName(new string(reader.ReadChars(MaxFirstNameLength)).Trim(NullCharacter), new string(reader.ReadChars(MaxLastNameLength)).Trim(NullCharacter)),
+                        DateOfBirth = new DateTime(reader.ReadInt32(), reader.ReadInt32(), reader.ReadInt32()),
+                        Sex = reader.ReadChar(),
+                        NumberOfReviews = reader.ReadInt16(),
+                        Salary = reader.ReadDecimal(),
+                    };
                 }
-
-                return new ReadOnlyCollection<FileCabinetRecord>(searchResult);
-            }
-            else
-            {
-                return null;
             }
         }
 
