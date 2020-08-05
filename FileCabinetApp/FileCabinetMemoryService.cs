@@ -132,7 +132,7 @@ namespace FileCabinetApp
         /// <summary>Finds records by first name.</summary>
         /// <param name="firstName">First name to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             if (firstName == null)
             {
@@ -140,14 +140,19 @@ namespace FileCabinetApp
             }
 
             string firstNameKey = firstName.ToUpperInvariant();
-            return this.firstNameDictionary.ContainsKey(firstNameKey) && this.firstNameDictionary[firstNameKey].Count != 0 ?
-                new ReadOnlyCollection<FileCabinetRecord>(this.firstNameDictionary[firstNameKey]) : null;
+            if (this.firstNameDictionary.ContainsKey(firstNameKey) && this.firstNameDictionary[firstNameKey].Count != 0)
+            {
+                foreach (var record in this.firstNameDictionary[firstNameKey])
+                {
+                    yield return record;
+                }
+            }
         }
 
         /// <summary>Finds records by last name.</summary>
         /// <param name="lastName">Last name to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             if (lastName == null)
             {
@@ -155,17 +160,27 @@ namespace FileCabinetApp
             }
 
             string lastNameKey = lastName.ToUpperInvariant();
-            return this.lastNameDictionary.ContainsKey(lastNameKey) && this.lastNameDictionary[lastNameKey].Count != 0 ?
-                new ReadOnlyCollection<FileCabinetRecord>(this.lastNameDictionary[lastNameKey]) : null;
+            if (this.lastNameDictionary.ContainsKey(lastNameKey) && this.lastNameDictionary[lastNameKey].Count != 0)
+            {
+                foreach (var record in this.lastNameDictionary[lastNameKey])
+                {
+                    yield return record;
+                }
+            }
         }
 
         /// <summary>Finds records by date of birth.</summary>
         /// <param name="dateOfBirth">Date of birth to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
-            return this.dateOfBirthDictionary.ContainsKey(dateOfBirth) && this.dateOfBirthDictionary[dateOfBirth].Count != 0 ?
-                new ReadOnlyCollection<FileCabinetRecord>(this.dateOfBirthDictionary[dateOfBirth]) : null;
+            if (this.dateOfBirthDictionary.ContainsKey(dateOfBirth) && this.dateOfBirthDictionary[dateOfBirth].Count != 0)
+            {
+                foreach (var record in this.dateOfBirthDictionary[dateOfBirth])
+                {
+                    yield return record;
+                }
+            }
         }
 
         /// <summary>Makes snapshot of current <see cref="FileCabinetMemoryService"/> object state.</summary>
@@ -219,6 +234,13 @@ namespace FileCabinetApp
                     return;
                 }
             }
+        }
+
+        /// <summary>This method is not supported for <see cref="FileCabinetMemoryService"/>.</summary>
+        /// <exception cref="NotSupportedException">This command works with file system only.</exception>
+        public void Purge()
+        {
+            throw new NotSupportedException();
         }
 
         private void AddRecord(FileCabinetRecord record)

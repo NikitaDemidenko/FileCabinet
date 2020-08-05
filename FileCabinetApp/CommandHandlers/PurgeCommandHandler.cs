@@ -46,27 +46,24 @@ namespace FileCabinetApp.CommandHandlers
 
         private void Purge(string parameters)
         {
-            if (this.fileCabinetService is FileCabinetFilesystemService fileCabinetFilesystemService)
+            try
             {
-                try
-                {
-                    fileCabinetFilesystemService.Purge();
-                }
-                catch (InvalidOperationException ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    return;
-                }
-
-                int allRecordsCountBeforePurge = fileCabinetFilesystemService.AllRecordsCount;
-                int purgedRecordsCount = allRecordsCountBeforePurge - fileCabinetFilesystemService.GetStat();
-                Console.WriteLine($"Data file processing is completed: {purgedRecordsCount} of {allRecordsCountBeforePurge} records were purged.");
+                this.fileCabinetService.Purge();
             }
-            else
+            catch (NotSupportedException)
             {
                 Console.WriteLine("This command works with file system only.");
                 return;
             }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return;
+            }
+
+            int allRecordsCountBeforePurge = this.fileCabinetService.AllRecordsCount;
+            int purgedRecordsCount = allRecordsCountBeforePurge - this.fileCabinetService.GetStat();
+            Console.WriteLine($"Data file processing is completed: {purgedRecordsCount} of {allRecordsCountBeforePurge} records were purged.");
         }
     }
 }

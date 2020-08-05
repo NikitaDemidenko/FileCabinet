@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace FileCabinetApp
@@ -43,17 +44,17 @@ namespace FileCabinetApp
         /// <summary>Finds records by first name.</summary>
         /// <param name="firstName">First name to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName);
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName);
 
         /// <summary>Finds records by last name.</summary>
         /// <param name="lastName">Last name to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName);
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName);
 
         /// <summary>Finds records by date of birth.</summary>
         /// <param name="dateOfBirth">Date of birth to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth);
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth);
 
         /// <summary>Makes snapshot of current object state.</summary>
         /// /// <returns>Returns new <see cref="FileCabinetServiceSnapshot"/>.</returns>
@@ -62,5 +63,8 @@ namespace FileCabinetApp
         /// <summary>Restores the specified snapshot.</summary>
         /// <param name="snapshot">Snapshot.</param>
         public void Restore(FileCabinetServiceSnapshot snapshot);
+
+        /// <summary>Defragments the data file.</summary>
+        public void Purge();
     }
 }

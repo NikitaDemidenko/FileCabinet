@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Text;
 using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
@@ -97,60 +98,36 @@ namespace FileCabinetApp
         /// <summary>Finds records by date of birth.</summary>
         /// <param name="dateOfBirth">Date of birth to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
+        public IEnumerable<FileCabinetRecord> FindByDateOfBirth(DateTime dateOfBirth)
         {
             using var writer = new StreamWriter(LogFileName, true, Encoding.UTF8);
             writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Calling FindByDateOfBirth() with dateOfBirth = '{dateOfBirth.ToString(InputDateFormat, Culture)}'");
             var result = this.service.FindByDateOfBirth(dateOfBirth);
-            if (result == null)
-            {
-                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - FindByDateOfBirth() returned null");
-            }
-            else
-            {
-                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - FindByDateOfBirth() returned {result.Count} record(s)");
-            }
-
+            writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - FindByDateOfBirth() returned {result.Count()} record(s)");
             return result;
         }
 
         /// <summary>Finds records by first name.</summary>
         /// <param name="firstName">First name to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByFirstName(string firstName)
+        public IEnumerable<FileCabinetRecord> FindByFirstName(string firstName)
         {
             using var writer = new StreamWriter(LogFileName, true, Encoding.UTF8);
             writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Calling FindByFirstName() with firstName = '{firstName}'");
             var result = this.service.FindByFirstName(firstName);
-            if (result == null)
-            {
-                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - FindByFirstName() returned null");
-            }
-            else
-            {
-                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - FindByFirstName() returned {result.Count} record(s)");
-            }
-
+            writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - FindByFirstName() returned {result.Count()} record(s)");
             return result;
         }
 
         /// <summary>Finds records by last name.</summary>
         /// <param name="lastName">Last name to find.</param>
         /// <returns>Returns a read-only collection of found records.</returns>
-        public ReadOnlyCollection<FileCabinetRecord> FindByLastName(string lastName)
+        public IEnumerable<FileCabinetRecord> FindByLastName(string lastName)
         {
             using var writer = new StreamWriter(LogFileName, true, Encoding.UTF8);
             writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Calling FindByLastName() with lastName = '{lastName}'");
             var result = this.service.FindByLastName(lastName);
-            if (result == null)
-            {
-                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - FindByLastName() returned null");
-            }
-            else
-            {
-                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - FindByLastName() returned {result.Count} record(s)");
-            }
-
+            writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - FindByLastName() returned {result.Count()} record(s)");
             return result;
         }
 
@@ -221,6 +198,28 @@ namespace FileCabinetApp
             writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Calling Restore() with snapshot with {snapshot.Records.Count} record(s)");
             this.service.Restore(snapshot);
             writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Restore() executed successfully");
+        }
+
+        /// <summary>Defragments the data file.</summary>
+        public void Purge()
+        {
+            using var writer = new StreamWriter(LogFileName, true, Encoding.UTF8);
+            writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Calling Purge()");
+            try
+            {
+                this.service.Purge();
+                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Purge() executed successfully");
+            }
+            catch (NotSupportedException)
+            {
+                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Purge() threw an exception: This method works with file system only.");
+                throw;
+            }
+            catch (InvalidOperationException ex)
+            {
+                writer.WriteLine($"{DateTime.Now.ToString(LogDateFormat, Culture)} - Purge() threw an exception: {ex.Message}");
+                throw;
+            }
         }
     }
 }

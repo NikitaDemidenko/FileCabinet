@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using static FileCabinetApp.ConstantsAndValidationRulesSettings.Constants;
 
 namespace FileCabinetApp.CommandHandlers
@@ -75,7 +76,7 @@ namespace FileCabinetApp.CommandHandlers
             if (propertyName.Equals(FirstNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var searchResult = this.fileCabinetService.FindByFirstName(propertyValue);
-                if (searchResult != null)
+                if (searchResult.Any())
                 {
                     this.printer(searchResult);
                 }
@@ -87,7 +88,7 @@ namespace FileCabinetApp.CommandHandlers
             else if (propertyName.Equals(LastNamePropertyName, StringComparison.InvariantCultureIgnoreCase))
             {
                 var searchResult = this.fileCabinetService.FindByLastName(propertyValue);
-                if (searchResult != null)
+                if (searchResult.Any())
                 {
                     this.printer(searchResult);
                 }
@@ -101,7 +102,7 @@ namespace FileCabinetApp.CommandHandlers
                 if (DateTime.TryParse(propertyValue, out DateTime dateOfBirth))
                 {
                     var searchResult = this.fileCabinetService.FindByDateOfBirth(dateOfBirth);
-                    if (searchResult != null)
+                    if (searchResult.Any())
                     {
                         this.printer(searchResult);
                     }
